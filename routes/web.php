@@ -7,7 +7,7 @@ Route::group(['prefix' => 'su', 'as' => 'superuser.'], function () {
 });
 
 Route::group(['as' => 'front.'], function () {
-    return \App\User::all();
+    // return \App\User::all();
     
     Route::get('/', 'FrontController@welcome')->name('welcome');
 });
