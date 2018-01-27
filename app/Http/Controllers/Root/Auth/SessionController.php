@@ -18,4 +18,9 @@ class SessionController extends Controller
     {
         return view('root.auth.login');
     }
+
+    public function login(Request $request)
+    {
+        
+    }
 }
