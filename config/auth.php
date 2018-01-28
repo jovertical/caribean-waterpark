@@ -36,11 +36,6 @@ return [
     */
 
     'guards' => [
-        'superuser' => [
-            'driver' => 'session',
-            'provider' => 'superusers',
-        ],
-
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -70,11 +65,6 @@ return [
     */
 
     'providers' => [
-        'superusers' => [
-            'driver' => 'eloquent',
-            'model' => App\Superuser::class,
-        ],
-
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
@@ -102,12 +92,6 @@ return [
     */
 
     'passwords' => [
-        'superusers' => [
-            'provider' => 'superusers',
-            'table' => 'password_resets',
-            'expire' => 60,
-        ],
-
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',

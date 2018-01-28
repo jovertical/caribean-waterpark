@@ -11,13 +11,13 @@
         <title>{{ config('app.name') }}</title>
 
         <!-- Bootstrap -->
-        <link href="/root/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/root/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- MDB -->
-        <link href="/root/mdb/css/mdb.min.css" rel="stylesheet">
+        <link href="/root/assets/mdb/css/mdb.min.css" rel="stylesheet">
 
         <!-- Fontawesome -->
-        <link href="/root/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/root/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- Page specific stylesheets -->
         @yield('styles')
@@ -31,11 +31,11 @@
             <div id="mdb-preloader" class="flex-center"><div id="preloader-markup"></div></div>
 
             @auth
-                @include('root.partials.nav')
+                @include('root.partials.header')
             @endauth
 
             <main>
-                <div class="container">
+                <div class="container-fluid">
                     @yield('content')
                 </div>
             </main>
@@ -46,33 +46,19 @@
         </div>
 
         <!-- jQuery -->
-        <script src="/root/jquery/js/jquery.min.js"></script>
+        <script src="/root/assets/jquery/js/jquery.min.js"></script>
 
         <!-- Theter -->
-        <script src="/root/bootstrap/js/popper.min.js"></script>
+        <script src="/root/assets/bootstrap/js/popper.min.js"></script>
 
         <!-- Bootstrap -->
-        <script src="/root/bootstrap/js/bootstrap.js"></script>
+        <script src="/root/assets/bootstrap/js/bootstrap.js"></script>
 
         <!-- MDB -->
-        <script src="/root/mdb/js/mdb.min.js"></script>
+        <script src="/root/assets/mdb/js/mdb.min.js"></script>
 
-        <!-- Inline Script -->
-        <script>
-            $(document).ready(function() {
-                // SideNav Init
-                $(".button-collapse").sideNav();
-
-                // 
-                $('#mdb-preloader').css({ display: 'none' });
-
-                //
-                $('button[type=submit]').on('click', function() {
-                    $('button').addClass('disabled');
-                });
-            });
-        </script>
-        <!--/. Inline Script -->
+        <!-- Main -->
+        <script src="/root/assets/app/js/main.js"></script>
 
         <!-- Page specific scripts -->
         @yield('scripts')

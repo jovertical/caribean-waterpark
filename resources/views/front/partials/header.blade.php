@@ -11,6 +11,15 @@
                         <a href="{{ route('front.welcome') }}">Home</a>
                     </li>
 
+                    <li class="menu-item-has-children">
+                        <a href="#">Services</a>
+                        <ul class="sub-menu">
+                            <li><a href="trip.html">Accomodations</a></li>
+                            <li><a href="trip-detail.html"></a></li>
+                            <li><a href="trip-dark.html">Trips (Dark)</a></li>
+                        </ul>
+                    </li>
+
                     <li class="menu-item-has-children"><a href="destinations-list.html">Destinations</a>
                         <ul class="sub-menu">
                             <li><a href="destinations-list.html">List</a></li>
