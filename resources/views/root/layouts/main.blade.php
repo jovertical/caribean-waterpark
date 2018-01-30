@@ -59,6 +59,8 @@
 
         <!-- Main -->
         <script src="/root/assets/app/js/main.js"></script>
+        
+        {!! Toastr::message() !!}
 
         <!-- Page specific scripts -->
         @yield('scripts')

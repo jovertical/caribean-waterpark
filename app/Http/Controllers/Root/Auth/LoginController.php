@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Root\Auth;
 
+use Toastr as Notify;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -76,7 +77,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        //
+        Notify::success('Good luck for the day ahead.', 'Welcome back!');
     }
 
     public function logout(Request $request)
