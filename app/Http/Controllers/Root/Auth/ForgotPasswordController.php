@@ -34,7 +34,12 @@ class ForgotPasswordController extends Controller
         $user->notify(new SendsPasswordResetLink($token));
         $this->saveResetToken($user, $token);
 
-        return redirect()->route('root.login');
+        session()->flash('message', [
+            'type' => 'success',
+            'content' => 'Password reset link has been sent to your email.'
+        ]);
+
+        return redirect()->back();
     }
 
     protected function generateResetToken() {

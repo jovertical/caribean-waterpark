@@ -4,6 +4,10 @@
     <div class="row justify-content-center">
         <div class="col-md-5">
 
+            @if(Session::has('message'))
+                @include('root.partials.message')
+            @endif
+
             <div class="card px-4">
                 <div class="card-body">
                     <p class="h5 text-center my-4">Superuser login</p>
@@ -46,9 +50,10 @@
                             <!-- Left -->
                             <div class="col-md-6 text-left">
                                 <div class="form-group">
-                                    <input type="checkbox" id="checkbox">
-                                    <label for="checkbox">
-                                        <a href="#" class="blue-text"> Remember me</a></label>
+                                    <input type="checkbox" name="remember" id="remember" {{
+                                        old('remember') ? 'checked' : '' }}>
+                                        <label for="remember">
+                                            <a href="#" class="blue-text"> Remember me</a></label>
                                 </div>
                             </div>
                             <!--/. Left -->

@@ -64,6 +64,11 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
+        session()->flash('message', [
+            'type' => 'success',
+            'content' => 'You have been logged out from the system.'
+        ]);
+
         return redirect()->route('root.login');
     }
 }

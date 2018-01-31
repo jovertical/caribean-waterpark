@@ -47,14 +47,14 @@
     <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
         <!-- SideNav slide-out button -->
         <div class="float-left">
-            <a href="#" data-activates="slide-out" class="button-collapse black-text"><i class="fa fa-bars"></i></a>
+            <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars"></i></a>
         </div>
 
         <!-- Breadcrumb-->
         <div class="mr-auto">
             <ol class="header-breadcrumb breadcrumb fp-header-breadcrumb clearfix">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('root.home') }}" class="black-text">Home</a>
+                    <a href="{{ route('root.home') }}">Home</a>
                 </li>
 
                 @for($i = 2; $i <= count(Request::segments()); $i++)
@@ -93,7 +93,7 @@
                     <form method="GET" action="">
                         {{ method_field('PUT') }}
 
-                        <button class="dropdown-item waves-effect">My account</button>
+                        <a type="button" class="dropdown-item waves-effect">My account</a>
                     </form>
 
                     <a href="#" class="dropdown-item waves-effect" onclick="

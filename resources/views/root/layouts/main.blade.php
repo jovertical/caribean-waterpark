@@ -26,7 +26,7 @@
         @yield('styles')
     </head>
 
-    <body class="fixed-sn white-skin">
+    <body class="fixed-sn black-skin">
 
         <div id="container">
 

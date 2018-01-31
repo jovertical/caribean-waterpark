@@ -4,6 +4,10 @@
     <div class="row justify-content-center">
         <div class="col-md-5">
 
+            @if(Session::has('message'))
+                @include('root.partials.message')
+            @endif
+
             <div class="card px-4">
                 <div class="card-body">
                     <p class="h5 text-center my-4">Forgot password</p>
