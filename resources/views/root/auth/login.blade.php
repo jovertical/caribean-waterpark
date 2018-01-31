@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <p class="h5 text-center my-4">Superuser login</p>
 
-                    <form method="POST" action="{{ route('superuser.login') }}">
+                    <form method="POST" action="{{ route('root.login') }}">
                         {{ csrf_field() }}
 
                         <!-- Name -->
@@ -56,7 +56,10 @@
                             <!-- Right -->
                             <div class="col-md-6 text-right">
                                 <div class="form-group">
-                                    <label><a href="#" class="blue-text"> Forgot password?</a></label>
+                                    <label>
+                                        <a href="{{ route('root.password.request') }}" class="blue-text">
+                                        Forgot password?</a>
+                                    </label>
                                 </div>
                             </div>
                             <!--/. Right -->
@@ -73,12 +76,4 @@
 
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('.datepicker').pickadate();
-        });
-    </script>
 @endsection

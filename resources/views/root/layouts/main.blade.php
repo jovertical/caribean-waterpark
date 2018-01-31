@@ -10,14 +10,17 @@
 
         <title>{{ config('app.name') }}</title>
 
+        <!-- Fontawesome -->
+        <link href="/root/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+
         <!-- Bootstrap -->
         <link href="/root/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- MDB -->
         <link href="/root/assets/mdb/css/mdb.min.css" rel="stylesheet">
-
-        <!-- Fontawesome -->
-        <link href="/root/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+        
+        <!-- Main -->
+        <link href="/root/assets/app/css/main.css" rel="stylesheet">
 
         <!-- Page specific stylesheets -->
         @yield('styles')
@@ -25,23 +28,27 @@
 
     <body class="fixed-sn white-skin">
 
-        <div id="app">
+        <div id="container">
 
             <!-- Preloader animation -->
             <div id="mdb-preloader" class="flex-center"><div id="preloader-markup"></div></div>
 
             @auth
-                @include('root.partials.header')
+                <div id="header">
+                    @include('root.partials.header')
+                </div>
             @endauth
 
             <main>
-                <div class="container-fluid">
+                <div id="body" class="container-fluid">
                     @yield('content')
                 </div>
             </main>
 
             @auth
-                @include('root.partials.footer')
+                <div id="footer">
+                    @include('root.partials.footer')
+                </div>
             @endauth
         </div>
 
@@ -59,7 +66,7 @@
 
         <!-- Main -->
         <script src="/root/assets/app/js/main.js"></script>
-        
+
         {!! Toastr::message() !!}
 
         <!-- Page specific scripts -->

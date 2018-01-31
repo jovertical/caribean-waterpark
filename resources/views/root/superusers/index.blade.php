@@ -1,5 +1,10 @@
 @extends('root.layouts.main')
 
+@section('styles')
+    <!-- Datatables Bootstrap 4 -->
+    <link href="/root/assets/datatable/css/datatables.bootstrap4.min.css" rel="stylesheet">
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md">
@@ -38,34 +43,40 @@
 @endsection
 
 @section('scripts')
-<script>
-    $(document).ready(function() {
-        //DataTable Initialization
-        $('#table').DataTable({
-            sort: false
+    <!-- Datatables.net -->
+    <script src="/root/assets/datatable/js/datatables.min.js"></script>
+
+    <!-- Datatables Bootstrap 4 -->
+    <script src="/root/assets/datatable/js/datatables.bootstrap4.min.js"></script>
+            
+    <script>
+        $(document).ready(function() {
+            //DataTable Initialization
+            $('table[id=table]').DataTable({
+                sort: false
+            });
+
+            $('table[data-form="table"]').on('click','.form-delete', function(e) {
+                e.preventDefault();
+
+                let $form = $(this);
+
+                $('#deleteModal').modal({ backdrop: 'static',
+                    keyboard: false}).on('click', '#btn-delete', function() {
+                        $form.submit();
+                    });
+            });
+
+            $('table[data-form="table"]').on('click','.form-toggle', function(e) {
+                e.preventDefault();
+
+                let $form = $(this);
+
+                $('#toggleModal').modal({ backdrop: 'static',
+                    keyboard: false}).on('click', '#btn-toggle', function() {
+                        $form.submit();
+                    });
+            });
         });
-
-        $('table[data-form="table"]').on('click','.form-delete', function(e) {
-            e.preventDefault();
-
-            let $form = $(this);
-
-            $('#deleteModal').modal({ backdrop: 'static',
-                keyboard: false}).on('click', '#btn-delete', function() {
-                    $form.submit();
-                });
-        });
-
-        $('table[data-form="table"]').on('click','.form-toggle', function(e) {
-            e.preventDefault();
-
-            let $form = $(this);
-
-            $('#toggleModal').modal({ backdrop: 'static',
-                keyboard: false}).on('click', '#btn-toggle', function() {
-                    $form.submit();
-                });
-        });
-    });
-</script>
+    </script>
 @endsection

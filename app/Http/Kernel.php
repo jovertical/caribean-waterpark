@@ -51,8 +51,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'superuser.guest' => \App\Http\Middleware\SuperuserGuestOnly::class,
-        'superuser.auth' => \App\Http\Middleware\SuperuserAuthenticatedOnly::class,
+        'root.guest' => \App\Http\Middleware\SuperuserGuestOnly::class,
+        'root.auth' => \App\Http\Middleware\SuperuserAuthenticatedOnly::class,
 
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

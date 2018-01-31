@@ -15,7 +15,7 @@
         <li>
             <ul class="collapsible collapsible-accordion">
                 <li>
-                    <a href="{{ route('superuser.home') }}" class="collapsible-header waves-effect">
+                    <a href="{{ route('root.home') }}" class="collapsible-header waves-effect">
                         <i class="fa fa-tachometer"></i>Dashboard</a>
                 </li>
 
@@ -54,7 +54,7 @@
         <div class="mr-auto">
             <ol class="header-breadcrumb breadcrumb fp-header-breadcrumb clearfix">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('superuser.home') }}" class="black-text">Home</a>
+                    <a href="{{ route('root.home') }}" class="black-text">Home</a>
                 </li>
 
                 @for($i = 2; $i <= count(Request::segments()); $i++)
@@ -100,7 +100,7 @@
                         event.preventDefault();
                             document.getElementById('form-logout').submit();">Log-out</a>
 
-                    <form method="POST" action="{{ route('superuser.logout') }}" id="form-logout" class="d-none">
+                    <form method="POST" action="{{ route('root.logout') }}" id="form-logout" class="d-none">
                         {{ csrf_field() }}
                     </form>
                 </div>
