@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserRolesTable extends Migration
+class CreateReservationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateUserRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_roles', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->text('description');
+            $table->integer('user_id');
+            $table->date('checkin');
+            $table->date('checkout');
+            $table->enum('status', ['pending', 'paid', 'reserved', 'cancelled', 'waiting', 'void']);
+            $table->float('amount_taxable')->nullable();
+            $table->float('amount_deductable')->nullable();
+            $table->float('amount_paid')->nullable();
+            $table->float('amount_payable');
 
-            $table->boolean('active')->default(true);
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
@@ -34,6 +39,6 @@ class CreateUserRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('reservations');
     }
 }

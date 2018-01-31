@@ -2,7 +2,7 @@
 
 namespace App;
 
-class UserRole extends Model
+class Item extends Model
 {
     //
 }

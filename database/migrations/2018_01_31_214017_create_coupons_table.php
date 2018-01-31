@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserRolesTable extends Migration
+class CreateCouponsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,16 @@ class CreateUserRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_roles', function (Blueprint $table) {
+        Schema::create('coupons', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('description');
+            $table->enum('applicable_type', ['per_item', 'per_reservation']);
+            $table->enum('deductable_type', ['percent', 'amount']);
+            $table->float('amount_deductable');
+            $table->date('valid_from');
+            $table->date('valid_until');
+            $table->boolean('reuseable')->default(false);
 
             $table->boolean('active')->default(true);
             $table->integer('created_by');
@@ -34,6 +40,6 @@ class CreateUserRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('coupons');
     }
 }

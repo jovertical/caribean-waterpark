@@ -19,9 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->boolean('verified')->default(false);
-            $table->boolean('active')->default(true);
             $table->enum('type', ['user', 'superuser']);
+            $table->boolean('verified')->default(false);
 
             $table->string('first_name')->nullable();
             $table->string('middle_name')->nullable();
@@ -31,7 +30,8 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
 
-            $table->integer('created_by')->nullable();
+            $table->boolean('active')->default(true);
+            $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
             $table->dateTime('last_activity')->nullable();

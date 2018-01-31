@@ -55,7 +55,7 @@
                         <!--/. Options -->
 
                         <div class="text-center my-4">
-                            <button class="btn btn-primary">Reset</button>
+                            <button type="submit" class="btn btn-primary">Reset</button>
                         </div>
 
                     </form>

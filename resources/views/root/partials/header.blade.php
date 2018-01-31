@@ -5,8 +5,8 @@
     <ul id="slide-out" class="side-nav fixed sn-bg-1 custom-scrollbar">
         <!-- Avatar -->
         <li class="logo-sn waves-effect">
-            <div class=" text-center">
-                <img src="" class="rounded-circle p-5 img-fluid">
+            <div class="text-center">
+                <img src="/root/assets/images/avatar1.png" class="rounded-circle p-3 img-fluid">
             </div>
         </li>
         <!--/. Avatar -->
@@ -14,27 +14,172 @@
         <!-- Side navigation links -->
         <li>
             <ul class="collapsible collapsible-accordion">
-                <li>
-                    <a href="{{ route('root.home') }}" class="collapsible-header waves-effect">
-                        <i class="fa fa-tachometer"></i>Dashboard</a>
-                </li>
-
-                <!-- Manage -->
+                <!-- My account -->
                 <li>
                     <a class="collapsible-header waves-effect arrow-r">
-                        <i class="fa fa-archive"></i> Manage
+                        <i class="fa fa-user-circle"></i> {{ Auth::user()->email }}
                         <i class="fa fa-angle-down rotate-icon"></i></a>
 
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="/superuser/superusers" class="waves-effect">Superusers</a>
-                                <a href="/superuser/users" class="waves-effect">Users</a>
+                                <a href="#" class="waves-effect"><i class="fa fa-lock"></i>Lock</a>
+
+                                <a href="#" onclick="event.preventDefault();
+                                                document.getElementById('form-logout').submit();" class="waves-effect">
+                                                    <i class="fa fa-sign-out"></i>Log-out</a>
+
+                                <form method="POST" action="{{ route('root.logout') }}" id="form-logout" class="d-none">
+                                    {{ csrf_field() }}
+                                </form>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <!--/. Manage -->
+                <!--/. My account -->
+
+                <hr>
+
+                <!-- Dashboard -->
+                <li>
+                    <a href="{{ route('root.home') }}" class="collapsible-header waves-effect">
+                        <i class="fa fa-tachometer"></i>Dashboard</a>
+                </li>
+                <!--/. Dashboard -->
+
+                <hr>
+
+                <!-- Categories -->
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r">
+                        <i class="fa fa-th"></i> Categories
+                        <i class="fa fa-angle-down rotate-icon"></i></a>
+
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="/superuser/categories/create" class="waves-effect">
+                                    <i class="fa fa-plus"></i>New category</a>
+                                <a href="/superuser/categories" class="waves-effect">
+                                    <i class="fa fa-list"></i>All categories</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--/. Categories -->
+
+                <!-- Items -->
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r">
+                        <i class="fa fa-gift"></i> Items
+                        <i class="fa fa-angle-down rotate-icon"></i></a>
+
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="/superuser/items/create" class="waves-effect">
+                                    <i class="fa fa-plus"></i>New item</a>
+                                <a href="/superuser/items" class="waves-effect">
+                                    <i class="fa fa-list"></i>All items</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--/. Items -->
+
+                <!-- Coupons -->
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r">
+                        <i class="fa fa-tags"></i> Coupons
+                        <i class="fa fa-angle-down rotate-icon"></i></a>
+
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="/superuser/coupons/create" class="waves-effect">
+                                    <i class="fa fa-plus"></i>New coupon</a>
+                                <a href="/superuser/coupons" class="waves-effect">
+                                    <i class="fa fa-list"></i>All coupons</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--/. Coupons -->
+
+                <hr>
+
+                <!-- Reservations -->
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r">
+                        <i class="fa fa-hotel"></i> Reservations
+                        <i class="fa fa-angle-down rotate-icon"></i></a>
+
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="/superuser/reservations/create" class="waves-effect">
+                                    <i class="fa fa-plus"></i>New reservation</a>
+                                <a href="/superuser/reservations" class="waves-effect">
+                                    <i class="fa fa-list"></i>All reservations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--/. Reservations -->
+
+                <!-- Calendar -->
+                <li>
+                    <a href="#" class="collapsible-header waves-effect">
+                        <i class="fa fa-calendar"></i>Calendar</a>
+                </li>
+                <!--/. Calendar -->
+
+                <!-- Reports -->
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r">
+                        <i class="fa fa-line-chart"></i> Reports
+                        <i class="fa fa-angle-down rotate-icon"></i></a>
+
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="#" class="waves-effect">Sales</a>
+                                <a href="#" class="waves-effect">Monthly Reservation</a>
+                                <a href="#" class="waves-effect">Occupancy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--/. Reports -->
+
+                <hr>
+
+                <!-- Users -->
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r">
+                        <i class="fa fa-users"></i> Users
+                        <i class="fa fa-angle-down rotate-icon"></i></a>
+
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="/superuser/superusers/create" class="waves-effect">
+                                    <i class="fa fa-plus"></i>New superuser</a>
+                                <a href="/superuser/superusers" class="waves-effect">
+                                    <i class="fa fa-list"></i>All superusers</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--/. Users -->
+
+                <!-- Setup -->
+                <li>
+                    <a href="#" class="collapsible-header waves-effect">
+                        <i class="fa fa-wrench"></i>Setup</a>
+                </li>
+                <!--/. Setup -->
+
             </ul>
         </li>
         <!--/. Side navigation links -->
@@ -82,30 +227,6 @@
                 </div>
             </li>
             <!--/. Notifications -->
-
-            <!-- Account -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle waves-effect" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user-circle"></i>
-                    <span class="clearfix d-none d-sm-inline-block">{{ Auth::user()->name }}</span></a>
-
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <form method="GET" action="">
-                        {{ method_field('PUT') }}
-
-                        <a type="button" class="dropdown-item waves-effect">My account</a>
-                    </form>
-
-                    <a href="#" class="dropdown-item waves-effect" onclick="
-                        event.preventDefault();
-                            document.getElementById('form-logout').submit();">Log-out</a>
-
-                    <form method="POST" action="{{ route('root.logout') }}" id="form-logout" class="d-none">
-                        {{ csrf_field() }}
-                    </form>
-                </div>
-            </li>
-            <!--/. Account -->
 
         </ul>
         <!--/Navbar links-->
