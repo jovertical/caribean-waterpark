@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable();
 
             $table->boolean('active')->default(true);
-            $table->integer('created_by');
+            $table->integer('created_by')->default(1);
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
             $table->dateTime('last_activity')->nullable();
