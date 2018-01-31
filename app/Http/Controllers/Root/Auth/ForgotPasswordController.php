@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Root\Auth;
 use App\User;
 use App\PasswordReset;
 use App\Notifications\PasswordResetLink;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -45,11 +46,11 @@ class ForgotPasswordController extends Controller
     {
         $key = config('app.key');
 
-        if (str()->startsWith($key, 'base64:')) {
+        if (Str::startsWith($key, 'base64:')) {
             $key = base64_decode(substr($key, 7));
         }
 
-        return hash_hmac('sha256', str()->random(40), $key);
+        return hash_hmac('sha256', Str::random(40), $key);
     }
 
     protected function saveResetToken(User $user, $token) 
