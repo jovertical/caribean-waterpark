@@ -2,7 +2,7 @@
 
 @section('styles')
     <!-- Datatables Bootstrap 4 -->
-    <link href="/root/assets/datatable/css/datatables.bootstrap4.min.css" rel="stylesheet">
+    <link href="/root/assets/jquery/css/datatables.bootstrap4.min.css" rel="stylesheet">
 @endsection
 
 @section('content')

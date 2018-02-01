@@ -6,7 +6,7 @@
         <!-- Avatar -->
         <li class="logo-sn waves-effect">
             <div class="text-center">
-                <img src="/root/assets/images/avatar1.png" class="rounded-circle p-3 img-fluid">
+                <img src="/root/assets/app/images/avatar1.png" class="rounded-circle p-3 img-fluid">
             </div>
         </li>
         <!--/. Avatar -->

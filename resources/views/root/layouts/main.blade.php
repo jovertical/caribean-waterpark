@@ -14,13 +14,13 @@
         <link href="/root/assets/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- Bootstrap -->
-        <link href="/root/assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/root/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- MDB -->
-        <link href="/root/assets/css/mdb.min.css" rel="stylesheet">
-        
+        <link href="/root/assets/mdb/css/mdb.min.css" rel="stylesheet">
+
         <!-- App -->
-        <link href="/root/assets/css/app.css" rel="stylesheet">
+        <link href="/root/assets/app/css/app.css" rel="stylesheet">
 
         <!-- Page specific stylesheets -->
         @yield('styles')
@@ -53,19 +53,19 @@
         </div>
 
         <!-- jQuery -->
-        <script src="/root/assets/js/jquery.min.js"></script>
+        <script src="/root/assets/jquery/js/jquery.min.js"></script>
 
         <!-- Theter -->
-        <script src="/root/assets/js/popper.min.js"></script>
+        <script src="/root/assets/popper/js/popper.min.js"></script>
 
         <!-- Bootstrap -->
-        <script src="/root/assets/js/bootstrap.js"></script>
+        <script src="/root/assets/bootstrap/js/bootstrap.js"></script>
 
         <!-- MDB -->
-        <script src="/root/assets/js/mdb.min.js"></script>
+        <script src="/root/assets/mdb/js/mdb.min.js"></script>
 
         <!-- App -->
-        <script src="/root/assets/js/app.js"></script>
+        <script src="/root/assets/app/js/app.js"></script>
 
         {!! Toastr::message() !!}
 
