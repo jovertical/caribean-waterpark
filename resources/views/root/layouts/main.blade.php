@@ -11,7 +11,7 @@
         <title>{{ config('app.name') }}</title>
 
         <!-- Fontawesome -->
-        <link href="/root/assets/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/root/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- Bootstrap -->
         <link href="/root/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
