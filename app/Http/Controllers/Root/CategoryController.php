@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
+use Toastr as Notify;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,34 +24,82 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name'          => 'required|unique:categories',
-            'description'   => 'required',
+            'name'          => 'required|max:100',
+            'description'   => 'max:500'
         ]);
 
-        Category::create([
-            'name'          => $request->input('name'),
-            'description'   => $request->input('description'),
+        try {
+            Category::create([
+                'name'          => $request->input('name'),
+                'description'   => $request->input('description'),
+            ]);
+
+            Notify::success('Category created.', 'Success!');
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+
+            return redirect()->back();
+        }
+
+        return redirect()->route('root.categories.index');
+    }
+
+    public function edit($id)
+    {
+        $category = Category::find($id);
+
+        return view('root.categories.edit', ['category' => $category]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name'          => 'required|max:100',
+            'description'   => 'max:500'
         ]);
 
-        session()->flash('message', [
-            'type' => 'success',
-            'content' => 'Category created.'
-        ]);
+        try {
+            Category::find($id)->update([
+                'name'          => $request->input('name'),
+                'description'   => $request->input('description'),
+            ]);
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+
+            return redirect()->back();
+        }
+
+        Notify::success('Category updated.', 'Success!');
 
         return redirect()->route('root.categories.index');
     }
 
     public function destroy($id)
     {
-        $category = Category::find($id);
+        try {
+            $category = Category::find($id);
 
-        $category->delete();
+            $category->delete();
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
 
-        session()->flash('message', [
-            'type' => 'success',
-            'content' => 'Category deleted.'
-        ]);
+            return redirect()->back();
+        }
+
+        Notify::success('Category deleted.', 'Success!');
 
         return redirect()->back();
+    }
+
+    public function selectPicture($id)
+    {
+        $category = Category::find($id);
+
+        return view('root.categories.picture', ['category' => $category]);
+    }
+
+    public function uploadPicture(Request $request, $id)
+    {
+
     }
 }

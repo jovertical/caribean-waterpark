@@ -53,6 +53,8 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'root.guest' => \App\Http\Middleware\SuperuserGuestOnly::class,
         'root.auth' => \App\Http\Middleware\SuperuserAuthenticatedOnly::class,
+        'front.guest' => \App\Http\Middleware\UserGuestOnly::class,
+        'front.auth' => \App\Http\Middleware\UserAuthenticatedOnly::class,
 
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

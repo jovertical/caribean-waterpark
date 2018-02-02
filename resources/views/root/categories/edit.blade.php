@@ -6,17 +6,18 @@
 
             <div class="card">
                 <div class="card-body">
-                    <p class="h5 mb-5">Create category</p>
+                    <p class="h5 mb-5">Edit category</p>
 
-                    <form method="POST" action="{{ route('root.categories.store') }}">
+                    <form method="POST" action="{{ route('root.categories.update', $category->id) }}">
+                        {{ method_field('PATCH') }}
                         {{ csrf_field() }}
 
                         <!-- Name -->
                         <div class="form-group">
-                            <label for="name">Name <span class="text-muted">(required)</span></label>
+                            <label for="name">Name</label>
 
                             <input type="text" name="name" id="name" class="form-control {{ $errors->has('name') ?
-                                'invalid' : '' }}" placeholder="The name of the category" value="{{ old('name') }}">
+                                'invalid' : '' }}" placeholder="The name of the category" value="{{ $category->name }}">
 
                             @if($errors->has('name'))
                                 <div id="name-error" class="text-right">
@@ -31,7 +32,7 @@
                             <label for="description">Description</label>
 
                             <textarea type="text" name="description" id="description" class="md-textarea {{
-                                $errors->has('description') ? 'invalid' : '' }}">{{ old('description') }}</textarea>
+                                $errors->has('name') ? 'description' : '' }}">{{ $category->description }}</textarea>
 
                             @if($errors->has('description'))
                                 <div id="description-error" class="text-right">
@@ -44,7 +45,7 @@
                         <!-- Submit -->
                         <div class="form-group text-right">
                             <a type="button" href="{{ route('root.categories.index') }}" class="btn btn-flat">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                         <!--/. Submit -->
 

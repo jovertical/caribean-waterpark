@@ -16,7 +16,10 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::get('/', 'HomeController@index')->name('home');
         Route::resource('superusers', 'UsersController');
 
-        Route::resource('categories', 'CategoryController');
+        Route::resource('/categories', 'CategoryController');
+        Route::get('/categories/{id}/picture', 'CategoryController@selectPicture')->name('category.picture');
+        Route::post('/categories/{id}/picture', 'CategoryController@uploadPicture');
+
         Route::resource('items', 'ItemController');
         Route::resource('coupons', 'CouponController');
     });

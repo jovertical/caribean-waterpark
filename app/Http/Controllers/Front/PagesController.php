@@ -9,8 +9,6 @@ class PagesController extends Controller
 {
     public function welcome()
     {
-        session()->flush();
-        
         return view('front.pages.welcome');
     }
 }

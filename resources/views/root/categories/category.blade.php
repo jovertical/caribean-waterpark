@@ -1,5 +1,9 @@
 <tr>
-    <td></td>
+    <td>
+        <div class="text-center">
+            <img src="/root/assets/app/images/avatar1.png" class="rounded-circle img-fluid">
+        </div>
+    </td>
     <td>{{ $category->name }}</td>
     <td>{!! str_limit($category->description, 50) !!}</td>
     <td>

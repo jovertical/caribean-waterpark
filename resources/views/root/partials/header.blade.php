@@ -71,7 +71,7 @@
                 <!-- Items -->
                 <li>
                     <a class="collapsible-header waves-effect arrow-r">
-                        <i class="fa fa-gift"></i> Items
+                        <i class="fa fa-cube"></i> Items
                         <i class="fa fa-angle-down rotate-icon"></i></a>
 
                     <div class="collapsible-body">
@@ -202,11 +202,11 @@
                     <a href="{{ route('root.home') }}">Home</a>
                 </li>
 
-                @for($i = 2; $i <= count(Request::segments()); $i++)
+                @for($i = 2; $i < 3; $i++)
                     <li class="breadcrumb-item">
                         <a href="{{ URL::to(implode( '/',
-                            array_slice(Request::segments(), 0 , $i, true))) }}">
-                            {{ ucfirst(strtolower(Request::segment($i))) }}</a>
+                            array_slice(Request::segments(), 0, $i, true))) }}">
+                                {{ ucfirst(Request::segment($i)) }}</a>
                     </li>
                 @endfor
             </ol>

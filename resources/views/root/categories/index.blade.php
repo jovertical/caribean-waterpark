@@ -9,13 +9,13 @@
     <div class="row">
         <div class="col-md">
 
-            <h5 class="font-bold my-4">
-                <strong>Categories</strong>
+            <div class="card">
+                <div class="card-body">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam blanditiis at placeat illum, voluptatem obcaecati, dignissimos iste libero ipsam nemo cum vero ullam distinctio quo, veniam, facilis consequuntur officia error.
+                </div>
+            </div>
 
-                <small class="text-muted">
-                    - list of item categories
-                </small>
-            </h5>
+            <br>
 
             <!-- Categories Body -->
             <div class="card">
