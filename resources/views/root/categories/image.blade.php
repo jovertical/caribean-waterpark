@@ -6,17 +6,20 @@
 
             <div class="card">
                 <div class="card-body">
-                    <p class="h5 mb-5">Select picture for <em>{{ $category->name }}</em></p>
+                    <p class="h5 mb-5">Select image for <em>{{ $category->name }}</em></p>
 
-                    <form method="POST" action="{{ route('root.categories.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('root.categories.image', $category->id) }}" 
+                        enctype="multipart/form-data">
                         {{ csrf_field() }}
 
-                        <!-- Picture -->
-                        
-                        <!--/. Picture -->
+                        <!-- Image -->
+                        <div class="md-form">
+                            <input type="file" name="image" id="image">
+                        </div>
+                        <!--/. Image -->
 
                         <!-- Submit -->
-                        <div class="form-group text-right">
+                        <div class="md-form text-right">
                             <a type="button" href="{{ route('root.categories.index') }}" class="btn btn-flat">Cancel</a>
                             <button type="submit" class="btn btn-primary">Upload</button>
                         </div>

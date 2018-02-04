@@ -30,6 +30,9 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
 
+            $table->text('file_path')->nullable();
+            $table->string('file_name')->nullable();
+
             $table->boolean('active')->default(true);
             $table->integer('created_by')->default(1);
             $table->integer('updated_by')->nullable();

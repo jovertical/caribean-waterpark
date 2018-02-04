@@ -21,6 +21,9 @@ class CreateItemsTable extends Migration
             $table->integer('quantity');
             $table->float('price');
 
+            $table->text('file_path')->nullable();
+            $table->string('file_name')->nullable();
+
             $table->boolean('active')->default(true);
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();

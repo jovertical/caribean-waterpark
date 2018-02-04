@@ -18,12 +18,15 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
 
+            $table->text('file_path')->nullable();
+            $table->string('file_name')->nullable();
+
             $table->boolean('active')->default(true);
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use Toastr as Notify;
 use App\Category;
+use Carbon, ImageUploader, File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,7 +16,7 @@ class CategoryController extends Controller
 
         switch($status) {
             case null:
-                    $categories = Category::where('active', false)->get();
+                    $categories = Category::where('active', true)->get();
                 break;
 
             case 'inactive':
@@ -55,7 +56,7 @@ class CategoryController extends Controller
             if ($category->save()) {
                 Notify::success('Category created.', 'Success!');
 
-                return redirect()->route('root.categories.picture', $category->id);
+                return redirect()->route('root.categories.image', $category->id);
             }
 
             Notify::warning('Cannot create a category', 'Ooops?');
@@ -90,7 +91,7 @@ class CategoryController extends Controller
             if ($category->save()) {
                 Notify::success('Category updated.', 'Success!');
 
-                return redirect()->route('root.categories.picture', $category->id);
+                return redirect()->route('root.categories.image', $category->id);
             }
 
             Notify::warning('Cannot update category', 'Ooops?');
@@ -127,15 +128,47 @@ class CategoryController extends Controller
         //
     }
 
-    public function selectPicture($id)
+    public function selectImage($id)
     {
         $category = Category::find($id);
 
-        return view('root.categories.picture', ['category' => $category]);
+        return view('root.categories.image', ['category' => $category]);
     }
 
-    public function uploadPicture(Request $request, $id)
+    public function uploadImage(Request $request, $id)
     {
-        //
+        try {
+            $category = Category::find($id);
+
+            $uploaded = ImageUploader::upload($request->file('image'), "storage/root/categories/{$category->id}");
+
+            if ($uploaded) {
+                if (File::exists("{$category->file_path}/{$category->file_name}")) {
+                    File::delete("{$category->file_path}/{$category->file_name}");
+                }
+                if (File::exists("{$category->file_path}/resized/{$category->file_name}")) {
+                    File::delete("{$category->file_path}/resized/{$category->file_name}");
+                }
+                if (File::exists("{$category->file_path}/thumbnail/{$category->file_name}")) {
+                    File::delete("{$category->file_path}/thumbnail/{$category->file_name}");
+                }
+            }
+
+            $category->file_path = $uploaded['file_path'];
+            $category->file_name = $uploaded['file_name'];
+
+            if ($category->save()) {
+                Notify::success('Image for category uploaded.', 'Success!');
+
+                return redirect()->route('root.categories.index');
+            }
+
+           Notify::warning('Cannot upload your image.', 'Ooops?');
+
+        } catch(Exception $e) {
+           Notify::error('Cannot upload your image.', 'Ooops!');
+        }
+
+        return redirect()->back();
     }
 }

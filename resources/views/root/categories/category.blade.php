@@ -1,7 +1,7 @@
 <tr>
     <td>
         <div class="text-center">
-            <img src="/root/assets/app/images/avatar1.png" class="rounded-circle img-fluid">
+            <img src="{{ "{$category->file_path}/thumbnail/{$category->file_name}" }}" class="rounded-circle img-fluid">
         </div>
     </td>
     <td>{{ $category->name }}</td>
