@@ -228,6 +228,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'ValidationRule' => Illuminate\Validation\Rule::class,
+        'Str' => Illuminate\Support\Str::class,
         'Toastr'  => Brian2694\Toastr\Facades\Toastr::class,
     ],
 

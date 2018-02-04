@@ -15,7 +15,7 @@ class CreateCouponsTable extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->text('description')->nullable();
             $table->enum('applicable_type', ['per_item', 'per_reservation']);
             $table->enum('deductable_type', ['percent', 'amount']);

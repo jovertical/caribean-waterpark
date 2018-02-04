@@ -1,6 +1,7 @@
 <?php
 
 Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], function () {
+
     Route::group(['namespace' => 'Auth'], function() {
         Route::get('/login', 'LoginController@showLoginForm')->name('login');
         Route::post('/login', 'LoginController@login');
@@ -17,7 +18,7 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::resource('superusers', 'UsersController');
 
         Route::resource('/categories', 'CategoryController');
-        Route::get('/categories/{id}/picture', 'CategoryController@selectPicture')->name('category.picture');
+        Route::get('/categories/{id}/picture', 'CategoryController@selectPicture')->name('categories.picture');
         Route::post('/categories/{id}/picture', 'CategoryController@uploadPicture');
 
         Route::resource('items', 'ItemController');

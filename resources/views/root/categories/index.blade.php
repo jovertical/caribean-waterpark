@@ -10,12 +10,34 @@
         <div class="col-md">
 
             <div class="card">
-                <div class="card-body">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam blanditiis at placeat illum, voluptatem obcaecati, dignissimos iste libero ipsam nemo cum vero ullam distinctio quo, veniam, facilis consequuntur officia error.
+                <div class="card-body pb-0">
+                    <form method="GET" action="{{ route('root.categories.index') }}" class="form-inline pb-0">
+                        <!-- Status -->
+                        <div class="md-form">
+                            <select name="s" id="s" class="mdb-select colorful-select dropdown-default">
+                                <option value="" {{ Request::input('s') ==
+                                    null ? 'selected disabled' : '' }}>Active</option>
+                                <option value="inactive" {{ Request::input('s') ==
+                                    'inactive' ? 'selected disabled' : '' }}>Inactive</option>
+                                <option value="trashed" {{ Request::input('s') ==
+                                    'trashed' ? 'selected disabled' : '' }}>Trashed</option>
+                            </select>
+
+                            <label for="s">Status</label>
+                        </div>
+                        <!--/. Status -->
+
+                        <!-- Submit -->
+                        <div class="md-form ml-auto" >
+                            <button type="submit" class="btn btn-outline-default mb-0">
+                                <i class="fa fa-search mr-1"></i>Filter</button>
+                        </div>
+                        <!--/. Submit -->
+                    </form>
                 </div>
             </div>
 
-            <br>
+            <br />
 
             <!-- Categories Body -->
             <div class="card">
@@ -84,6 +106,8 @@
                     });
             });
 
+            // Material select init
+            $('.mdb-select').material_select();
         });
     </script>
 @endsection

@@ -58,9 +58,9 @@
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="/superuser/categories/create" class="waves-effect">
+                                <a href="{{ route('root.categories.create') }}" class="waves-effect">
                                     <i class="fa fa-plus"></i>New category</a>
-                                <a href="/superuser/categories" class="waves-effect">
+                                <a href="{{ route('root.categories.index') }}" class="waves-effect">
                                     <i class="fa fa-list"></i>All categories</a>
                             </li>
                         </ul>
@@ -77,9 +77,9 @@
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="/superuser/items/create" class="waves-effect">
+                                <a href="{{ route('root.items.create') }}" class="waves-effect">
                                     <i class="fa fa-plus"></i>New item</a>
-                                <a href="/superuser/items" class="waves-effect">
+                                <a href="{{ route('root.items.index') }}" class="waves-effect">
                                     <i class="fa fa-list"></i>All items</a>
                             </li>
                         </ul>
@@ -96,9 +96,9 @@
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="/superuser/coupons/create" class="waves-effect">
+                                <a href="{{ route('root.coupons.create') }}" class="waves-effect">
                                     <i class="fa fa-plus"></i>New coupon</a>
-                                <a href="/superuser/coupons" class="waves-effect">
+                                <a href="{{ route('root.items.index') }}" class="waves-effect">
                                     <i class="fa fa-list"></i>All coupons</a>
                             </li>
                         </ul>

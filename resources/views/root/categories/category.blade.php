@@ -5,7 +5,7 @@
         </div>
     </td>
     <td>{{ $category->name }}</td>
-    <td>{!! str_limit($category->description, 50) !!}</td>
+    <td>{!! Str::limit($category->description, 50) !!}</td>
     <td>
         <div class="dropdown">
             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
