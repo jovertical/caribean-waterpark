@@ -65,7 +65,7 @@
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
                 this.on("success", function(file, response) {
-                    //
+                    console.log(response);
                 });
             }
         };

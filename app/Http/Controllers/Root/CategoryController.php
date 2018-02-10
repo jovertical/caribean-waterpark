@@ -122,16 +122,16 @@ class CategoryController extends Controller
         try {
             $category = Category::find($id);
 
-            $uploaded = ImageUploader::upload($request->file('image'), "root/categories/{$category->id}");
+            $upload = ImageUploader::upload($request->file('image'), "categories/{$category->id}");
 
-            if ($uploaded) {
-                $category->file_path = $uploaded['file_path'];
-                $category->file_directory = $uploaded['file_directory'];
-                $category->file_name = $uploaded['file_name'];
+            if ($upload) {
+                $category->file_path = $upload['file_path'];
+                $category->file_directory = $upload['file_directory'];
+                $category->file_name = $upload['file_name'];
             }
 
             if ($category->save()) {
-                 return response()->json(200);
+                 return response()->json($upload, 200);
             }
 
         } catch(Exception $e) {
