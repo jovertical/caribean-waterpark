@@ -122,7 +122,7 @@ class CategoryController extends Controller
         try {
             $category = Category::find($id);
 
-            $upload = ImageUploader::upload($request->file('image'), "categories/{$category->id}");
+            $upload = ImageUploader::upload($request->file('image'), "storage/categories/{$category->id}");
 
             if ($upload) {
                 $category->file_path = $upload['file_path'];
