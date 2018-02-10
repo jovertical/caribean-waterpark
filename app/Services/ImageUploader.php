@@ -13,10 +13,15 @@ class ImageUploader {
         $thumbnail = ['height' => 500, 'width' => 500];
 
         $base_directory = 'storage/'.$directory;
+        $resized_directory = $base_directory.'/resized';
         $thumbs_directory = $base_directory.'/thumbnails';
 
         if (! File::exists($base_directory)) {
             File::makeDirectory($base_directory, $mode = 0777, true, true);
+        }
+
+        if (! File::exists($resized_directory)) {
+            File::makeDirectory($resized_directory, $mode = 0777, true, true);
         }
 
         if (! File::exists($thumbs_directory)) {
@@ -26,6 +31,8 @@ class ImageUploader {
         $path = $file->move($base_directory, $file_name);
 
         if (in_array($file_ext, ['jpeg', 'jpg', 'png', 'gif'])) {
+            Image::make($base_directory.'/'.$file_name)
+                ->save($resized_directory.'/'.$file_name, 95);
             Image::make($base_directory.'/'.$file_name)
                 ->crop($thumbnail['width'], $thumbnail['height'])
                 ->save($thumbs_directory.'/'.$file_name, 95);
