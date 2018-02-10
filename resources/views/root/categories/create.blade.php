@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('root.categories.store') }}" id="form-category" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('root.categories.store') }}" id="form-category-store" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
             {{ csrf_field() }}
 
             <div class="m-portlet__body">
@@ -65,27 +65,10 @@
 
 @section('scripts')
     <script>
-        $('.dropzone').dropzone({
-            uploadMultiple: true,
-            maxFiles: 1,
-            maxFileSize: 5,
-            acceptedFiles: "image/*",
-            accept: function(file, done) {
-                done();
-            },
-            init: function() {
-                var image = this;
-
-                $('button[id=submit]').on("click", function(e) {
-                    image.processQueue();
-                });
-            },
-        });
-
         var category = function () {
             // form validate
             var formValidationInit = function () {
-                $("form[id=form-category]").validate({
+                $("form[id=form-category-store]").validate({
                     rules: {
                         name: {
                             required: true,
