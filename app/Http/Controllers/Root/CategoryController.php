@@ -125,25 +125,17 @@ class CategoryController extends Controller
             $uploaded = ImageUploader::upload($request->file('image'), "root/categories/{$category->id}");
 
             if ($uploaded) {
-                if (File::exists("{$category->file_path}/{$category->file_name}")) {
-                    File::delete("{$category->file_path}/{$category->file_name}");
-                }
-                if (File::exists("{$category->file_path}/thumbnails/{$category->file_name}")) {
-                    File::delete("{$category->file_path}/thumbnails/{$category->file_name}");
-                }
+                $category->file_path = $uploaded['file_path'];
+                $category->file_directory = $uploaded['file_directory'];
+                $category->file_name = $uploaded['file_name'];
             }
 
-            $category->file_path = $uploaded['file_path'];
-            $category->file_name = $uploaded['file_name'];
-
             if ($category->save()) {
-                 return response()->json('you hit the server!', 200);
+                 return response()->json(200);
             }
 
         } catch(Exception $e) {
-            // return response()->json($e, 400);
+            return response()->json($e, 400);
         }
-
-        return response()->json(200);
     }
 }

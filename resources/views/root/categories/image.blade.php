@@ -23,15 +23,16 @@
                     <label class="col-lg-2 col-form-label">Image: </label>
 
                     <div class="col-lg-6">
-                        <div action="{{ route('root.categories.image.upload', $category->id) }}" class="m-dropzone dropzone">
+                        <form method="POST" action="{{ route('root.categories.image', $category->id) }}" class="m-dropzone dropzone" id="form-category-upload">
                             {{ csrf_field() }}
+
                             <div class="m-dropzone__msg dz-message">
                                 <h3 class="m-dropzone__msg-title">Drop files here or click to upload.</h3>
                                 <span class="m-dropzone__msg-desc">File formats supported:
                                     <strong>jpg/jpeg</strong>, <strong>png</strong>, <strong>gif</strong>
                                 </span>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <!--/. Image -->
@@ -56,20 +57,17 @@
 
 @section('scripts')
     <script>
-        $('.dropzone').dropzone({
+        Dropzone.options.formCategoryUpload = {
+            paramName: 'image',
             addRemoveLinks : true,
             maxFiles: 1,
             maxFilesize: 4,
-            acceptedFiles: "image/*",
-            headers: {
-                'X-CSRFToken': $('meta[name="token"]').attr('content')
-            }, 
-            accept: function(file, done) {
-                done();
-            },
+            acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
-                //
+                this.on("success", function(file, response) {
+                    //
+                });
             }
-        });
+        };
     </script>
 @endsection

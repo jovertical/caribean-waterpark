@@ -1,9 +1,9 @@
 <tr>
     <td>{{ $category->id }}</td>
     <td>
-        <div class="text-center">
-            <img src="{{ "{$category->file_path}/{$category->file_name}" }}" class="rounded-circle img-fluid">
-        </div>
+        <span>
+            <img src="{{ "{$category->file_directory}/thumbnails/{$category->file_name }"}}" class="img-fluid rounded-circle" style="width: 30%;">
+        </span>
     </td>
     <td>{{ $category->name }}</td>
     <td>{!! Str::limit($category->description, 50) !!}</td>

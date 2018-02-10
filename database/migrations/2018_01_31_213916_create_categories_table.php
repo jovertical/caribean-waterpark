@@ -19,6 +19,7 @@ class CreateCategoriesTable extends Migration
             $table->text('description')->nullable();
 
             $table->text('file_path')->nullable();
+            $table->text('file_directory')->nullable();
             $table->string('file_name')->nullable();
 
             $table->boolean('active')->default(true);
