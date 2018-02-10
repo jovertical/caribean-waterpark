@@ -12,25 +12,27 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $status = $request->input('s');
+        // $status = $request->input('s');
 
-        switch($status) {
-            case null:
-                    $categories = Category::where('active', true)->get();
-                break;
+        // switch($status) {
+        //     case null:
+        //             $categories = Category::where('active', true)->get();
+        //         break;
 
-            case 'inactive':
-                    $categories = Category::where('active', false)->get();
-                break;
+        //     case 'inactive':
+        //             $categories = Category::where('active', false)->get();
+        //         break;
 
-            case 'trashed':
-                    $categories = Category::onlyTrashed()->get();
-                break;
+        //     case 'trashed':
+        //             $categories = Category::onlyTrashed()->get();
+        //         break;
 
-            default:
-                    //
-                break;
-        }
+        //     default:
+        //             //
+        //         break;
+        // }
+
+        $categories = Category::all();
 
         return view('root.categories.index', ['categories' => $categories]);
     }
@@ -140,19 +142,16 @@ class CategoryController extends Controller
         try {
             $category = Category::find($id);
 
-            $uploaded = ImageUploader::upload($request->file('image'), "storage/root/categories/{$category->id}");
+            $uploaded = ImageUploader::upload($request->file('image'), "root/categories/{$category->id}");
 
-            if ($uploaded) {
-                if (File::exists("{$category->file_path}/{$category->file_name}")) {
-                    File::delete("{$category->file_path}/{$category->file_name}");
-                }
-                if (File::exists("{$category->file_path}/resized/{$category->file_name}")) {
-                    File::delete("{$category->file_path}/resized/{$category->file_name}");
-                }
-                if (File::exists("{$category->file_path}/thumbnail/{$category->file_name}")) {
-                    File::delete("{$category->file_path}/thumbnail/{$category->file_name}");
-                }
-            }
+            // if ($uploaded) {
+            //     if (File::exists("{$category->file_path}/{$category->file_name}")) {
+            //         File::delete("{$category->file_path}/{$category->file_name}");
+            //     }
+            //     if (File::exists("{$category->file_path}/thumbnails/{$category->file_name}")) {
+            //         File::delete("{$category->file_path}/thumbnails/{$category->file_name}");
+            //     }
+            // }
 
             $category->file_path = $uploaded['file_path'];
             $category->file_name = $uploaded['file_name'];

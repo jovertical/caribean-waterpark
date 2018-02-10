@@ -1,67 +1,60 @@
 @extends('root.layouts.main')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-5">
+    <!-- begin:: Page -->
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background-image: url(/root/assets/app/media/img//bg/bg-3.jpg);">
+            <div class="m-grid__item m-grid__item--fluid    m-login__wrapper">
+                <div class="m-login__container">
+                    <div class="m-login__logo">
+                        <a href="#">
+                            <img src="/root/assets/app/media/img//logos/logo-1.png">
+                        </a>
+                    </div>
 
-            <div class="card px-4">
-                <div class="card-body">
-                    <p class="h5 text-center my-4">Reset password</p>
-
-                    <form method="POST" action="{{ route('root.password.reset', $token) }}">
-                        {{ csrf_field() }}
-
-                        <!-- Password -->
-                        <div class="md-form">
-                            <i class="fa fa-lock prefix grey-text"></i>
-                            <label for="password">Password</label>
-                            <input type="password" name="password" id="password" class="form-control {{
-                                $errors->has('password') ? 'invalid' : '' }}" value="{{ old('password') }}">
-
-                            @if($errors->has('password'))
-                                <div id="password-error" class="text-right">
-                                    <span class="red-text">{{ $errors->first('password') }}</span>
-                                </div>
-                            @endif
+                    <div class="m-login__signin">
+                        <div class="m-login__head">
+                            <h3 class="m-login__title">Reset password</h3>
                         </div>
-                        <!--/. Password -->
 
-                        <!-- Confirm password -->
-                        <div class="md-form">
-                            <i class="fa fa-lock prefix grey-text"></i>
-                            <label for="password_confirmation">Confirm password</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control {{ $errors->has('password_confirmation') ? 'invalid' : '' }}">
+                        <form method="POST" action="{{ route('root.password.reset', $token) }}" class="m-login__form m-form">
+                            {{ csrf_field() }}
 
-                            @if($errors->has('password_confirmation'))
-                                <div id="password_confirmation-error" class="text-right">
-                                    <span class="red-text">{{ $errors->first('password_confirmation') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                        <!--/. Confirm -->
+                            <!-- Password -->
+                            <div class="form-group m-form__group {{ $errors->has('password') ? 'has-danger' : '' }}">
+                                <input type="password" name="password" id="password" class="form-control m-input" placeholder="New password" autocomplete="off">
 
-                        <!-- Options -->
-                        <div class="row d-flex align-items-center">
-                            <!-- Right -->
-                            <div class="col-md text-right">
-                                <div class="form-group">
-                                    <label>
-                                        <a href="{{ route('root.login') }}" class="blue-text">Back to login</a>
-                                    </label>
+                                <div class="form-control-feedback">{{ $errors->first('password') }}</div>
+                            </div>
+                            <!--/. Password -->
+
+                            <!-- Password confirmation -->
+                            <div class="form-group m-form__group {{ $errors->has('password_confirmation') ? 'has-danger' : '' }}">
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control m-input" placeholder="Confirm new password" autocomplete="off">
+
+                                <div class="form-control-feedback">{{ $errors->first('password_confirmation') }}</div>
+                            </div>
+                            <!--/. Password confirmation -->
+
+                            <div class="row m-login__form-sub">
+                                <div class="col m--align-right m-login__form-right">
+                                    <a href="{{ route('root.login') }}" class="m-link">Back to login</a>
                                 </div>
                             </div>
-                            <!--/. Right -->
-                        </div>
-                        <!--/. Options -->
 
-                        <div class="text-center my-4">
-                            <button type="submit" class="btn btn-primary">Reset</button>
-                        </div>
+                            <!-- Submit -->
+                            <div class="m-login__form-action">
+                                <button type="submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--primary">Reset</button>
+                            </div>
+                            <!--/. Submit -->
 
-                    </form>
+                        </form>
+                    </div>
+
                 </div>
             </div>
-
         </div>
+
     </div>
+    <!-- end:: Page -->
 @endsection

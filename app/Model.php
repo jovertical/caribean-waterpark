@@ -17,7 +17,7 @@ class Model extends Eloquent
     {
         parent::boot();
         self::creating(function ($model) {
-            $model->created_by = auth()->user()->id;
+            $model->created_by = auth()->check() ? auth()->user()->id : 0;
         });
     }
 }

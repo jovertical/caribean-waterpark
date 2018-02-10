@@ -1,57 +1,52 @@
 @extends('root.layouts.main')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-5">
+    <!-- begin:: Page -->
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background-image: url(/root/assets/app/media/img//bg/bg-3.jpg);">
+            <div class="m-grid__item m-grid__item--fluid    m-login__wrapper">
+                <div class="m-login__container">
+                    <div class="m-login__logo">
+                        <a href="#">
+                            <img src="/root/assets/app/media/img//logos/logo-1.png">
+                        </a>
+                    </div>
 
-            @if(Session::has('message'))
-                @include('root.partials.message')
-            @endif
-
-            <div class="card px-4">
-                <div class="card-body">
-                    <p class="h5 text-center my-4">Forgot password</p>
-
-                    <form method="POST" action="{{ route('root.password.email') }}">
-                        {{ csrf_field() }}
-
-                        <!-- Email -->
-                        <div class="md-form">
-                            <i class="fa fa-envelope prefix grey-text"></i>
-                            <label for="email">Email</label>
-                            <input type="email" name="email" id="email" class="form-control {{
-                                $errors->has('email') ? 'invalid' : '' }}" value="{{ old('email') }}">
-
-                            @if($errors->has('email'))
-                                <div id="email-error" class="text-right">
-                                    <span class="red-text">{{ $errors->first('email') }}</span>
-                                </div>
-                            @endif
+                    <div class="m-login__signin">
+                        <div class="m-login__head">
+                            <h3 class="m-login__title">Forgot password</h3>
                         </div>
-                        <!-- Email -->
 
-                        <!-- Options -->
-                        <div class="row d-flex align-items-center">
-                            <!-- Right -->
-                            <div class="col-md text-right">
-                                <div class="form-group">
-                                    <label>
-                                        <a href="{{ route('root.login') }}" class="blue-text">Back to login</a>
-                                    </label>
+                        <form method="POST" action="{{ route('root.password.email') }}" class="m-login__form m-form">
+                            {{ csrf_field() }}
+
+                            <!-- Email -->
+                            <div class="form-group m-form__group {{ $errors->has('email') ? 'has-danger' : '' }}">
+                                <input type="email" name="email" id="email" class="form-control m-input" placeholder="Enter your email" autocomplete="off" value="{{ old('email') }}">
+
+                                <div class="form-control-feedback">{{ $errors->first('email') }}</div>
+                            </div>
+                            <!--/. Email -->
+
+                            <div class="row m-login__form-sub">
+                                <div class="col m--align-right m-login__form-right">
+                                    <a href="{{ route('root.login') }}" class="m-link">Back to login</a>
                                 </div>
                             </div>
-                            <!--/. Right -->
-                        </div>
-                        <!--/. Options -->
 
-                        <div class="text-center my-4">
-                            <button type="submit" class="btn btn-primary">Send Link</button>
-                        </div>
+                            <!-- Submit -->
+                            <div class="m-login__form-action">
+                                <button type="submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--primary">Send link</button>
+                            </div>
+                            <!--/. Submit -->
 
-                    </form>
+                        </form>
+                    </div>
+
                 </div>
             </div>
-
         </div>
+
     </div>
+    <!-- end:: Page -->
 @endsection

@@ -10,62 +10,110 @@
 
         <title>{{ config('app.name') }}</title>
 
-        <!-- Fontawesome -->
-        <link href="/root/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Web font -->
+        <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
 
-        <!-- Bootstrap -->
-        <link href="/root/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script>
+            WebFont.load({
+                google: {"families":["Poppins:300,400,500,600,700","Roboto:300,400,500,600,700"]},
+                active: function() {
+                    sessionStorage.fonts = true;
+                }
+          });
+        </script>
+        <!--/. Web font -->
 
-        <!-- MDB -->
-        <link href="/root/assets/mdb/css/mdb.min.css" rel="stylesheet">
+        <!-- App icon -->
+        <link rel="shortcut icon" href="/root/assets/demo/demo2/media/img/logo/favicon.ico" />
 
-        <!-- App -->
-        <link href="/root/assets/app/css/app.css" rel="stylesheet">
+        <!-- Vendor bundle -->
+        <link href="/root/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+
+        <!-- Demo 2 bundle -->
+        <link href="/root/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css" />
+
 
         <!-- Page specific stylesheets -->
         @yield('styles')
     </head>
 
-    <body class="fixed-sn black-skin">
+    <body class="m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 
-        <div id="container">
-
-            <!-- Preloader animation -->
-            <div id="mdb-preloader" class="flex-center"><div id="preloader-markup"></div></div>
+        <div class="m-grid m-grid--hor m-grid--root m-page">
 
             @auth
-                <div id="header">
-                    @include('root.partials.header')
-                </div>
+                @include('root.partials.header')
             @endauth
 
-            <main>
-                <div id="body" class="container-fluid">
-                    @yield('content')
+            <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
+                <!-- BEGIN: Left Aside -->
+                <button class="m-aside-left-close m-aside-left-close--skin-light" id="m_aside_left_close_btn">
+                    <i class="la la-close"></i></button>
+
+                <div id="m_aside_left" class="m-grid__item m-aside-left ">
+                    <!-- BEGIN: Aside Menu -->
+                    <div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-light m-aside-menu--submenu-skin-light" data-menu-vertical="true" data-menu-scrollable="false" data-menu-dropdown-timeout="500">
+                        <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
+                            <li class="m-menu__section">
+                                <h4 class="m-menu__section-text">Departments</h4>
+                                <i class="m-menu__section-icon flaticon-more-v3"></i>
+                            </li>
+                            <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        </ul>
+                    </div>
                 </div>
-            </main>
+
+                <div class="m-grid__item m-grid__item--fluid m-wrapper">
+                    <!-- BEGIN: Subheader -->
+                    <div class="m-subheader">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-auto">
+                                <h3 class="m-subheader__title m-subheader__title--separator">
+                                    {{ Str::ucfirst(Request::segment(count(Request::segments()))) }}
+                                </h3>
+
+                                <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                                    <li class="m-nav__item m-nav__item--home">
+                                        <a href="{{ route('root.home') }}" class="m-nav__link m-nav__link--icon">
+                                           <i class="m-nav__link-icon la la-home"></i>
+                                        </a>
+                                    </li>
+
+                                    @for($i = 2; $i < 3; $i++)
+                                        <li class="m-nav__separator">-</li>
+
+                                        <li class="m-nav__item">
+                                            <a href="{{ URL::to(implode( '/',
+                                                array_slice(Request::segments(),0, $i, true))) }}" class="m-nav__link">
+                                                    <span class="m-nav__link-text">
+                                                        {{ ucfirst(Request::segment($i)) }}</span>
+                                            </a>
+                                        </li>
+                                    @endfor
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- END: Subheader -->
+
+                    <div class="m-content">
+                        @yield('content')
+                    </div>
+                </div>
+            </div>
 
             @auth
-                <div id="footer">
-                    @include('root.partials.footer')
-                </div>
+                @include('root.partials.footer')
             @endauth
+
         </div>
 
-        <!-- jQuery -->
-        <script src="/root/assets/jquery/js/jquery.min.js"></script>
+        <!-- Vendor bundle -->
+        <script src="/root/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
 
-        <!-- Theter -->
-        <script src="/root/assets/popper/js/popper.min.js"></script>
-
-        <!-- Bootstrap -->
-        <script src="/root/assets/bootstrap/js/bootstrap.js"></script>
-
-        <!-- MDB -->
-        <script src="/root/assets/mdb/js/mdb.min.js"></script>
-
-        <!-- App -->
-        <script src="/root/assets/app/js/app.js"></script>
+        <!-- Demo 2 bundle -->
+        <script src="/root/assets/demo/demo2/base/scripts.bundle.js" type="text/javascript"></script>
 
         {!! Toastr::message() !!}
 
