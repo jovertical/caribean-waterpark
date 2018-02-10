@@ -78,14 +78,15 @@
                                             </a>
                                         </li>
 
-                                        @for($i = 2; $i < 3; $i++)
+                                        @for($i = 2; $i <= count(Request::segments()); $i++)
                                             <li class="m-nav__separator">-</li>
 
                                             <li class="m-nav__item">
-                                                <a href="{{ URL::to(implode( '/',
-                                                    array_slice(Request::segments(),0, $i, true))) }}" class="m-nav__link">
-                                                        <span class="m-nav__link-text">
-                                                            {{ ucfirst(Request::segment($i)) }}</span>
+                                                <a href="{{ URL::to(implode('/',
+                                                    array_slice(Request::segments(), 0, $i, true))) }}"
+                                                        class="m-nav__link"><span class="m-nav__link-text"
+                                                            onclick="{{ $i > 2 ? 'event.preventDefault();' : '' }}">
+                                                                {{ ucfirst(Request::segment($i)) }}</span>
                                                 </a>
                                             </li>
                                         @endfor
@@ -104,7 +105,7 @@
             @auth
                     </div>
                 </div>
-            
+
                 @include('root.partials.footer')
             @endauth
 
