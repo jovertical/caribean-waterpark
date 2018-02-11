@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use File, Storage, Image;
+use File, Storage, Image, URL;
 
 class ImageUploader {
 
@@ -40,7 +40,7 @@ class ImageUploader {
 
         return [
             'file_path' => $path,
-            'file_directory' => $base_directory,
+            'file_directory' => URL::to($base_directory),
             'file_name' => $file_name
         ];
     }

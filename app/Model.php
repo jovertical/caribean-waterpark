@@ -16,8 +16,9 @@ class Model extends Eloquent
     public static function boot()
     {
         parent::boot();
+
         self::creating(function ($model) {
-            $model->created_by = auth()->check() ? auth()->user()->id : 0;
+            $model->created_by = auth()->check() ? auth()->user()->id : null;
         });
     }
 }

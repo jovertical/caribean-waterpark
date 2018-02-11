@@ -19,7 +19,7 @@ class CreateReservationCouponsTable extends Migration
             $table->integer('reservation_id');
             $table->float('amount_deductable');
 
-            $table->integer('created_by');
+            $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
             $table->softDeletes();

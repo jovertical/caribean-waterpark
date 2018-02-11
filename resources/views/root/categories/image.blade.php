@@ -30,9 +30,13 @@
                                 <h3 class="m-dropzone__msg-title">Drop files here or click to upload.</h3>
                                 <span class="m-dropzone__msg-desc">File formats supported:
                                     <strong>jpg/jpeg</strong>, <strong>png</strong>, <strong>gif</strong>
+                                    <br />
+                                    Max file size is <strong>4mb</strong>
                                 </span>
                             </div>
                         </form>
+
+                        <span class="m-form__help">This will help in marketing your items.</span>
                     </div>
                 </div>
                 <!--/. Image -->
@@ -65,7 +69,7 @@
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
                 this.on("success", function(file, response) {
-                    console.log(response);
+                    //
                 });
             }
         };

@@ -1,5 +1,11 @@
+<!-- begin::Scroll Top -->
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<!-- end::Scroll Top -->
+
 <!-- begin::Footer -->
-{{-- <footer class="m-grid__item m-footer ">
+<footer class="m-grid__item m-footer ">
     <div class="m-container m-container--fluid m-container--full-height m-page__container">
         <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
             <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
@@ -20,16 +26,6 @@
                             <span class="m-nav__link-text">Privacy</span>
                         </a>
                     </li>
-                    <li class="m-nav__item">
-                        <a href="#" class="m-nav__link">
-                            <span class="m-nav__link-text">T&C</span>
-                        </a>
-                    </li>
-                    <li class="m-nav__item">
-                        <a href="#" class="m-nav__link">
-                            <span class="m-nav__link-text">Purchase</span>
-                        </a>
-                    </li>
                     <li class="m-nav__item m-nav__item">
                         <a href="#" class="m-nav__link" data-toggle="m-tooltip" title="Support Center" data-placement="left">
                             <i class="m-nav__link-icon flaticon-info m--icon-font-size-lg3"></i>
@@ -39,5 +35,5 @@
             </div>  
         </div>
     </div>
-</footer> --}}
+</footer>
 <!-- end::Footer -->    

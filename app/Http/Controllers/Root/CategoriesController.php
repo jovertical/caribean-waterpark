@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Root;
 
 use Toastr as Notify;
 use App\Category;
-use Carbon, ImageUploader, File;
+use Carbon, ImageUploader, File, Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+class CategoriesController extends Controller
 {
     public function index(Request $request)
     {
@@ -25,6 +25,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
+            'type'          => 'required',
             'name'          => 'required|max:100|unique:categories,name,NULL,id,deleted_at,NULL',
             'description'   => 'max:500'
         ]);
@@ -32,7 +33,8 @@ class CategoryController extends Controller
         try {
             $category = new Category();
 
-            $category->name         = $request->input('name');
+            $category->type         = $request->input('type');
+            $category->name         = Str::lower($request->input('name'));
             $category->description  = $request->input('description');
 
             if ($category->save()) {
@@ -60,6 +62,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
+            'type'          => 'required',
             'name'          => "required|max:100|unique:categories,name,{$id},id,deleted_at,NULL",
             'description'   => 'max:500'
         ]);
@@ -67,13 +70,14 @@ class CategoryController extends Controller
         try {
             $category = Category::find($id);
 
-            $category->name         = $request->input('name');
+            $category->type         = $request->input('type');
+            $category->name         = Str::lower($request->input('name'));
             $category->description  = $request->input('description');
 
             if ($category->save()) {
                 Notify::success('Category updated.', 'Success!');
 
-                return redirect()->route('root.categories.image', $category->id);
+                return redirect()->route('root.categories.index');
             }
 
             Notify::warning('Cannot update category', 'Ooops?');

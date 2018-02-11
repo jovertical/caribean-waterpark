@@ -31,7 +31,9 @@
 
         <!-- Demo 2 bundle -->
         <link href="/root/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css" />
-
+        
+        <!-- Main -->
+        <link href="/root/assets/app/css/main.css" rel="stylesheet" type="text/css" />
 
         <!-- Page specific stylesheets -->
         @yield('styles')
@@ -42,72 +44,29 @@
         <div class="m-grid m-grid--hor m-grid--root m-page">
 
             @auth
+                <!-- Header -->
                 @include('root.partials.header')
-
+            
                 <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
-                    <!-- BEGIN: Left Aside -->
-                    <button class="m-aside-left-close m-aside-left-close--skin-light" id="m_aside_left_close_btn">
-                        <i class="la la-close"></i></button>
-
-                    <div id="m_aside_left" class="m-grid__item m-aside-left ">
-                        <!-- BEGIN: Aside Menu -->
-                        <div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-light m-aside-menu--submenu-skin-light" data-menu-vertical="true" data-menu-scrollable="false" data-menu-dropdown-timeout="500">
-                            <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
-                                <li class="m-menu__section">
-                                    <h4 class="m-menu__section-text">Departments</h4>
-                                    <i class="m-menu__section-icon flaticon-more-v3"></i>
-                                </li>
-                                <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
-                            </ul>
-                        </div>
-                    </div>
+                    <!-- Sidebar -->
+                    @include('root.partials.sidebar')
 
                     <div class="m-grid__item m-grid__item--fluid m-wrapper">
-                        <!-- BEGIN: Subheader -->
-                        <div class="m-subheader">
-                            <div class="d-flex align-items-center">
-                                <div class="mr-auto">
-                                    <h3 class="m-subheader__title m-subheader__title--separator">
-                                        {{ Str::ucfirst(Request::segment(count(Request::segments()))) }}
-                                    </h3>
-
-                                    <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-                                        <li class="m-nav__item m-nav__item--home">
-                                            <a href="{{ route('root.home') }}" class="m-nav__link m-nav__link--icon">
-                                               <i class="m-nav__link-icon la la-home"></i>
-                                            </a>
-                                        </li>
-
-                                        @for($i = 2; $i <= count(Request::segments()); $i++)
-                                            <li class="m-nav__separator">-</li>
-
-                                            <li class="m-nav__item">
-                                                <a href="{{ URL::to(implode('/',
-                                                    array_slice(Request::segments(), 0, $i, true))) }}"
-                                                        class="m-nav__link"><span class="m-nav__link-text"
-                                                            onclick="{{ $i > 2 ? 'event.preventDefault();' : '' }}">
-                                                                {{ ucfirst(Request::segment($i)) }}</span>
-                                                </a>
-                                            </li>
-                                        @endfor
-                                    </ul>
-                                </div>
-
+                        <!-- Sub-header -->
+                        @include('root.partials.sub_header')
+                        
+                        @endauth
+                            <div class="m-content">
+                                <!-- Content -->
+                                @yield('content')
                             </div>
-                        </div>
-                        <!-- END: Subheader -->
-            @endauth
-
-                <div class="m-content">
-                    @yield('content')
-                </div>
-
-            @auth
+                        @auth
                     </div>
                 </div>
-
-                @include('root.partials.footer')
             @endauth
+
+            <!-- Footer -->
+            @include('root.partials.footer')
 
         </div>
 
@@ -116,6 +75,9 @@
 
         <!-- Demo 2 bundle -->
         <script src="/root/assets/demo/demo2/base/scripts.bundle.js" type="text/javascript"></script>
+        
+        <!-- Main -->
+        <script src="/root/assets/app/js/main.js" type="text/javascript"></script>
 
         {!! Toastr::message() !!}
 

@@ -17,11 +17,11 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::get('/', 'HomeController@index')->name('home');
         Route::resource('superusers', 'UsersController');
 
-        Route::resource('/categories', 'CategoryController');
-        Route::get('/categories/{id}/image', 'CategoryController@selectImage')->name('categories.image');
-        Route::post('/categories/{id}/image', 'CategoryController@uploadImage');
+        Route::resource('/categories', 'CategoriesController');
+        Route::get('/categories/{id}/image', 'CategoriesController@selectImage')->name('categories.image');
+        Route::post('/categories/{id}/image', 'CategoriesController@uploadImage');
 
-        Route::resource('items', 'ItemController');
-        Route::resource('coupons', 'CouponController');
+        Route::resource('items', 'ItemsController');
+        Route::resource('coupons', 'CouponsController');
     });
 });

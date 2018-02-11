@@ -24,7 +24,7 @@ class CreateReservationsTable extends Migration
             $table->float('amount_paid')->nullable();
             $table->float('amount_payable');
 
-            $table->integer('created_by');
+            $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
             $table->softDeletes();

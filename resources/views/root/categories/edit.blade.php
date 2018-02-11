@@ -12,21 +12,45 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('root.categories.update', $category->id) }}" id="form-category" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
+        <form method="POST" action="{{ route('root.categories.update', $category->id) }}" id="form-category-update" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
             {{ method_field('PATCH') }}
             {{ csrf_field() }}
 
             <div class="m-portlet__body">
+                <!-- Type -->
+                <div class="form-group m-form__group row {{ $errors->has('type') ? 'has-danger' : '' }}">
+                    <label for="name" class="col-lg-2 col-form-label">Type: </label>
+
+                    <div class="col-lg-6">
+                        <select name="type" id="type" class="form-control m-bootstrap-select">
+                            <option value="" disabled>Please select a type</option>
+                            <option value="accomodation" {{ $category->type == 'accomodation' ? 'selected' : '' }}>Accomodation</option>
+                            <option value="miscellaneous" {{ $category->type == 'miscellaneous' ? 'selected' : '' }}>Miscellaneous</option>
+                        </select>
+
+                        <div id="type-error" class="form-control-feedback">
+                            {{ $errors->first('type') }}
+                        </div>
+
+                        <span class="m-form__help">It will define the properties of <strong>items</strong> created under this category.</span>
+                    </div>
+                </div>
+                <!--/. Type -->
+
                 <!-- Name -->
                 <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}">
                     <label for="name" class="col-lg-2 col-form-label">Name: </label>
 
                     <div class="col-lg-6">
                         <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
-                            'form-control-danger' :'' }}" placeholder="The name of the category" value="{{
+                            'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{
                                 $category->name }}">
 
-                        <div class="form-control-feedback">{{ $errors->first('name') }}</div>
+                        <div id="name-error" class="form-control-feedback">
+                            {{ $errors->first('name') }}
+                        </div>
+
+                        <span class="m-form__help">The name of the category.</span>
                     </div>
                 </div>
                 <!--/. Name -->
@@ -40,7 +64,9 @@
                             {{ $errors->has('description') ? 'form-control-danger' :'' }}>{{ $category->description }}
                         </textarea>
 
-                        <div class="form-control-feedback">{{ $errors->first('description') }}</div>
+                        <div id="description-error" class="form-control-feedback">
+                            {{ $errors->first('description') }}
+                        </div>
                     </div>
                 </div>
                 <!--/. Description -->
@@ -68,7 +94,7 @@
     <script>
         var category = function () {
             var formValidationInit = function () {
-                $("form[id=form-category]").validate({
+                $("form[id=form-category-update]").validate({
                     rules: {
                         name: {
                             required: true,
@@ -80,30 +106,35 @@
                         },
                     },
 
-                    //display error alert on form submit
                     invalidHandler: function(event, validator) {
-                        mApp.scrollTo("form[id=form-category]");
+                        var form = $('form[id=form-category-update]');
 
-                        swal({
-                            "title": "",
-                            "text": "There are some errors in your submission. Please correct them.",
-                            "type": "error",
-                            "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
-                        });
+                        mApp.scrollTo(form, -200);
                     },
                 });
             }
 
+            // description
             var descriptionInit = function () {
                 $('.summernote').summernote({
                     height: 150
                 });
             }
-                
+            //. description
+
+            // type
+            var typeInit = function () {
+                $('select[id=type]').selectpicker({
+                    //
+                });
+            }
+            //. type
+
             return {
                 init: function() {
-                    descriptionInit();
                     formValidationInit();
+                    descriptionInit();
+                    typeInit();
                 }
             };
         }();

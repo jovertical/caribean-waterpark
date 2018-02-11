@@ -20,7 +20,7 @@ class CreateItemCalendarsTable extends Migration
             $table->date('date');
             $table->integer('item_quantity');
 
-            $table->integer('created_by');
+            $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
             $table->softDeletes();

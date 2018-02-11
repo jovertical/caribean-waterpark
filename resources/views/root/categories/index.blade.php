@@ -23,6 +23,25 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
+                            <!-- Type -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>Type:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <select class="form-control m-bootstrap-select" id="type">
+                                            <option value="">All</option>
+                                            <option value="accomodation">Accomodation</option>
+                                            <option value="miscellaneous">Miscellaneous</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-md-none m--margin-bottom-10"></div>
+                            </div>
+                            <!--/. Type -->
+
+                            <!-- Search -->
                             <div class="col-md-4">
                                 <div class="m-input-icon m-input-icon--left">
                                     <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
@@ -31,6 +50,7 @@
                                     </span>
                                 </div>
                             </div>
+                            <!--/. Search -->
                         </div>
                     </div>
 
@@ -50,6 +70,7 @@
                     <tr>
                         <th>#</th>
                         <th>Picture</th>
+                        <th>Type</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Actions</th>
@@ -104,6 +125,12 @@
                             }
                         ],
                     });
+
+                    $('select[id=type]').on('change', function() {
+                        datatable.search($(this).val().toLowerCase(), 'Type');
+                    });
+
+                    $('select[id=type]').selectpicker();
                 };
 
                 return {
