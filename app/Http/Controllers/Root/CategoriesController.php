@@ -142,4 +142,37 @@ class CategoriesController extends Controller
             return response()->json($e, 400);
         }
     }
+
+
+    public function destroyImage(Request $request, $id)
+    {
+       try {
+            $category = Category::find($id);
+
+            if (File::exists($category->file_directory.'/'.$category->file_name)) {
+                $deleted = File::delete($category->file_directory.'/'.$category->file_name);
+            }
+
+            if (File::exists($category->file_directory.'/resized/'.$category->file_name)) {
+                $deleted = File::delete($category->file_directory.'/resized/'.$category->file_name);
+            }
+
+            if (File::exists($category->file_directory.'/thumbnails/'.$category->file_name)) {
+                $deleted = File::delete($category->file_directory.'/thumbnails/'.$category->file_name);
+            }
+
+            $category->file_path = null;
+            $category->file_directory = null;
+            $category->file_name = null;
+            $category->save();
+
+            if ($deleted) {
+                return response()->json('File deleted.', 200);
+            }
+
+            return response()->json('File not deleted.', 200);
+        } catch(Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
 }

@@ -20,6 +20,7 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::resource('/categories', 'CategoriesController');
         Route::get('/categories/{id}/image', 'CategoriesController@selectImage')->name('categories.image');
         Route::post('/categories/{id}/image', 'CategoriesController@uploadImage');
+        Route::delete('/categories/{id}/image', 'CategoriesController@destroyImage')->name('categories.image.destroy');
 
         Route::resource('items', 'ItemsController');
         Route::resource('coupons', 'CouponsController');

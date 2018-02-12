@@ -69,7 +69,24 @@
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
                 this.on("success", function(file, response) {
-                    //
+                    // console.log(response);
+                });
+
+                this.on("removedfile", function(file) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '{{ route('root.categories.image.destroy', $category->id) }}',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            //
+                        },
+                        dataType: 'html',
+                        success: function(data) {
+                            // console.log(data);
+                        }
+                    });
                 });
             }
         };

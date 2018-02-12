@@ -2,7 +2,7 @@
     <td>{{ $category->id }}</td>
     <td>
         <span>
-            <img src="{{ "{$category->file_directory}/thumbnails/{$category->file_name}" }}" class="img-fluid rounded-circle" style="width: 30%;">
+            <img src="{{ URL::to("{$category->file_directory}/thumbnails/{$category->file_name}") }}" class="img-fluid rounded-circle" style="width: 30%;">
         </span>
     </td>
     <td>{{ Str::ucfirst($category->type) }}</td>
