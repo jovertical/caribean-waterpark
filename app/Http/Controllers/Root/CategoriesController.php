@@ -126,12 +126,14 @@ class CategoriesController extends Controller
     {
         $category = Category::find($id);
 
-        if (File::exists($category->file_directory.'/'.$category->file_name)) {
-            $file_path = $category->file_directory.'/'.$category->file_name;
+        $thumbs_directory = $category->file_directory.'/thumbnails';
+
+        if (File::exists($thumbs_directory.'/'.$category->file_name)) {
+            $file_path = $thumbs_directory.'/'.$category->file_name;
 
             $images = [
                 [ 
-                    'directory' => URL::to($category->file_directory),
+                    'directory' => URL::to($thumbs_directory),
                     'name'      => File::name($file_path).'.'.File::extension($file_path), 
                     'size'      => File::size($file_path) 
                 ]

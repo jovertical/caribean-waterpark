@@ -75,13 +75,11 @@
                 });
 
                 $.get('{{ route('root.categories.image.uploaded', $category->id) }}', function(data) {
-                    console.log(data);
-
                     $.each(data.images, function (index, image) {
                         var file = {directory: image.directory, name: image.name, size: image.size};
 
                         myDropzone.options.addedfile.call(myDropzone, file);
-                        myDropzone.options.thumbnail.call(myDropzone, file, file.directory + '/thumbnails/' + file.name);
+                        myDropzone.options.thumbnail.call(myDropzone, file, file.directory + '/' + file.name);
                         myDropzone.emit("complete", file);
                     });
                 });
