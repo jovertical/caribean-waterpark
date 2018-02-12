@@ -23,7 +23,7 @@
                     <label class="col-lg-2 col-form-label">Image: </label>
 
                     <div class="col-lg-6">
-                        <form method="POST" action="{{ route('root.categories.image', $category->id) }}" class="m-dropzone dropzone" id="form-category-upload">
+                        <form method="POST" action="{{ route('root.categories.image.upload', $category->id) }}" class="m-dropzone dropzone" id="form-category-upload">
                             {{ csrf_field() }}
 
                             <div class="m-dropzone__msg dz-message">
@@ -68,11 +68,25 @@
             maxFilesize: 4,
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
-                this.on("success", function(file, response) {
+                var myDropzone = this;
+
+                myDropzone.on("success", function(file, response) {
                     // console.log(response);
                 });
 
-                this.on("removedfile", function(file) {
+                $.get('{{ route('root.categories.image.uploaded', $category->id) }}', function(data) {
+                    console.log(data);
+
+                    $.each(data.images, function (index, image) {
+                        var file = {directory: image.directory, name: image.name, size: image.size};
+
+                        myDropzone.options.addedfile.call(myDropzone, file);
+                        myDropzone.options.thumbnail.call(myDropzone, file, file.directory + '/thumbnails/' + file.name);
+                        myDropzone.emit("complete", file);
+                    });
+                });
+
+                myDropzone.on("removedfile", function(file) {
                     $.ajax({
                         type: 'DELETE',
                         url: '{{ route('root.categories.image.destroy', $category->id) }}',
@@ -84,7 +98,7 @@
                         },
                         dataType: 'html',
                         success: function(data) {
-                            // console.log(data);
+                            console.log(data);
                         }
                     });
                 });

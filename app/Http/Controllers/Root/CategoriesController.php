@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Root;
 
 use Toastr as Notify;
 use App\Category;
-use Carbon, ImageUploader, File, Str;
+use ImageUploader;
+use File, Str, URL, Carbon, Image;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -121,6 +122,27 @@ class CategoriesController extends Controller
         return view('root.categories.image', ['category' => $category]);
     }
 
+    public function uploadedImage(Request $request, $id)
+    {
+        $category = Category::find($id);
+
+        if (File::exists($category->file_directory.'/'.$category->file_name)) {
+            $file_path = $category->file_directory.'/'.$category->file_name;
+
+            $images = [
+                [ 
+                    'directory' => URL::to($category->file_directory),
+                    'name'      => File::name($file_path).'.'.File::extension($file_path), 
+                    'size'      => File::size($file_path) 
+                ]
+            ];
+
+            return response()->json(['images' => $images]);
+        }
+
+        return response()->json('No image.');
+    }
+
     public function uploadImage(Request $request, $id)
     {
         try {
@@ -135,14 +157,13 @@ class CategoriesController extends Controller
             }
 
             if ($category->save()) {
-                 return response()->json($upload, 200);
+                 return response()->json($upload);
             }
 
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
     }
-
 
     public function destroyImage(Request $request, $id)
     {
@@ -167,10 +188,10 @@ class CategoriesController extends Controller
             $category->save();
 
             if ($deleted) {
-                return response()->json('File deleted.', 200);
+                return response()->json('File deleted.');
             }
 
-            return response()->json('File not deleted.', 200);
+            return response()->json('File not deleted.');
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
