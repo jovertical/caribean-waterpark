@@ -77,7 +77,7 @@
                         <div class="row">
                             <div class="col-lg-2"></div>
                             <div class="col-lg-6">
-                                <button type="submit" class="btn btn-brand">Update</button>
+                                <button type="submit" id="submit" class="btn btn-brand">Update</button>
                                 <a type="button" href="{{ route('root.categories.index') }}" class="btn btn-secondary">Cancel</a>
                             </div>
                         </div>
@@ -92,6 +92,8 @@
 
 @section('scripts')
     <script>
+        var $button_submit = $('button[id=submit]');
+
         var category = function () {
             var formValidationInit = function () {
                 $("form[id=form-category-update]").validate({
@@ -108,6 +110,8 @@
 
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-category-update]');
+
+                        $button_submit.removeClass('m-loader m-loader--light m-loader--right');
 
                         mApp.scrollTo(form, -200);
                     },
@@ -141,6 +145,10 @@
 
         $(document).ready(function() {
             category.init();
+
+            $button_submit.on('click', function(e) {
+                $button_submit.addClass('m-loader m-loader--light m-loader--right');
+            });
         });
     </script>
 @endsection

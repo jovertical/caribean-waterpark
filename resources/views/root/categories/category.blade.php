@@ -1,5 +1,5 @@
 <tr>
-    <td>{{ $category->id }}</td>
+    <td>{{ $index + 1 }}</td>
     <td>
         <span>
             <img src="{{ URL::to("{$category->file_directory}/thumbnails/{$category->file_name}") }}" class="img-fluid rounded-circle" style="width: 30%;">

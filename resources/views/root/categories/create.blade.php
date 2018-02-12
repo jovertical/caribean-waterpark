@@ -87,6 +87,8 @@
 
 @section('scripts')
     <script>
+        var $button_submit = $('button[id=submit]');
+
         var category = function () {
             // form validate
             var formValidationInit = function () {
@@ -104,6 +106,8 @@
 
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-category-update]');
+
+                        $button_submit.removeClass('m-loader m-loader--light m-loader--right');
 
                         mApp.scrollTo(form, -200);
                     },
@@ -135,6 +139,10 @@
                 }
             };
         }();
+
+        $button_submit.on('click', function(e) {
+            $button_submit.addClass('m-loader m-loader--light m-loader--right');
+        });
 
         $(document).ready(function() {
             category.init();
