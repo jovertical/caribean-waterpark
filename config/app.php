@@ -232,7 +232,7 @@ return [
         'Str' => Illuminate\Support\Str::class,
         'Carbon' => Carbon\Carbon::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Toastr' => Brian2694\Toastr\Facades\Toastr::class,
+        'Notify' => Brian2694\Toastr\Facades\Toastr::class,
         'ImageUploader' => App\Services\ImageUploader::class,
     ],
 

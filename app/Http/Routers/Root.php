@@ -24,6 +24,11 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::delete('categories/{id}/image/destroy', 'CategoriesController@destroyImage')->name('categories.image.destroy');
 
         Route::resource('items', 'ItemsController');
+        Route::get('items/{id}/image', 'ItemsController@selectImage')->name('items.image');
+        Route::post('items/{id}/image/upload', 'ItemsController@uploadImage')->name('items.image.upload');
+        Route::get('items/{id}/image/uploaded', 'ItemsController@uploadedImage')->name('items.image.uploaded');
+        Route::delete('items/{id}/image/destroy', 'ItemsController@destroyImage')->name('items.image.destroy');
+
         Route::resource('coupons', 'CouponsController');
     });
 });

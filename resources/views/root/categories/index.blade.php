@@ -88,6 +88,14 @@
         <!--/. Portlet body -->
     </div>
     <!--/. Portlet -->
+
+    @component('root.components.modal')
+        @slot('title')
+            Confirm action
+        @endslot
+
+        You can't undo this action. Are you sure?
+    @endcomponent
 @endsection
 
 @section('scripts')

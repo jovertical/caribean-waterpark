@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Root;
 
-use Toastr as Notify;
 use App\Category;
 use ImageUploader;
-use File, Str, URL, Carbon, Image;
+use File, Str, URL;
+use Carbon, Image, Notify;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -32,7 +32,7 @@ class CategoriesController extends Controller
         ]);
 
         try {
-            $category = new Category();
+            $category = new Category;
 
             $category->type         = $request->input('type');
             $category->name         = Str::lower($request->input('name'));

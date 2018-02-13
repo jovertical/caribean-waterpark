@@ -18,8 +18,8 @@ class CreateItemsTable extends Migration
             $table->integer('category_id');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->integer('quantity');
             $table->float('price');
+            $table->integer('quantity')->nullable();
 
             $table->text('file_path')->nullable();
             $table->string('file_name')->nullable();
