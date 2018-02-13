@@ -56,7 +56,7 @@
                         @include('root.partials.sub_header')
                         
                         @endauth
-                            <div class="">
+                            <div class="m-content">
                                 <!-- Content -->
                                 @yield('content')
                             </div>
