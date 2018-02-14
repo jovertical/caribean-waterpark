@@ -14,13 +14,13 @@
         <span class="d-flex">
             <a href="{{ route('root.items.image', $item->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View image"><i class="la la-image"></i></a>
 
-            <form method="GET" action="{{ route('root.items.edit', $item->id) }}" class="form-edit">
+            <form method="GET" action="{{ route('root.items.edit', $item->id) }}">
                 {{ method_field('PUT') }}
 
                 <button type="submit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit item"><i class="la la-edit"></i></button>
             </form>
 
-            <form method="POST" action="{{ route('root.items.destroy', $item->id) }}" class="form-delete">
+            <form method="POST" action="{{ route('root.items.destroy', $item->id) }}" class="form-confirm">
                 {{ method_field('DELETE') }}
                 {{ csrf_field() }}
 

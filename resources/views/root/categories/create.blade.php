@@ -21,7 +21,7 @@
                     <label for="name" class="col-lg-2 col-form-label">Type: </label>
 
                     <div class="col-lg-6">
-                        <select name="type" id="type" class="form-control m-bootstrap-select">
+                        <select name="type" id="type" class="form-control m-bootstrap-select" required>
                             <option value="" disabled selected>Please select a type</option>
                             <option value="accomodation">Accomodation</option>
                             <option value="miscellaneous">Miscellaneous</option>
@@ -33,7 +33,7 @@
                 <!--/. Type -->
 
                 <!-- Name -->
-                <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}">
+                <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}" required>
                     <label for="name" class="col-lg-2 col-form-label">Name: </label>
 
                     <div class="col-lg-6">
@@ -45,7 +45,7 @@
                             {{ $errors->first('name') }}
                         </div>
 
-                        <span class="m-form__help">The name of the category.</span>
+                        <span class="m-form__help">The name of this category.</span>
                     </div>
                 </div>
                 <!--/. Name -->
@@ -87,13 +87,15 @@
 
 @section('scripts')
     <script>
-        var $button_submit = $('button[id=submit]');
-
         var category = function () {
             // form validate
             var formValidationInit = function () {
                 $("form[id=form-category-store]").validate({
                     rules: {
+                        type: {
+                            required: true
+                        },
+
                         name: {
                             required: true,
                             maxlength: 255
@@ -107,7 +109,7 @@
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-category-update]');
 
-                        $button_submit.removeClass('m-loader m-loader--light m-loader--right');
+                        $('button[type=submit]').removeClass('m-loader m-loader--light m-loader--right');
 
                         mApp.scrollTo(form, -200);
                     },
@@ -142,10 +144,6 @@
 
         $(document).ready(function() {
             category.init();
-
-            $button_submit.on('click', function(e) {
-                $button_submit.addClass('m-loader m-loader--light m-loader--right');
-            });
         });
     </script>
 @endsection

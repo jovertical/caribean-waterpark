@@ -47,7 +47,7 @@
                         <div class="row">
                             <div class="col-lg-2"></div>
                             <div class="col-lg-6">
-                                <a type="button" id="submit" href="{{ route('root.categories.index') }}" class="btn btn-brand">Finish</a>
+                                <a type="submit" id="submit" href="{{ route('root.categories.index') }}" class="btn btn-brand">Finish</a>
                             </div>
                         </div>
                     </div>
@@ -61,8 +61,6 @@
 
 @section('scripts')
     <script>
-        var $button_submit = $('a[id=submit]');
-
         Dropzone.options.formCategoryUpload = {
             paramName: 'image',
             addRemoveLinks : true,
@@ -104,9 +102,5 @@
                 });
             }
         };
-
-        $button_submit.on('click', function(e) {
-            $button_submit.addClass('m-loader m-loader--light m-loader--right');
-        });
     </script>
 @endsection

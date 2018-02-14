@@ -21,7 +21,7 @@
                     <label for="name" class="col-lg-2 col-form-label">Category: </label>
 
                     <div class="col-lg-6">
-                        <select name="category" id="category" class="form-control m-bootstrap-select">
+                        <select name="category" id="category" class="form-control m-bootstrap-select" required>
                             <option value="" disabled selected>Please select it's category</option>
 
                             @foreach($categories as $category)
@@ -29,7 +29,7 @@
                             @endforeach
                         </select>
 
-                        <span class="m-form__help"></span>
+                        <span class="m-form__help">The category this item is under.</span>
                     </div>
                 </div>
                 <!--/. Category -->
@@ -40,13 +40,13 @@
 
                     <div class="col-lg-6">
                         <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{ old('name') }}">
+                            'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{ old('name') }}" required>
 
                         <div id="name-error" class="form-control-feedback">
                             {{ $errors->first('name') }}
                         </div>
 
-                        <span class="m-form__help">The name of the item.</span>
+                        <span class="m-form__help">The name of this item.</span>
                     </div>
                 </div>
                 <!--/. Name -->
@@ -73,13 +73,13 @@
 
                     <div class="col-lg-6">
                         <input type="number" name="price" id="price" class="form-control m-input {{ $errors->has('price') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a price" value="{{ old('price') }}">
+                            'form-control-danger' :'' }}" placeholder="Please enter a price" value="{{ old('price') }}" required>
 
                         <div id="price-error" class="form-control-feedback">
                             {{ $errors->first('price') }}
                         </div>
 
-                        <span class="m-form__help">The price of the item.</span>
+                        <span class="m-form__help">The price of this item.</span>
                     </div>
                 </div>
                 <!--/. Price -->
@@ -96,7 +96,7 @@
                             {{ $errors->first('quantity') }}
                         </div>
 
-                        <span class="m-form__help">How many are this item. <em>Empty means no limit.</em></span>
+                        <span class="m-form__help">How many are this item. <em><strong>Empty</strong> means no limit.</em></span>
                     </div>
                 </div>
                 <!--/. Quantity -->
@@ -122,13 +122,15 @@
 
 @section('scripts')
     <script>
-        var $button_submit = $('button[id=submit]');
-
         var item = function () {
             // form validate
             var formValidationInit = function () {
                 $("form[id=form-item-store]").validate({
                     rules: {
+                        category: {
+                            required: true
+                        },
+
                         name: {
                             required: true,
                             maxlength: 255
@@ -137,12 +139,16 @@
                         description: {
                             maxlength: 500
                         },
+
+                        price: {
+                            required: true
+                        }
                     },
 
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-item-update]');
 
-                        $button_submit.removeClass('m-loader m-loader--light m-loader--right');
+                        $('button[type=submit]').removeClass('m-loader m-loader--light m-loader--right');
 
                         mApp.scrollTo(form, -200);
                     },
@@ -177,10 +183,6 @@
 
         $(document).ready(function() {
             item.init();
-
-            $button_submit.on('click', function(e) {
-                $button_submit.addClass('m-loader m-loader--light m-loader--right');
-            });
         });
     </script>
 @endsection

@@ -69,7 +69,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Picture</th>
+                        <th>Image</th>
                         <th>Type</th>
                         <th>Name</th>
                         <th>Description</th>
@@ -118,10 +118,12 @@
                             {
                                 field: '#',
                                 title: '#',
+                                width: 15
                             },
                             {
-                                field: 'Picture',
-                                title: 'picture'
+                                field: 'Image',
+                                title: 'image',
+                                width: 50
                             },
                             {
                                 field: 'Name',
@@ -129,7 +131,8 @@
                             },
                             {
                                 field: 'Description',
-                                title: 'name'
+                                title: 'name',
+                                width: 200
                             }
                         ],
                     });

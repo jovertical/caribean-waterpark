@@ -70,8 +70,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Picture</th>
-                        <th>Type</th>
+                        <th>Image</th>
+                        <th>Category</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Price</th>
@@ -112,7 +112,10 @@
 
                     var datatable = $('.m-datatable').mDatatable({
                         data: {
-                            saveState: { cookie: false },
+                            saveState: { cookie: false }
+                        },
+                        layout: {
+                            scroll: true,
                         },
                         search: {
                             input: $('#generalSearch'),
@@ -121,10 +124,16 @@
                             {
                                 field: '#',
                                 title: '#',
+                                width: 15
                             },
                             {
-                                field: 'Picture',
-                                title: 'picture'
+                                field: 'Image',
+                                title: 'image',
+                                width: 50
+                            },
+                            {
+                                field: 'Category',
+                                title: 'category'
                             },
                             {
                                 field: 'Name',

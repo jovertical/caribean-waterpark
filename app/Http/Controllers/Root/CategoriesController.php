@@ -110,16 +110,22 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
-    public function restore($id)
-    {
-        //
-    }
-
     public function selectImage($id)
     {
-        $category = Category::find($id);
+        try {
+            $category = Category::find($id);
 
-        return view('root.categories.image', ['category' => $category]);
+            if ($category != null) {
+                return view('root.categories.image', ['category' => $category]);
+            }
+
+            Notify::warning('Cannot find category', 'Ooops?');
+
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+
+        return redirect()->back();
     }
 
     public function uploadedImage(Request $request, $id)
@@ -132,10 +138,10 @@ class CategoriesController extends Controller
             $file_path = $thumbs_directory.'/'.$category->file_name;
 
             $images = [
-                [ 
+                [
                     'directory' => URL::to($thumbs_directory),
-                    'name'      => File::name($file_path).'.'.File::extension($file_path), 
-                    'size'      => File::size($file_path) 
+                    'name'      => File::name($file_path).'.'.File::extension($file_path),
+                    'size'      => File::size($file_path)
                 ]
             ];
 
