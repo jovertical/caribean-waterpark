@@ -21,15 +21,12 @@ class CreateItemsTable extends Migration
             $table->float('price');
             $table->integer('quantity')->nullable();
 
-            $table->text('file_path')->nullable();
-            $table->string('file_name')->nullable();
-
             $table->boolean('active')->default(true);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
