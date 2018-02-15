@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use App\Category;
 use App\Item;
+use ImageUploader;
 use File, Str, URL;
 use Carbon, Image, Notify;
 use Illuminate\Http\Request;
@@ -147,4 +148,96 @@ class ItemsController extends Controller
 
         return redirect()->back();
     }
+
+    public function uploadedImage(Request $request, $id)
+    {
+        try {
+            $item = Item::find($id);
+
+            $item_images = $item->images;
+
+            $images = [];
+
+            foreach($item_images as $item_image) {
+                $thumbs_directory = $item_image->file_directory.'/thumbnails';
+
+                if (File::exists($thumbs_directory.'/'.$item_image->file_name)) {
+                    $file_path = $thumbs_directory.'/'.$item_image->file_name;
+
+                    $images[] = [
+                        'directory' => URL::to($thumbs_directory),
+                        'name'      => File::name($file_path).'.'.File::extension($file_path),
+                        'size'      => File::size($file_path)
+                    ];
+                }
+            }
+
+            return response()->json(['images' => $images]);
+        } catch(Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json('Cannot find your images.');
+    }
+
+    public function uploadImage(Request $request, $id)
+    {
+        try {
+            $item = Item::find($id);
+
+            $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
+
+            if ($upload) {
+                if ($item->images()->count() < 5) {
+                    $item->images()->create([
+                        'count'             => $item->images()->count() + 1,
+                        'file_path'         => $upload['file_path'],
+                        'file_directory'    => $upload['file_directory'],
+                        'file_name'         => $upload['file_name']
+                    ]);
+                }
+            }
+
+            return response()->json($upload);
+        } catch(Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json('Upload is not successful.');
+    }
+
+    public function destroyImage(Request $request, $id)
+    {
+        try {
+            $item = Item::find($id);
+
+            return response()->json($item);
+
+            $file_name = $request->input('file_name');
+
+            $item->images->each(function($image) use ($file_name) {
+
+                if (File::exists($image->file_directory.'/'.$file_name)) {
+                    File::delete($image->file_directory.'/'.$file_name);
+                }
+
+                if (File::exists($image->file_directory.'/thumbnails/'.$file_name)) {
+                    File::delete($image->file_directory.'/thumbnails/'.$file_name);
+                }
+
+                // $image->file_path = null;
+                // $image->file_directory = null;
+                // $image->file_name = null;
+
+                if ($image->save()) {
+                    return response()->json([]);
+                }
+            });
+        } catch(Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json('Cannot delete your image.');
+    }
+
 }

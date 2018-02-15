@@ -34,10 +34,10 @@ class CreateUsersTable extends Migration
             $table->text('file_directory')->nullable();
             $table->string('file_name')->nullable();
 
-            $table->boolean('active')->default(true);
             $table->dateTime('last_activity')->nullable();
             $table->rememberToken();
             
+            $table->boolean('active')->default(true);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

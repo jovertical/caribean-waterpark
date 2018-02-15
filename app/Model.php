@@ -20,5 +20,13 @@ class Model extends Eloquent
         self::creating(function ($model) {
             $model->created_by = auth()->check() ? auth()->user()->id : null;
         });
+
+        self::updating(function($model) {
+            $model->updated_by = auth()->check() ? auth()->user()->id : null;
+        });
+
+        self::deleting(function($model) {
+            $model->deleted_by = auth()->check() ? auth()->user()->id : null;
+        });
     }
 }

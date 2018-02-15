@@ -61,43 +61,50 @@
 
 @section('scripts')
     <script>
+        var fileName;
+
         Dropzone.options.formItemUpload = {
             paramName: 'image',
             addRemoveLinks : true,
-            maxFiles: 1,
+            maxFiles: 5,
             maxFilesize: 4,
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
-                var myDropzone = this;
+                var $myDropzone = this;
 
-                myDropzone.on("success", function(file, response) {
-                    // console.log(response);
+                $myDropzone.on('success', function(file, response) {
+                    var fileUploaded = file.previewElement.querySelector("[data-dz-name]");
+                    fileUploaded.innerHTML = response.file_name;
+                    fileName = response.file_name;
+                });
+
+                $myDropzone.on('removedfile', function(file) {
+                    if ($myDropzone.files.length == 0) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '{{ route('root.items.image.destroy', $item->id) }}',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                file_name: fileName
+                            },
+                            dataType: 'html',
+                            success: function(data) {
+                                console.log(data);
+                            }
+                        });
+                    }   
                 });
 
                 $.get('{{ route('root.items.image.uploaded', $item->id) }}', function(data) {
                     $.each(data.images, function (index, image) {
                         var file = {directory: image.directory, name: image.name, size: image.size};
 
-                        myDropzone.options.addedfile.call(myDropzone, file);
-                        myDropzone.options.thumbnail.call(myDropzone, file, file.directory + '/' + file.name);
-                        myDropzone.emit("complete", file);
-                    });
-                });
-
-                myDropzone.on("removedfile", function(file) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '{{ route('root.items.image.destroy', $item->id) }}',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {
-                            //
-                        },
-                        dataType: 'html',
-                        success: function(data) {
-                            // console.log(data);
-                        }
+                        $myDropzone.options.addedfile.call($myDropzone, file);
+                        $myDropzone.options.thumbnail.call($myDropzone, file, file.directory + '/' + file.name);
+                        $myDropzone.emit("complete", file);
+                        $myDropzone.files.push(file);
                     });
                 });
             }

@@ -73,6 +73,7 @@
                         <th>Type</th>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Items</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -133,6 +134,10 @@
                                 field: 'Description',
                                 title: 'name',
                                 width: 200
+                            },
+                            {
+                                field: 'Items',
+                                title: 'items'
                             }
                         ],
                     });

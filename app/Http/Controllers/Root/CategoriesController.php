@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 
 class CategoriesController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $categories = Category::all();
 
@@ -178,30 +178,27 @@ class CategoriesController extends Controller
        try {
             $category = Category::find($id);
 
-            if (File::exists($category->file_directory.'/'.$category->file_name)) {
-                $deleted = File::delete($category->file_directory.'/'.$category->file_name);
+            $file_name = $request->input('file_name');
+
+            if (File::exists($category->file_directory.'/'.$file_name)) {
+                File::delete($category->file_directory.'/'.$file_name);
             }
 
-            if (File::exists($category->file_directory.'/resized/'.$category->file_name)) {
-                $deleted = File::delete($category->file_directory.'/resized/'.$category->file_name);
-            }
-
-            if (File::exists($category->file_directory.'/thumbnails/'.$category->file_name)) {
-                $deleted = File::delete($category->file_directory.'/thumbnails/'.$category->file_name);
+            if (File::exists($category->file_directory.'/thumbnails/'.$file_name)) {
+                File::delete($category->file_directory.'/thumbnails/'.$file_name);
             }
 
             $category->file_path = null;
             $category->file_directory = null;
             $category->file_name = null;
-            $category->save();
 
-            if ($deleted) {
-                return response()->json('File deleted.');
+            if ($category->save()) {
+                return response()->json([]);
             }
-
-            return response()->json('File not deleted.');
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
+
+        return response()->json([]);
     }
 }
