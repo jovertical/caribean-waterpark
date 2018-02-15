@@ -61,8 +61,6 @@
 
 @section('scripts')
     <script>
-        var fileName;
-
         Dropzone.options.formItemUpload = {
             paramName: 'image',
             addRemoveLinks : true,
@@ -75,31 +73,29 @@
                 $myDropzone.on('success', function(file, response) {
                     var fileUploaded = file.previewElement.querySelector("[data-dz-name]");
                     fileUploaded.innerHTML = response.file_name;
-                    fileName = response.file_name;
+                    file.name = response.file_name;
                 });
 
                 $myDropzone.on('removedfile', function(file) {
-                    if ($myDropzone.files.length == 0) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: '{{ route('root.items.image.destroy', $item->id) }}',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            data: {
-                                file_name: fileName
-                            },
-                            dataType: 'html',
-                            success: function(data) {
-                                console.log(data);
-                            }
-                        });
-                    }   
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '{{ route('root.items.image.destroy', $item->id) }}',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            file_name: file.name
+                        },
+                        dataType: 'html',
+                        success: function(data) {
+                            console.log(JSON.parse(data));
+                        }
+                    });
                 });
 
                 $.get('{{ route('root.items.image.uploaded', $item->id) }}', function(data) {
-                    $.each(data.images, function (index, image) {
-                        var file = {directory: image.directory, name: image.name, size: image.size};
+                    $.each(data.images, function (index, file) {
+                        var file = {directory: file.directory, name: file.name, size: file.size};
 
                         $myDropzone.options.addedfile.call($myDropzone, file);
                         $myDropzone.options.thumbnail.call($myDropzone, file, file.directory + '/' + file.name);

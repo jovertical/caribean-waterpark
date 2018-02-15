@@ -211,28 +211,23 @@ class ItemsController extends Controller
         try {
             $item = Item::find($id);
 
-            return response()->json($item);
-
             $file_name = $request->input('file_name');
 
-            $item->images->each(function($image) use ($file_name) {
+            $item_image =   $item->images->filter(function($image) use ($file_name) {
+                                return $image->file_name == $file_name;
+                            })->first();
 
-                if (File::exists($image->file_directory.'/'.$file_name)) {
-                    File::delete($image->file_directory.'/'.$file_name);
-                }
+            if (File::exists($item_image->file_directory.'/'.$item_image->file_name)) {
+                File::delete($item_image->file_directory.'/'.$item_image->file_name);
+            }
 
-                if (File::exists($image->file_directory.'/thumbnails/'.$file_name)) {
-                    File::delete($image->file_directory.'/thumbnails/'.$file_name);
-                }
+            if (File::exists($item_image->file_directory.'/thumbnails/'.$item_image->file_name)) {
+                File::delete($item_image->file_directory.'/thumbnails/'.$item_image->file_name);
+            }
 
-                // $image->file_path = null;
-                // $image->file_directory = null;
-                // $image->file_name = null;
-
-                if ($image->save()) {
-                    return response()->json([]);
-                }
-            });
+            if ($item_image->delete()) {
+                return response()->json([]);
+            }
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
