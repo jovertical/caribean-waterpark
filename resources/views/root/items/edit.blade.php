@@ -92,7 +92,7 @@
 
                     <div class="col-lg-6">
                         <input type="number" name="quantity" id="quantity" class="form-control m-input {{ $errors->has('quantity') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a price" value="{{ $item->quantity }}">
+                            'form-control-danger' :'' }}" placeholder="Please enter a quantity" value="{{ $item->quantity }}">
 
                         <div id="quantity-error" class="form-control-feedback">
                             {{ $errors->first('quantity') }}

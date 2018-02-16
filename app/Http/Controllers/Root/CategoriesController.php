@@ -158,11 +158,9 @@ class CategoriesController extends Controller
 
             $upload = ImageUploader::upload($request->file('image'), "categories/{$category->id}");
 
-            if ($upload) {
-                $category->file_path = $upload['file_path'];
-                $category->file_directory = $upload['file_directory'];
-                $category->file_name = $upload['file_name'];
-            }
+            $category->file_path = $upload['file_path'];
+            $category->file_directory = $upload['file_directory'];
+            $category->file_name = $upload['file_name'];
 
             if ($category->save()) {
                  return response()->json($upload);

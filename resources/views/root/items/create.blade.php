@@ -1,6 +1,12 @@
 @extends('root.layouts.main')
 
 @section('content')
+    @if ($categories->count() == 0)
+        @component('root.components.alert')
+            There are no categories yet. <a href="{{ route('root.categories.create') }}" class="m-link">Create one?</a>
+        @endcomponent
+    @endif
+
     <div class="m-portlet">
         <div class="m-portlet__head">
             <div class="m-portlet__head-caption">
@@ -90,7 +96,7 @@
 
                     <div class="col-lg-6">
                         <input type="number" name="quantity" id="quantity" class="form-control m-input {{ $errors->has('quantity') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a price" value="{{ old('quantity') }}">
+                            'form-control-danger' :'' }}" placeholder="Please enter a quantity" value="{{ old('quantity') }}">
 
                         <div id="quantity-error" class="form-control-feedback">
                             {{ $errors->first('quantity') }}

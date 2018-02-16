@@ -7,8 +7,8 @@
     </td>
     <td>{{ Str::ucfirst($category->type) }}</td>
     <td>{{ Str::ucfirst($category->name) }}</td>
-    <td>{!! Str::limit($category->description, 50) !!}</td>
-    <td>{{ count($category->items) }}</td>
+    <td>{!! Str::limit($category->description, 25) !!}</td>
+    <td>{{ $category->items->count() }}</td>
     <td>
         <span class="d-flex">
             <a href="{{ route('root.categories.image', $category->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View image"><i class="la la-image"></i></a>

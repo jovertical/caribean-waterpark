@@ -71,6 +71,7 @@
                 var $myDropzone = this;
 
                 $myDropzone.on('success', function(file, response) {
+                    console.log(response);
                     var fileUploaded = file.previewElement.querySelector("[data-dz-name]");
                     fileUploaded.innerHTML = response.file_name;
                 });

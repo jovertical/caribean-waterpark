@@ -118,26 +118,31 @@
                         columns: [
                             {
                                 field: '#',
-                                title: '#',
-                                width: 15
+                                width: 25
                             },
                             {
                                 field: 'Image',
-                                title: 'image',
                                 width: 50
                             },
                             {
+                                field: 'Type',
+                                width: 75
+                            },
+                            {
                                 field: 'Name',
-                                title: 'name'
+                                width: 100
                             },
                             {
                                 field: 'Description',
-                                title: 'name',
                                 width: 200
                             },
                             {
                                 field: 'Items',
-                                title: 'items'
+                                width: 50
+                            },
+                            {
+                                field: 'Actions',
+                                width: 100
                             }
                         ],
                     });

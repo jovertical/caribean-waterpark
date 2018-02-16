@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Root;
 use App\Category;
 use App\Item;
 use ImageUploader;
-use File, Str, URL;
+use Storage, File, Str, URL;
 use Carbon, Image, Notify;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -187,15 +187,15 @@ class ItemsController extends Controller
 
             $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
 
-            if ($upload) {
-                if ($item->images()->count() < 5) {
-                    $item->images()->create([
-                        'count'             => $item->images()->count() + 1,
-                        'file_path'         => $upload['file_path'],
-                        'file_directory'    => $upload['file_directory'],
-                        'file_name'         => $upload['file_name']
-                    ]);
-                }
+            return response()->json(Storage::files($item->file_directory));
+
+            if ($item->images()->count() < 5) {
+                $item->images()->create([
+                    'count'             => $item->images->count() + 1,
+                    'file_path'         => $upload['file_path'],
+                    'file_directory'    => $upload['file_directory'],
+                    'file_name'         => $upload['file_name']
+                ]);
             }
 
             return response()->json($upload);

@@ -123,34 +123,36 @@
                         columns: [
                             {
                                 field: '#',
-                                title: '#',
-                                width: 15
+                                width: 25
                             },
                             {
                                 field: 'Image',
-                                title: 'image',
                                 width: 50
                             },
                             {
                                 field: 'Category',
-                                title: 'category'
+                                width: 75
                             },
                             {
                                 field: 'Name',
-                                title: 'name'
+                                width: 100
                             },
                             {
                                 field: 'Description',
-                                title: 'name'
+                                width: 200
                             },
                             {
                                 field: 'Price',
-                                title: 'price'
+                                width: 100
                             },
                             {
                                 field: 'Quantity',
-                                title: 'quantity'
-                            }
+                                width: 75
+                            },
+                            {
+                                field: 'Actions',
+                                width: 100
+                            }            
                         ],
                     });
 

@@ -8,7 +8,7 @@
                 <div class="m-stack__item m-brand">
                     <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                         <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                            <a href="?page=index&demo=demo2" class="m-brand__logo-wrapper">
+                            <a href="{{ route('root.home') }}" class="m-brand__logo-wrapper">
                                 <img src="/root/assets/demo/demo2/media/img/logo/logo.png" alt=""/>
                             </a>
                         </div>

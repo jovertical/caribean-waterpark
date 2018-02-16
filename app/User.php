@@ -16,8 +16,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    protected $dates = ['deleted_at'];
-
     public function role()
     {
         return $this->hasOne(Role::class);
@@ -26,5 +24,20 @@ class User extends Authenticatable
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function getFirstNameAttribute($value)
+    {
+        return strtolower($value);
+    }
+
+    public function getMiddleNameAttribute($value)
+    {
+        return strtolower($value);
+    }
+
+    public function getLastNameAttribute($value)
+    {
+        return strtolower($value);
     }
 }

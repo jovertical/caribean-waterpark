@@ -1,15 +1,15 @@
 <tr>
     <td>{{ $index + 1 }}</td>
     <td>
-        <span>
-            @if(count($item->images))
+        @if(count($item->images))
+            <span>
                 <img src="{{ URL::to("{$item->images->first()->file_directory}/thumbnails/{$item->images->first()->file_name}") }}" class="img-fluid rounded-circle">
-            @endif
-        </span>
+            </span>
+        @endif
     </td>
     <td>{{ Str::ucfirst($item->category->name) }}</td>
     <td>{{ Str::ucfirst($item->name) }}</td>
-    <td>{!! Str::limit($item->description, 50) !!}</td>
+    <td>{!! Str::limit($item->description, 25) !!}</td>
     <td>{{ $item->price }}</td>
     <td>{{ $item->quantity }}</td>
     <td>
