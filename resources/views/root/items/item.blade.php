@@ -2,7 +2,9 @@
     <td>{{ $index + 1 }}</td>
     <td>
         <span>
-            <img src="{{ URL::to("{$item->images->first()->file_directory}/thumbnails/{$item->images->first()->file_name}") }}" class="img-fluid rounded-circle">
+            @if(count($item->images))
+                <img src="{{ URL::to("{$item->images->first()->file_directory}/thumbnails/{$item->images->first()->file_name}") }}" class="img-fluid rounded-circle">
+            @endif
         </span>
     </td>
     <td>{{ Str::ucfirst($item->type) }}</td>
