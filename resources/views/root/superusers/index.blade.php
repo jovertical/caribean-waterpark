@@ -96,7 +96,11 @@
                             saveState: { cookie: false },
                         },
                         layout: {
+                            theme: 'default',
+                            class: '',
                             scroll: true,
+                            height: 350,
+                            footer: false
                         },
                         search: {
                             input: $('#generalSearch'),

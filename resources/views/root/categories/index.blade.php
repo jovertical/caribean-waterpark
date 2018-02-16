@@ -108,9 +108,16 @@
                 // category initializer
                 var categoriesInit = function() {
 
-                    var datatable = $('.m-datatable').mDatatable({
+                    var datatable = $('table[id=table]').mDatatable({
                         data: {
                             saveState: { cookie: false },
+                        },
+                        layout: {
+                            theme: 'default',
+                            class: '',
+                            scroll: true,
+                            height: 350,
+                            footer: false
                         },
                         search: {
                             input: $('#generalSearch'),

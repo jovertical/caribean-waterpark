@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\Category;
+use App\{Category};
 use ImageUploader;
 use File, Str, URL;
 use Carbon, Image, Notify;

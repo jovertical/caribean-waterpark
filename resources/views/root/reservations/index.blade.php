@@ -9,7 +9,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        This is the list of items
+                        This is the list of reservations
                     </h3>
                 </div>
             </div>
@@ -23,24 +23,45 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
-                            <!-- Category -->
+                            <!-- Source -->
                             <div class="col-md-4">
                                 <div class="m-form__group m-form__group--inline">
                                     <div class="m-form__label">
-                                        <label>Category:</label>
+                                        <label>Source:</label>
                                     </div>
                                     <div class="m-form__control">
-                                        <select id="category" class="form-control m-bootstrap-select">
+                                        <select class="form-control m-bootstrap-select" id="source">
                                             <option value="">All</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->name }}">{{ Str::ucfirst($category->name) }}</option>
-                                            @endforeach
+                                            <option value="user">Customer</option>
+                                            <option value="superuser">Staff</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="d-md-none m--margin-bottom-10"></div>
                             </div>
-                            <!--/. Category -->
+                            <!--/. Source -->
+
+                            <!-- Status -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>Status:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <select class="form-control m-bootstrap-select" id="status">
+                                            <option value="">All</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="paid">Paid</option>
+                                            <option value="cancelled">Reserved</option>
+                                            <option value="cancelled">Cancelled</option>
+                                            <option value="waiting">Waiting</option>
+                                            <option value="void">Void</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-md-none m--margin-bottom-10"></div>
+                            </div>
+                            <!--/. Status -->
 
                             <!-- Search -->
                             <div class="col-md-4">
@@ -56,8 +77,8 @@
                     </div>
 
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-                        <a href="{{ route('root.items.create') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-                            <span><i class="la la-plus"></i><span>New item</span></span>
+                        <a href="{{ route('root.reservations.search-items') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <span><i class="la la-plus"></i><span>New reservation</span></span>
                         </a>
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
                     </div>
@@ -69,20 +90,21 @@
             <table id="table" class="m-datatable" width="100%" data-form="table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Image</th>
-                        <th>Category</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
+                        <th title="#">#</th>
+                        <th title="Source">Source</th>
+                        <th title="Customer">Customer</th>
+                        <th title="Checkin">Checkin</th>
+                        <th title="Checkout">Checkout</th>
+                        <th title="Payable">Payable</th>
+                        <th title="Paid">Paid</th>
+                        <th title="Status">Status</th>
+                        <th title="Actions">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach($items as $index => $item)
-                        @include('root.items.item')
+                    @foreach($reservations as $index => $reservation)
+                        @include('root.reservations.reservation')
                     @endforeach
                 </tbody>
             </table>
@@ -91,35 +113,20 @@
         <!--/. Portlet body -->
     </div>
     <!--/. Portlet -->
-
-    @component('root.components.modal')
-        @slot('title')
-            Confirm action
-        @endslot
-
-        You can't undo this action. Are you sure?
-    @endcomponent
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function() {
-            var items = function() {
+            var categories = function() {
                 //== Private functions
 
                 // category initializer
-                var itemsInit = function() {
+                var categoriesInit = function() {
 
                     var datatable = $('table[id=table]').mDatatable({
                         data: {
-                            saveState: { cookie: false }
-                        },
-                        layout: {
-                            theme: 'default',
-                            class: '',
-                            scroll: true,
-                            height: 350,
-                            footer: false
+                            saveState: { cookie: false },
                         },
                         search: {
                             input: $('#generalSearch'),
@@ -130,51 +137,59 @@
                                 width: 25
                             },
                             {
-                                field: 'Image',
+                                field: 'Source',
+                                width: 75
+                            },
+                            {
+                                field: 'Customer',
+                                width: 100
+                            },
+                            {
+                                field: 'Checkin',
+                                width: 75
+                            },
+                            {
+                                field: 'Checkout',
+                                width: 75
+                            },
+                            {
+                                field: 'Payable',
+                                width: 75
+                            },
+                            {
+                                field: 'Paid',
+                                width: 75
+                            },
+                            {
+                                field: 'Status',
                                 width: 50
-                            },
-                            {
-                                field: 'Category',
-                                width: 75
-                            },
-                            {
-                                field: 'Name',
-                                width: 100
-                            },
-                            {
-                                field: 'Description',
-                                width: 200
-                            },
-                            {
-                                field: 'Price',
-                                width: 100
-                            },
-                            {
-                                field: 'Quantity',
-                                width: 75
                             },
                             {
                                 field: 'Actions',
                                 width: 100
-                            }            
+                            }
                         ],
                     });
 
-                    $('select[id=category]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Category');
+                    $('select[id=source]').on('change', function() {
+                        datatable.search($(this).val().toLowerCase(), 'Source');
                     });
 
-                    $('select[id=category]').selectpicker();
+                    $('select[id=status]').on('change', function() {
+                        datatable.search($(this).val().toLowerCase(), 'Status');
+                    });
+
+                    $('.m-bootstrap-select').selectpicker();
                 };
 
                 return {
                     init: function() {
-                        itemsInit();
+                        categoriesInit();
                     },
                 };
             }();
 
-            items.init();
+            categories.init();
         });
     </script>
 @endsection

@@ -17,8 +17,8 @@ class CreateUserRolesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('description')->nullable();
-
             $table->boolean('active')->default(true);
+
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

@@ -168,14 +168,14 @@
                             </li>
                             <!--/. Inventory -->
 
-                            <!-- Reservation -->
+                            <!-- Reservations -->
                             <li class="m-menu__item"  aria-haspopup="true">
-                                <a href="#" class="m-menu__link ">
+                                <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
-                                    <span class="m-menu__link-text">Reservation</span>
+                                    <span class="m-menu__link-text">Reservations</span>
                                 </a>
                             </li>
-                            <!--/. Reservation -->
+                            <!--/. Reservations -->
 
                             <!-- Reports -->
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true">

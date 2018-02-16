@@ -23,12 +23,12 @@ class CreateCouponsTable extends Migration
             $table->date('valid_from');
             $table->date('valid_until');
             $table->boolean('reuseable')->default(false);
+            $table->boolean('active')->default(true);
 
             $table->text('file_path')->nullable();
             $table->text('file_directory')->nullable();
             $table->string('file_name')->nullable();
 
-            $table->boolean('active')->default(true);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

@@ -15,12 +15,15 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('type', ['user', 'superuser']);
             $table->integer('role_id')->default(1);
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('type', ['user', 'superuser']);
+            $table->rememberToken();
             $table->boolean('verified')->default(false);
+            $table->dateTime('last_activity')->nullable();
+            $table->boolean('active')->default(true);
 
             $table->string('first_name')->nullable();
             $table->string('middle_name')->nullable();
@@ -33,11 +36,7 @@ class CreateUsersTable extends Migration
             $table->text('file_path')->nullable();
             $table->text('file_directory')->nullable();
             $table->string('file_name')->nullable();
-
-            $table->dateTime('last_activity')->nullable();
-            $table->rememberToken();
             
-            $table->boolean('active')->default(true);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

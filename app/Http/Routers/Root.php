@@ -45,5 +45,12 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::delete('items/{id}/image/destroy', 'ItemsController@destroyImage')->name('items.image.destroy');
 
         Route::resource('coupons', 'CouponsController');
+        Route::get('coupons/{id}/image', 'ItemsController@selectImage')->name('coupons.image');
+        Route::post('coupons/{id}/image/upload', 'ItemsController@uploadImage')->name('coupons.image.upload');
+        Route::get('coupons/{id}/image/uploaded', 'ItemsController@uploadedImage')->name('coupons.image.uploaded');
+        Route::delete('coupons/{id}/image/destroy', 'ItemsController@destroyImage')->name('coupons.image.destroy');
+
+        Route::get('reservations', 'ReservationsController@index')->name('reservations.index');
+        Route::get('reservations/search-items', 'ReservationsController@searchItems')->name('reservations.search-items');
     });
 });

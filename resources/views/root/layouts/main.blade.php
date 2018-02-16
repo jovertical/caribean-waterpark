@@ -67,7 +67,6 @@
 
             <!-- Footer -->
             @include('root.partials.footer')
-
         </div>
 
         <!-- Vendor bundle -->

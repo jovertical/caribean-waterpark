@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 
 class ItemsController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $categories = Category::all();
 
