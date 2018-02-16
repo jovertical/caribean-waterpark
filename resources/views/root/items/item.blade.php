@@ -7,7 +7,7 @@
             @endif
         </span>
     </td>
-    <td>{{ Str::ucfirst($item->type) }}</td>
+    <td>{{ Str::ucfirst($item->category->name) }}</td>
     <td>{{ Str::ucfirst($item->name) }}</td>
     <td>{!! Str::limit($item->description, 50) !!}</td>
     <td>{{ $item->price }}</td>
