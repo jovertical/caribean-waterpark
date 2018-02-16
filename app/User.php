@@ -17,4 +17,14 @@ class User extends Authenticatable
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function role()
+    {
+        return $this->hasOne(Role::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

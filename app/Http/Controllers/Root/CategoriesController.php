@@ -55,7 +55,7 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        $category = Category::find($id);
+        $category = Category::findOrFail($id);
 
         return view('root.categories.edit', ['category' => $category]);
     }
@@ -69,7 +69,7 @@ class CategoriesController extends Controller
         ]);
 
         try {
-            $category = Category::find($id);
+            $category = Category::findOrFail($id);
 
             $category->type         = $request->input('type');
             $category->name         = Str::lower($request->input('name'));
@@ -93,7 +93,7 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         try {
-            $category = Category::find($id);
+            $category = Category::findOrFail($id);
 
             if ($category->delete()) {
                 Notify::success('Category deleted.', 'Success!');
@@ -113,7 +113,7 @@ class CategoriesController extends Controller
     public function selectImage($id)
     {
         try {
-            $category = Category::find($id);
+            $category = Category::findOrFail($id);
 
             if ($category != null) {
                 return view('root.categories.image', ['category' => $category]);
@@ -130,7 +130,7 @@ class CategoriesController extends Controller
 
     public function uploadedImage(Request $request, $id)
     {
-        $category = Category::find($id);
+        $category = Category::findOrFail($id);
 
         $thumbs_directory = $category->file_directory.'/thumbnails';
 
@@ -154,7 +154,7 @@ class CategoriesController extends Controller
     public function uploadImage(Request $request, $id)
     {
         try {
-            $category = Category::find($id);
+            $category = Category::findOrFail($id);
 
             $upload = ImageUploader::upload($request->file('image'), "categories/{$category->id}");
 
@@ -167,16 +167,17 @@ class CategoriesController extends Controller
             if ($category->save()) {
                  return response()->json($upload);
             }
-
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
+
+        return response()->json('File not uploaded.');
     }
 
     public function destroyImage(Request $request, $id)
     {
        try {
-            $category = Category::find($id);
+            $category = Category::findOrFail($id);
 
             $file_name = $request->input('file_name');
 
@@ -193,12 +194,12 @@ class CategoriesController extends Controller
             $category->file_name = null;
 
             if ($category->save()) {
-                return response()->json([]);
+                return response()->json('File deleted.');
             }
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
 
-        return response()->json([]);
+        return response()->json('File not deleted.');
     }
 }

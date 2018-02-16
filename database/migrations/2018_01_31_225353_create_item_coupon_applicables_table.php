@@ -14,8 +14,15 @@ class CreateItemCouponApplicablesTable extends Migration
     public function up()
     {
         Schema::create('item_coupon_applicables', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('item_id');
             $table->integer('coupon_id');
+
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('deleted_by')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

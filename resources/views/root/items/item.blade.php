@@ -2,7 +2,7 @@
     <td>{{ $index + 1 }}</td>
     <td>
         <span>
-            <img src="{{ URL::to("{$item->file_directory}/thumbnails/{$item->file_name}") }}" class="img-fluid rounded-circle" style="width: 30%;">
+            <img src="{{ URL::to("{$item->images->first()->file_directory}/thumbnails/{$item->images->first()->file_name}") }}" class="img-fluid rounded-circle">
         </span>
     </td>
     <td>{{ Str::ucfirst($item->type) }}</td>

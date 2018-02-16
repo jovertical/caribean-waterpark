@@ -61,8 +61,6 @@
 
 @section('scripts')
     <script>
-        var fileName;
-
         Dropzone.options.formCategoryUpload = {
             paramName: 'image',
             addRemoveLinks : true,
@@ -75,26 +73,25 @@
                 $myDropzone.on('success', function(file, response) {
                     var fileUploaded = file.previewElement.querySelector("[data-dz-name]");
                     fileUploaded.innerHTML = response.file_name;
-                    fileName = response.file_name;
                 });
 
                 $myDropzone.on('removedfile', function(file) {
-                    if ($myDropzone.files.length == 0) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: '{{ route('root.categories.image.destroy', $category->id) }}',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            data: {
-                                file_name: fileName
-                            },
-                            dataType: 'html',
-                            success: function(data) {
-                                //
-                            }
-                        });
-                    }   
+                    var fileUploaded = file.previewElement.querySelector("[data-dz-name]").innerHTML;
+                    
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '{{ route('root.categories.image.destroy', $category->id) }}',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            file_name: fileUploaded
+                        },
+                        dataType: 'html',
+                        success: function(data) {
+                            //
+                        }
+                    });
                 });
 
                 $.get('{{ route('root.categories.image.uploaded', $category->id) }}', function(data) {

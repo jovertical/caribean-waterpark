@@ -73,10 +73,11 @@
                 $myDropzone.on('success', function(file, response) {
                     var fileUploaded = file.previewElement.querySelector("[data-dz-name]");
                     fileUploaded.innerHTML = response.file_name;
-                    file.name = response.file_name;
                 });
 
                 $myDropzone.on('removedfile', function(file) {
+                    var fileUploaded = file.previewElement.querySelector("[data-dz-name]").innerHTML;
+
                     $.ajax({
                         type: 'DELETE',
                         url: '{{ route('root.items.image.destroy', $item->id) }}',
@@ -84,11 +85,11 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         data: {
-                            file_name: file.name
+                            file_name: fileUploaded
                         },
                         dataType: 'html',
                         success: function(data) {
-                            console.log(JSON.parse(data));
+                            //
                         }
                     });
                 });

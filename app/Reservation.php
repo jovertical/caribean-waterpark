@@ -8,4 +8,9 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function reservation_items()
+    {
+        return $this->hasMany(ReservationItem::class);
+    }
 }

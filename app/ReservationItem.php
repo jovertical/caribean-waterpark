@@ -2,7 +2,7 @@
 
 namespace App;
 
-class ItemCalendar extends Model
+class ReservationItem extends Model
 {
     public function reservation()
     {

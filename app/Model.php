@@ -9,7 +9,11 @@ class Model extends Eloquent
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     protected $guarded = [];
 
@@ -17,16 +21,18 @@ class Model extends Eloquent
     {
         parent::boot();
 
-        self::creating(function ($model) {
-            $model->created_by = auth()->check() ? auth()->user()->id : null;
+        $user = auth()->check() ? auth()->user()->id : null;
+
+        self::creating(function ($model) use ($user) {
+            $model->created_by = $user;
         });
 
-        self::updating(function($model) {
-            $model->updated_by = auth()->check() ? auth()->user()->id : null;
+        self::updating(function($model) use ($user) {
+            $model->updated_by = $user;
         });
 
-        self::deleting(function($model) {
-            $model->deleted_by = auth()->check() ? auth()->user()->id : null;
+        self::deleting(function($model) use ($user) {
+            $model->deleted_by = $user;
         });
     }
 }

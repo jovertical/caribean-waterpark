@@ -9,18 +9,13 @@
                     <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                         <div class="m-stack__item m-stack__item--middle m-brand__logo">
                             <a href="?page=index&demo=demo2" class="m-brand__logo-wrapper">
-                                <img alt="" src="/root/assets/demo/demo2/media/img/logo/logo.png"/>
+                                <img src="/root/assets/demo/demo2/media/img/logo/logo.png" alt=""/>
                             </a>
+                        </div>
 
-                            <!-- BEGIN: Responsive Aside Left Menu Toggler -->
-                            <a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
-                                <span></span>
-                            </a>
-                            <!-- END -->
-
-
+                        <div class="m-stack__item m-stack__item--middle m-brand__tools">
                             <!-- begin::Responsive Header Menu Toggler-->
-                            <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
+                             <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block m-brand__toggler--active">
                                 <span></span>
                             </a>
                             <!-- end::Responsive Header Menu Toggler-->
@@ -233,21 +228,28 @@
                                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                     <ul class="m-menu__subnav">
                                         <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="#" class="m-menu__link">
-                                                <i class="m-menu__link-icon flaticon-users"></i>
-                                                <span class="m-menu__link-text">Superusers</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="#" class="m-menu__link">
+                                            <a href="{{ route('root.users.index') }}" class="m-menu__link">
                                                 <i class="m-menu__link-icon flaticon-users"></i>
                                                 <span class="m-menu__link-text">Customers</span>
                                             </a>
                                         </li>
 
                                         <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="#" class="m-menu__link">
+                                            <a href="{{ route('root.superusers.index') }}" class="m-menu__link">
+                                                <i class="m-menu__link-icon flaticon-users"></i>
+                                                <span class="m-menu__link-text">Staffs</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="m-menu__item" aria-haspopup="true">
+                                            <a href="{{ route('root.user-roles.index') }}" class="m-menu__link">
+                                                <i class="m-menu__link-icon flaticon-web"></i>
+                                                <span class="m-menu__link-text">Staff Roles</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="m-menu__item" aria-haspopup="true">
+                                            <a href="{{ route('root.settings') }}" class="m-menu__link">
                                                 <i class="m-menu__link-icon flaticon-cogwheel"></i>
                                                 <span class="m-menu__link-text">Settings</span>
                                             </a>

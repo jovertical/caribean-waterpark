@@ -63,7 +63,7 @@ class ItemsController extends Controller
     public function edit($id)
     {
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             if ($item != null) {
                 $categories = Category::all();
@@ -89,7 +89,7 @@ class ItemsController extends Controller
         ]);
 
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             $item->category_id  = $request->input('category');
             $item->name         = Str::lower($request->input('name'));
@@ -114,7 +114,7 @@ class ItemsController extends Controller
     public function destroy($id)
     {
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             if ($item->delete()) {
                 Notify::success('Item deleted.', 'Success!');
@@ -134,7 +134,7 @@ class ItemsController extends Controller
     public function selectImage($id)
     {
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             if ($item != null) {
                 return view('root.items.image', ['item' => $item]);
@@ -152,7 +152,7 @@ class ItemsController extends Controller
     public function uploadedImage(Request $request, $id)
     {
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             $item_images = $item->images;
 
@@ -177,13 +177,13 @@ class ItemsController extends Controller
             return response()->json($e, 400);
         }
 
-        return response()->json('Cannot find your images.');
+        return response()->json([]);
     }
 
     public function uploadImage(Request $request, $id)
     {
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
 
@@ -203,13 +203,13 @@ class ItemsController extends Controller
             return response()->json($e, 400);
         }
 
-        return response()->json('Upload is not successful.');
+        return response()->json('File not uploaded.');
     }
 
     public function destroyImage(Request $request, $id)
     {
         try {
-            $item = Item::find($id);
+            $item = Item::findOrFail($id);
 
             $file_name = $request->input('file_name');
 
@@ -226,13 +226,13 @@ class ItemsController extends Controller
             }
 
             if ($item_image->delete()) {
-                return response()->json([]);
+                return response()->json('File deleted.');
             }
         } catch(Exception $e) {
             return response()->json($e, 400);
         }
 
-        return response()->json('Cannot delete your image.');
+        return response()->json('File not deleted.');
     }
 
 }

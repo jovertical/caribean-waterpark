@@ -15,7 +15,22 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
 
     Route::middleware('root.auth')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
-        Route::resource('superusers', 'UsersController');
+
+        Route::resource('users', 'UsersController');
+        Route::get('users/{id}/image', 'UsersController@selectImage')->name('users.image');
+        Route::post('users/{id}/image/upload', 'UsersController@uploadImage')->name('users.image.upload');
+        Route::get('users/{id}/image/uploaded', 'UsersController@uploadedImage')->name('users.image.uploaded');
+        Route::delete('users/{id}/image/destroy', 'UsersController@destroyImage')->name('users.image.destroy');
+
+        Route::resource('superusers', 'SuperusersController');
+        Route::get('superusers/{id}/image', 'SuperusersController@selectImage')->name('superusers.image');
+        Route::post('superusers/{id}/image/upload', 'SuperusersController@uploadImage')->name('superusers.image.upload');
+        Route::get('superusers/{id}/image/uploaded', 'SuperusersController@uploadedImage')->name('superusers.image.uploaded');
+        Route::delete('superusers/{id}/image/destroy', 'SuperusersController@destroyImage')->name('superusers.image.destroy');
+
+        Route::resource('user-roles', 'UserRolesController');
+
+        Route::get('settings', 'SettingsController@index')->name('settings');
 
         Route::resource('categories', 'CategoriesController');
         Route::get('categories/{id}/image', 'CategoriesController@selectImage')->name('categories.image');
