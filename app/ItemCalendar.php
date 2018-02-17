@@ -4,6 +4,11 @@ namespace App;
 
 class ItemCalendar extends Model
 {
+    protected $casts = [
+        'date'      => 'D-m-y',
+        'quantity'  => 'int'
+    ];
+
     public function reservation()
     {
         return $this->belongsTo(Reservation::class, 'reservation_id');

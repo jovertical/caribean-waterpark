@@ -18,7 +18,7 @@ class CreateItemCalendarsTable extends Migration
             $table->integer('reservation_id');
             $table->integer('item_id');
             $table->date('date');
-            $table->integer('item_quantity');
+            $table->integer('quantity');
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

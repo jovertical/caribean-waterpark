@@ -51,6 +51,7 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::delete('coupons/{id}/image/destroy', 'ItemsController@destroyImage')->name('coupons.image.destroy');
 
         Route::get('reservations', 'ReservationsController@index')->name('reservations.index');
-        Route::get('reservations/search-items', 'ReservationsController@searchItems')->name('reservations.search-items');
+
+        Route::get('reservations/search', 'ItemCalendarsController@searchItems')->name('item-calendars.search');
     });
 });
