@@ -72,7 +72,8 @@
 
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions">
-                                <button type="submit" class="btn btn-primary">Apply</button>
+                                <button type="submit" class="btn btn-primary" {{ Request::input('checkin_date') && 
+                                    Request::input('checkout_date') != null ? '' : 'disabled' }}>Apply</button>
                                 <button type="reset" class="btn btn-secondary">Cancel</button>
                             </div>
                         </div>
@@ -87,7 +88,7 @@
             <ul>
                 @foreach($items as $item)
                     <li>Name: <strong>{{ $item->name }}</strong> &nbsp
-                        Price: <strong>{{ number_format($item->calendar['price'], 2) }}</strong></li>
+                        Price: <strong>{{ number_format($item->calendar_price, 2) }}</strong></li>
                 @endforeach
             </ul>
         </div>

@@ -2,18 +2,12 @@
 
 namespace App\Traits;
 
-use App\{Item, ItemCalendar};
+use App\ItemCalendar;
 
 trait SearchesAvailableItems {
 
-    protected function filterItemCalendars($checkin_date, $checkout_date)
+    protected function filterItemCalendars($items, $checkin_date, $checkout_date)
     {
-        $items =    Item::with('category')->whereHas('category', function($category) {
-                        $category->where('type', 'accomodation');
-                    })
-                    ->where('active', true)
-                    ->get();
-
         $available_items = [];
 
         foreach ($items as $item) {
@@ -25,22 +19,12 @@ trait SearchesAvailableItems {
                                     ->get();
 
             if ($item_calendars->filter(function($ic) use ($item) { return $ic->quantity >= $item->quantity; })->count() == 0) {
-                $item->calendar = [
-                    'quantity' => $item->quantity - $item_calendars->sum('quantity'),
-                    'price' => $item->price * ($checkin_date->diffInDays($checkout_date))
-                ];
-
+                $item->calendar_quantity = $item->quantity - $item_calendars->sum('quantity');
+                $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
                 array_push($available_items, $item);
             }
         };
 
         return $available_items;
-    }
-
-    protected function filterItems($items, float $max_price)
-    {
-        return array_filter($items, function($item) use ($max_price) {
-            return $item->calendar['price'] <= $max_price;
-        });
     }
 }
