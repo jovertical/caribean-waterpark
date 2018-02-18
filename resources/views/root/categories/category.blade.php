@@ -2,7 +2,7 @@
     <td>{{ $index + 1 }}</td>
     <td>
         <span>
-            <img src="{{ URL::to("{$category->file_directory}/thumbnails/{$category->file_name}") }}" class="img-fluid rounded-circle">
+            <img src="{{ Helper::fileUrl($category, 'thumbnail') }}" class="img-fluid rounded-circle">
         </span>
     </td>
     <td>{{ Str::ucfirst($category->type) }}</td>

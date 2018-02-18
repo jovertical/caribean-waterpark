@@ -3,7 +3,7 @@
     <td>
         @if(count($item->images))
             <span>
-                <img src="{{ URL::to("{$item->images->first()->file_directory}/thumbnails/{$item->images->first()->file_name}") }}" class="img-fluid rounded-circle">
+                <img src="{{ Helper::fileUrl($item->images->first(), 'thumbnail') }}" class="img-fluid rounded-circle">
             </span>
         @endif
     </td>

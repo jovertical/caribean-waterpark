@@ -31,7 +31,6 @@ class ItemCalendarsController extends Controller
                                 $category->where('type', 'accomodation');
                             })
                             ->where('active', true)
-                            ->where('price', '<=', $price)
                             ->orderBy('price');
 
                 $items = $this->filterItemCalendars($items, $checkin_date, $checkout_date);

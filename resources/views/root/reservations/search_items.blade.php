@@ -2,47 +2,47 @@
 
 @section('content')
     <div class="row">
+        <div class="col-lg">
+            <div class="m-portlet">
+                <form method="GET" action="{{ route('root.item-calendars.search') }}">
+                    <div class="m-portlet__body">
+                        <div class="form-group m-form__group row justify-content-center">
+
+                            <label class="col-lg-1 col-form-label">Checkin:</label>
+                            <div class="col-lg-3">
+                                <div class="input-group m-input-group m-input-group--square">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                    </div>
+                                    <input type="text" name="ci" id="ci" class="form-control m-input"
+                                        value="{{ Request::input('ci') }}">
+                                </div>
+                            </div>
+
+                            <label class="col-lg-1 col-form-label">Checkout:</label>
+                            <div class="col-lg-3">
+                                <div class="input-group m-input-group m-input-group--square">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                    </div>
+                                    <input type="text" name="co" id="co" class="form-control m-input"
+                                        value="{{ Request::input('co') }}">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="la la-search"></i> Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-4">
             <form method="GET" action="{{ route('root.item-calendars.search') }}">
-                <!-- Dates -->
-                <div class="m-portlet m-portlet--head-sm" data-portlet="true" id="dates">
-                    <div class="m-portlet__head">
-                        <div class="m-portlet__head-caption">
-                            <div class="m-portlet__head-title">
-                                <span class="m-portlet__head-icon">
-                                    <i class="flaticon-calendar"></i>
-                                </span>
-
-                                <h3 class="m-portlet__head-text">Dates</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Form -->
-                    <div class="m-form m-form--fit m-form--label-align-right">
-                        <div class="m-portlet__body">
-                            <div class="form-group m-form__group m--margin-top-10">
-                                <label for="ci">Checkin: </label>
-                                <input type="text" name="ci" id="ci" class="form-control m-input" placeholder="Enter check-in date" value="{{ Request::input('ci') }}">
-                            </div>
-
-                            <div class="form-group m-form__group">
-                                <label for="co">Checkout: </label>
-                                <input type="text" name="co" id="co" class="form-control m-input" placeholder="Enter check-out date" value="{{ Request::input('co') }}">
-                            </div>
-                        </div>
-
-                        <div class="m-portlet__foot m-portlet__foot--fit">
-                            <div class="m-form__actions">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                                <button type="reset" class="btn btn-secondary">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Form -->
-                </div>
-                <!--/. Dates -->
-
                 <!-- Filters -->
                 <div class="m-portlet m-portlet--head-sm" data-portlet="true" id="filters">
                     <div class="m-portlet__head">
@@ -73,7 +73,7 @@
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions">
                                 <button type="submit" class="btn btn-primary">Apply</button>
-                                <button type="reset" class="btn btn-secondary">Cancel</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                         <div class="m-widget5">
                             <div class="m-widget5__item">
                                 <div class="m-widget5__pic">
-                                    <img class="m-widget7__img" src="{{ URL::to("{$item->images->first()->file_directory}/thumbnails/{$item->images->first()->file_name}") }}" alt="Image">
+                                    <img class="m-widget7__img" src="{{ Helper::fileUrl($item->images->first(), 'thumbnail') }}" alt="Image">
                                 </div>
 
                                 <div class="m-widget5__content">
@@ -98,22 +98,32 @@
                                         {{ ucfirst(strtolower($item->name)) }}
                                     </h4>
                                     <span class="m-widget5__desc">
-                                    {{ Str::limit($item->description, 100) }}
+                                        {!! Str::limit($item->description, 50) !!}
                                     </span>
+
+                                    <div class="m-widget5__info">
+                                        <span class="m-widget5__info-label">Category:</span>
+                                        <span class="m-widget5__info-author m--font-info">
+                                            {{ Str::ucfirst(Str::lower($item->category->name)) }}</span>
+                                        <br />
+                                        <span class="m-widget5__info-label">Price:</span>
+                                        <span class="m-widget5__info-date m--font-info">
+                                            ₱{{ number_format($item->price, 2) }}</span>
+                                    </div>
                                 </div>
 
                                 <div class="m-widget5__stats1">
                                     <span class="m-widget5__number m--font-warning">{{ $item->calendar_quantity }}</span>
-                                    <br>
+                                    <br />
                                     <span class="m-widget5__sales">Available</span>
                                 </div>
                                 <div class="m-widget5__stats2">
-                                    <span class="m-widget5__number m--font-info">₱{{ number_format($item->price, 2) }}</span>
+                                    <span class="m-widget5__number m--font-info">₱{{ number_format($item->calendar_price, 2) }}</span>
                                     <br>
-                                    <span class="m-widget5__votes">Per day</span>
+                                    <span class="m-widget5__votes">Price (# days)</span>
                                 </div>
                             </div>
-                            
+
                             <form method="POST" action="">
                                 {{ csrf_field() }}
 
