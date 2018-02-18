@@ -229,11 +229,13 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+
+        'Helper' => App\Services\Helper::class,
+        'ImageUploader' => App\Services\ImageUploader::class,
         'Str' => Illuminate\Support\Str::class,
         'Carbon' => Carbon\Carbon::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Notify' => Brian2694\Toastr\Facades\Toastr::class,
-        'ImageUploader' => App\Services\ImageUploader::class,
     ],
 
 ];
