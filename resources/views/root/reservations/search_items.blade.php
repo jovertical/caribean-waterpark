@@ -8,8 +8,8 @@
                     <div class="m-portlet__body">
                         <div class="form-group m-form__group row justify-content-center">
 
-                            <label class="col-lg-1 col-form-label">Checkin:</label>
                             <div class="col-lg-3">
+                                <label for="ci">Checkin:</label>
                                 <div class="input-group m-input-group m-input-group--square">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="la la-calendar"></i></span>
@@ -19,8 +19,9 @@
                                 </div>
                             </div>
 
-                            <label class="col-lg-1 col-form-label">Checkout:</label>
                             <div class="col-lg-3">
+                                <label for="co">Checkout:</label>
+
                                 <div class="input-group m-input-group m-input-group--square">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="la la-calendar"></i></span>
@@ -30,7 +31,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-2">
+                            <div class="col-lg-2 h-100 mt-auto">
+                                <br>
+
                                 <button type="submit" class="btn btn-primary">
                                     <i class="la la-search"></i> Search</button>
                             </div>
@@ -94,33 +97,20 @@
                                 </div>
 
                                 <div class="m-widget5__content">
-                                    <h4 class="m-widget5__title">
-                                        {{ ucfirst(strtolower($item->name)) }}
-                                    </h4>
-                                    <span class="m-widget5__desc">
+                                    <h4 class="m-widget5__title">{{ ucfirst(strtolower($item->name)) }}</h4>
+
+                                    <p class="m-widget5__desc">
                                         {!! Str::limit($item->description, 50) !!}
-                                    </span>
+                                    </p>
 
                                     <div class="m-widget5__info">
-                                        <span class="m-widget5__info-label">Category:</span>
-                                        <span class="m-widget5__info-author m--font-info">
-                                            {{ Str::ucfirst(Str::lower($item->category->name)) }}</span>
-                                        <br />
-                                        <span class="m-widget5__info-label">Price:</span>
+                                        <label class="m-widget5__info-label">Available:</label>
+                                        <span class="m-widget5__info-author m--font-warning">
+                                            {{ $item->calendar_quantity }}</span>
+                                        <label class="m-widget5__info-label">Price:</label>
                                         <span class="m-widget5__info-date m--font-info">
-                                            ₱{{ number_format($item->price, 2) }}</span>
+                                            ₱{{ number_format($item->calendar_price, 2) }}</span>
                                     </div>
-                                </div>
-
-                                <div class="m-widget5__stats1">
-                                    <span class="m-widget5__number m--font-warning">{{ $item->calendar_quantity }}</span>
-                                    <br />
-                                    <span class="m-widget5__sales">Available</span>
-                                </div>
-                                <div class="m-widget5__stats2">
-                                    <span class="m-widget5__number m--font-info">₱{{ number_format($item->calendar_price, 2) }}</span>
-                                    <br>
-                                    <span class="m-widget5__votes">Price (# days)</span>
                                 </div>
                             </div>
 
