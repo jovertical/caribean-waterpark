@@ -28,6 +28,30 @@ class UsersTableSeeder extends Seeder
         ]);
 
         \App\User::create([
+            'name' => 'chito',
+            'email' => 'chito@example.com',
+            'password' => bcrypt('secret'),
+            'verified' => true,
+            'type' => 'superuser',
+        ]);
+
+        \App\User::create([
+            'name' => 'arnie',
+            'email' => 'arnie@example.com',
+            'password' => bcrypt('secret'),
+            'verified' => true,
+            'type' => 'superuser',
+        ]);
+
+        \App\User::create([
+            'name' => 'kennent',
+            'email' => 'kennent@example.com',
+            'password' => bcrypt('secret'),
+            'verified' => true,
+            'type' => 'superuser',
+        ]);
+
+        \App\User::create([
             'name' => 'aldrin',
             'email' => 'aldrin@example.com',
             'password' => bcrypt('secret'),

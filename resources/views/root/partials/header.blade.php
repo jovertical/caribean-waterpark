@@ -14,6 +14,11 @@
                         </div>
 
                         <div class="m-stack__item m-stack__item--middle m-brand__tools">
+                            <!-- BEGIN: Responsive Aside Left Menu Toggler -->
+                            <a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
+                                <span></span>
+                            </a>
+                        
                             <!-- begin::Responsive Header Menu Toggler-->
                              <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block m-brand__toggler--active">
                                 <span></span>
@@ -122,8 +127,9 @@
                     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light">
                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow">
                             <!-- Dashboard -->
-                            <li class="m-menu__item"  aria-haspopup="true">
-                                <a href="{{ route('root.home') }}" class="m-menu__link ">
+                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'dashboard' ? 
+                                'm-menu__item--active' : '' }}"  aria-haspopup="true">
+                                <a href="{{ route('root.home') }}" class="m-menu__link">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">Dashboard</span>
                                 </a>
@@ -131,7 +137,9 @@
                             <!--/. Dashboard -->
 
                             <!-- Inventory -->
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true">
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel 
+                                {{ Helper::activeMenu(Request::segment(2)) == 'inventory' ? 'm-menu__item--active' : '' }}" 
+                                    data-menu-submenu-toggle="click" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">Inventory</span>
@@ -169,7 +177,8 @@
                             <!--/. Inventory -->
 
                             <!-- Reservations -->
-                            <li class="m-menu__item"  aria-haspopup="true">
+                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'reservations' ? 
+                                'm-menu__item--active' : '' }}"  aria-haspopup="true">
                                 <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">Reservations</span>
@@ -216,7 +225,9 @@
                             <!--/. Reports -->
 
                             <!-- Manage -->
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true">
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel 
+                                {{ Helper::activeMenu(Request::segment(2)) == 'manage' ? 
+                                    'm-menu__item--active' : '' }}"  data-menu-submenu-toggle="click" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">Manage</span>

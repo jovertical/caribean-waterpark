@@ -17,6 +17,7 @@ class CreateReservationItemsTable extends Migration
             $table->increments('id');
             $table->integer('reservation_id');
             $table->integer('item_id');
+            $table->integer('quantity');
             $table->float('price_taxable')->nullable();
             $table->float('price_deductable')->nullable();
             $table->float('price_payable');
@@ -24,8 +25,8 @@ class CreateReservationItemsTable extends Migration
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 

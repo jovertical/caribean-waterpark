@@ -15,6 +15,23 @@ class Helper {
         return  "{$name}.{$ext}";
     }
 
+    public static function activeMenu($segment_2)
+    {
+        $segments = [
+            'inventory'     => ['categories', 'items', 'coupons'],
+            'reservations'  => ['reservations'],
+            'manage'        => ['users', 'superusers', 'user-roles', 'settings'],
+        ];
+
+        foreach ($segments as $index => $segment) {
+            if (in_array($segment_2, array_values($segment))) {
+                return $index;
+            }
+        }
+
+        return 'dashboard';
+    }
+
     public static function fileUrl($data, $type = '')
     {
         if (is_object($data)) {

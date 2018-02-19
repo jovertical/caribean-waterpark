@@ -1,5 +1,9 @@
 @extends('root.layouts.main')
 
+@section('sidebar')
+    @component('root.components.sidebar')@endcomponent
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-lg">
@@ -34,8 +38,7 @@
                             <div class="col-lg-2 h-100 mt-auto">
                                 <br>
 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="la la-search"></i> Search</button>
+                                <button type="submit" class="btn btn-primary">Search</button>
                             </div>
                         </div>
                     </div>
@@ -45,45 +48,43 @@
     </div>
     <div class="row">
         <div class="col-lg-4">
-            <form method="GET" action="{{ route('root.item-calendars.search') }}">
-                <!-- Filters -->
-                <div class="m-portlet m-portlet--head-sm" data-portlet="true" id="filters">
-                    <div class="m-portlet__head">
-                        <div class="m-portlet__head-caption">
-                            <div class="m-portlet__head-title">
-                                <span class="m-portlet__head-icon">
-                                    <i class="flaticon-interface-3"></i>
-                                </span>
+            <!-- Filters -->
+            <div class="m-portlet m-portlet--head-sm" data-portlet="true" id="filters">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <span class="m-portlet__head-icon">
+                                <i class="flaticon-interface-3"></i>
+                            </span>
 
-                                <h3 class="m-portlet__head-text">Filters</h3>
-                            </div>
+                            <h3 class="m-portlet__head-text">Filters</h3>
                         </div>
                     </div>
-
-                    <!--/. Form -->
-                    <div class="m-form m-form--fit m-form--label-align-right">
-                        <div class="m-portlet__body">
-                            <div class="form-group m-form__group">
-                                <label for="mp">Maximum price: </label>
-
-                                <div class="m-ion-range-slider">
-                                    <input type="hidden" name="mp" id="mp" data-max-value="49999"
-                                        value="{{ Request::input('mp') }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="m-portlet__foot m-portlet__foot--fit">
-                            <div class="m-form__actions">
-                                <button type="submit" class="btn btn-primary">Apply</button>
-                                <button type="reset" class="btn btn-secondary">Reset</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Form -->
                 </div>
-                <!--/. Filters -->
-            </form>
+
+                <!--/. Form -->
+                <div class="m-form m-form--fit m-form--label-align-right">
+                    <div class="m-portlet__body">
+                        <div class="form-group m-form__group">
+                            <label for="mp">Maximum price: </label>
+
+                            <div class="m-ion-range-slider">
+                                <input type="hidden" name="mp" id="mp" data-max-value="49999"
+                                    value="{{ Request::input('mp') }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Form -->
+            </div>
+            <!--/. Filters -->
         </div>
 
         <div class="col-lg">
