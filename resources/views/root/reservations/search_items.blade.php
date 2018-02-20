@@ -1,14 +1,38 @@
 @extends('root.layouts.main')
 
 @section('sidebar')
-    @component('root.components.sidebar')@endcomponent
+    @component('root.components.sidebar')
+        <!-- Cart -->
+        <li class="m-menu__item" aria-haspopup="true">
+            <a href="#" class="m-menu__link">
+                <i class="m-menu__link-icon la la-shopping-cart"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">Cart</span>
+                            @if(count($selected_items))
+                                <span class="m-menu__link-badge">
+                                    <span class="m-badge m-badge--success">{{ count($selected_items) }}</span>
+                                </span>
+                            @endif
+                        </span>
+                    </span>
+                </span>
+            </a>
+        </li>
+    @endcomponent
 @endsection
 
 @section('content')
     <div class="row">
         <div class="col-lg">
+            @if(Session::has('message'))
+                @component('root.components.alert')
+                    {{ Session::get('message') }}
+                @endcomponent
+            @endif
+
             <div class="m-portlet">
-                <form method="GET" action="{{ route('root.item-calendars.search') }}">
+                <form method="GET" action="{{ route('root.reservations.search-items') }}">
                     <div class="m-portlet__body">
                         <div class="form-group m-form__group row justify-content-center">
 
@@ -88,52 +112,52 @@
         </div>
 
         <div class="col-lg">
-            @foreach($items as $item)
-                <div class="m-portlet">
-                    <div class="m-portlet__body">
-                        <div class="m-widget5">
-                            <div class="m-widget5__item">
-                                <div class="m-widget5__pic">
-                                    <img class="m-widget7__img" src="{{ Helper::fileUrl($item->images->first(), 'thumbnail') }}" alt="Image">
-                                </div>
+            @if(count($available_items))
+                @foreach($available_items as $index => $available_item)
+                    <div class="m-portlet">
+                        <div class="m-portlet__body">
+                            <div class="m-widget5">
+                                <div class="m-widget5__item">
+                                    <div class="m-widget5__pic">
+                                        <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}" class="m-widget7__img"  alt="Image">
+                                    </div>
 
-                                <div class="m-widget5__content">
-                                    <h4 class="m-widget5__title">{{ ucfirst(strtolower($item->name)) }}</h4>
+                                    <div class="m-widget5__content">
+                                        <h4 class="m-widget5__title">{{ ucfirst(strtolower($available_item->name)) }}</h4>
 
-                                    <p class="m-widget5__desc">
-                                        {!! Str::limit($item->description, 50) !!}
-                                    </p>
+                                        <p class="m-widget5__desc">
+                                            {!! Str::limit($available_item->description, 50) !!}
+                                        </p>
 
-                                    <div class="m-widget5__info">
-                                        <label class="m-widget5__info-label">Available:</label>
-                                        <span class="m-widget5__info-author m--font-warning">
-                                            {{ $item->calendar_quantity }}</span>
-                                        <label class="m-widget5__info-label">Price:</label>
-                                        <span class="m-widget5__info-date m--font-info">
-                                            ₱{{ number_format($item->calendar_price, 2) }}</span>
+                                        <div class="m-widget5__info">
+                                            <label class="m-widget5__info-label">Available:</label>
+                                            <span class="m-widget5__info-author m--font-warning">
+                                                {{ $available_item->calendar_quantity }}</span>
+                                            <label class="m-widget5__info-label">Price:</label>
+                                            <span class="m-widget5__info-date m--font-info">
+                                                ₱{{ number_format($available_item->calendar_price, 2) }}</span>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <form method="POST" action="{{ route('root.reservations.add-item', $index) }}">
+                                    {{ csrf_field() }}
+
+                                    <div class="m-widget19__action">
+                                        <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom">Add</button>
+                                    </div>
+                                </form>
                             </div>
-
-                            <form method="POST" action="">
-                                {{ csrf_field() }}
-
-                                <div class="m-widget19__action">
-                                    <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom">
-                                        Add</button>
-                                </div>
-                            </form>
                         </div>
                     </div>
+                    <!--/. Item -->
+                @endforeach
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
+                    {{ $available_items->appends(Request::all())->links() }}
                 </div>
-                <!--/. Item -->
-            @endforeach
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
-                {{ $items->appends(Request::all())->links() }}
-            </div>
-
+            @endif
         </div>
     </div>
 @endsection

@@ -75,7 +75,7 @@
                                                             <span class="m-nav__section-text">Section</span>
                                                         </li>
                                                         <li class="m-nav__item">
-                                                            <a href="?page=profile&demo=demo2" class="m-nav__link">
+                                                            <a href="#" class="m-nav__link">
                                                                 <i class="m-nav__link-icon flaticon-profile-1"></i>
                                                                 <span class="m-nav__link-title">
                                                                     <span class="m-nav__link-wrap">
