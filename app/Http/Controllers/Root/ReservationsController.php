@@ -62,7 +62,7 @@ class ReservationsController extends Controller
         session(['reservation.checkin_date' => $checkin_date->format('Y-m-d')]);
         session(['reservation.checkout_date' => $checkout_date->format('Y-m-d')]);
 
-        return view('root.reservations.search_items', [
+        return view('root.reservation.search_items', [
             'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
             'selected_items' => session()->get('reservation.selected_items')
         ]);
@@ -85,21 +85,32 @@ class ReservationsController extends Controller
 
                 Notify::success('Item added.', 'Success!');
 
-                return redirect()->back();
+                return back();
             }
 
-            $selected_items[array_search($item_added->id, array_column($selected_items, 'id'))]->quantity += $quantity;
             $item_added->calendar_occupied += $quantity;
             $item_added->calendar_unoccupied -= $quantity;
 
             Notify::success('Item quantity updated.', 'Success!');
 
-            return redirect()->back();
+            return back();
         }
 
         Notify::warning('Item not added/quantity updated.', 'Whooops?');
 
-        return redirect()->back();
+        return back();
+    }
+
+    public function removeItem(Request $request, $index)
+    {
+
+    }
+
+    public function showItems()
+    {
+        $items = session()->get('reservation.selected_items');
+
+        return view('root.reservation.show_items', ['items' => $items]);
     }
 
     public function index()

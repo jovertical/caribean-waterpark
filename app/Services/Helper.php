@@ -53,6 +53,11 @@ class Helper {
         return '/root/assets/app/media/img/misc/noimage.png';
     }
 
+    public static function moneyFormat(float $amount)
+    {
+        return number_format($amount, 2, '.', ',');
+    }
+
     public static function paginate($data, $perPage = 10)
     {
         if (is_array($data)) {

@@ -4,7 +4,7 @@
     @component('root.components.sidebar')
         <!-- Cart -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="#" class="m-menu__link">
+            <a href="{{ route('root.reservations.show-items') }}" class="m-menu__link">
                 <i class="m-menu__link-icon la la-shopping-cart"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
@@ -19,6 +19,7 @@
                 </span>
             </a>
         </li>
+        <!--/. Cart -->
     @endcomponent
 @endsection
 
@@ -136,7 +137,7 @@
                                                     {{ $available_item->calendar_unoccupied }}</span>
                                                 <label class="m-widget5__info-label">Price:</label>
                                                 <span class="m-widget5__info-date m--font-info">
-                                                    ₱{{ number_format($available_item->calendar_price, 2) }}</span>
+                                                    ₱{{ Helper::moneyFormat($available_item->calendar_price) }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -240,7 +241,7 @@
 
                 $('#modalTitle').text('Add/increase in cart: ' + $form.data('item-name'));
 
-                $quantity.on('keyup', function() {
+                $quantity.on('keyup change', function() {
                     $('input[id=quantity_' + $form.data('item-index') + ']').val($quantity.val());
                 });
 
