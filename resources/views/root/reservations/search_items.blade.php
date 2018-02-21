@@ -114,43 +114,49 @@
         <div class="col-lg">
             @if(count($available_items))
                 @foreach($available_items as $index => $available_item)
-                    <div class="m-portlet">
-                        <div class="m-portlet__body">
-                            <div class="m-widget5">
-                                <div class="m-widget5__item">
-                                    <div class="m-widget5__pic">
-                                        <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}" class="m-widget7__img"  alt="Image">
-                                    </div>
+                    @if($available_item->calendar_unoccupied > 0)
+                        <div class="m-portlet">
+                            <div class="m-portlet__body">
+                                <div class="m-widget5">
+                                    <div class="m-widget5__item">
+                                        <div class="m-widget5__pic">
+                                            <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}" class="m-widget7__img"  alt="Image">
+                                        </div>
 
-                                    <div class="m-widget5__content">
-                                        <h4 class="m-widget5__title">{{ ucfirst(strtolower($available_item->name)) }}</h4>
+                                        <div class="m-widget5__content">
+                                            <h4 class="m-widget5__title">{{ ucfirst(strtolower($available_item->name)) }}</h4>
 
-                                        <p class="m-widget5__desc">
-                                            {!! Str::limit($available_item->description, 50) !!}
-                                        </p>
+                                            <p class="m-widget5__desc">
+                                                {!! Str::limit($available_item->description, 50) !!}
+                                            </p>
 
-                                        <div class="m-widget5__info">
-                                            <label class="m-widget5__info-label">Available:</label>
-                                            <span class="m-widget5__info-author m--font-warning">
-                                                {{ $available_item->calendar_quantity }}</span>
-                                            <label class="m-widget5__info-label">Price:</label>
-                                            <span class="m-widget5__info-date m--font-info">
-                                                ₱{{ number_format($available_item->calendar_price, 2) }}</span>
+                                            <div class="m-widget5__info">
+                                                <label class="m-widget5__info-label">Available:</label>
+                                                <span class="m-widget5__info-author m--font-warning">
+                                                    {{ $available_item->calendar_unoccupied }}</span>
+                                                <label class="m-widget5__info-label">Price:</label>
+                                                <span class="m-widget5__info-date m--font-info">
+                                                    ₱{{ number_format($available_item->calendar_price, 2) }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <form method="POST" action="{{ route('root.reservations.add-item', $index) }}">
-                                    {{ csrf_field() }}
+                                    <div data-attribute="confirmable">
+                                        <form method="POST" action="{{ route('root.reservations.add-item', $index) }}" class="confirm" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
+                                            {{ csrf_field() }}
 
-                                    <div class="m-widget19__action">
-                                        <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom">Add</button>
+                                            <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">
+
+                                            <div class="m-widget19__action">
+                                                <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom" data-toggle="modal" data-target="#modalConfirmation">Add</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--/. Item -->
+                        <!--/. Item -->
+                    @endif
                 @endforeach
 
                 <!-- Pagination -->
@@ -160,6 +166,18 @@
             @endif
         </div>
     </div>
+
+    @component('root.components.modal_confirmation')
+        @slot('title')
+            Confirm action
+        @endslot
+
+        <div class="form-group">
+            <label class="form-control-label">Quantity:</label>
+
+            <input type="number" id="quantity" class="form-control" value="1">
+        </div>
+    @endcomponent
 @endsection
 
 @section('scripts')
@@ -211,6 +229,25 @@
 
         $(document).ready(function() {
             search.init();
+
+            // modal confirmation
+            $('div[data-attribute=confirmable]').on('click', '.confirm', function(e) {
+                e.preventDefault();
+
+                var $form = $(this);
+                var $modal = $("#modalConfirmation");
+                var $quantity = $('input[id=quantity]');
+
+                $('#modalTitle').text('Add/increase in cart: ' + $form.data('item-name'));
+
+                $quantity.on('keyup', function() {
+                    $('input[id=quantity_' + $form.data('item-index') + ']').val($quantity.val());
+                });
+
+                $modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    $form.submit();
+                });
+            });
         });
     </script>
 @endsection

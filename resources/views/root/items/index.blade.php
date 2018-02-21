@@ -66,7 +66,7 @@
             <!--end: Search Form -->
 
             <!-- Categories -->
-            <table id="table" class="m-datatable" width="100%" data-form="table">
+            <table id="table" class="m-datatable" width="100%" data-attribute="confirmable">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -92,7 +92,7 @@
     </div>
     <!--/. Portlet -->
 
-    @component('root.components.modal')
+    @component('root.components.modal_confirmation')
         @slot('title')
             Confirm action
         @endslot
@@ -103,78 +103,89 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            var items = function() {
-                //== Private functions
+        var items = function() {
+            //== Private functions
 
-                // category initializer
-                var itemsInit = function() {
+            // category initializer
+            var itemsInit = function() {
 
-                    var datatable = $('table[id=table]').mDatatable({
-                        data: {
-                            saveState: { cookie: false }
-                        },
-                        layout: {
-                            theme: 'default',
-                            class: '',
-                            scroll: true,
-                            height: 350,
-                            footer: false
-                        },
-                        search: {
-                            input: $('#generalSearch'),
-                        },
-                        columns: [
-                            {
-                                field: '#',
-                                width: 25
-                            },
-                            {
-                                field: 'Image',
-                                width: 50
-                            },
-                            {
-                                field: 'Category',
-                                width: 75
-                            },
-                            {
-                                field: 'Name',
-                                width: 100
-                            },
-                            {
-                                field: 'Description',
-                                width: 200
-                            },
-                            {
-                                field: 'Price',
-                                width: 100
-                            },
-                            {
-                                field: 'Quantity',
-                                width: 75
-                            },
-                            {
-                                field: 'Actions',
-                                width: 100
-                            }            
-                        ],
-                    });
-
-                    $('select[id=category]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Category');
-                    });
-
-                    $('select[id=category]').selectpicker();
-                };
-
-                return {
-                    init: function() {
-                        itemsInit();
+                var datatable = $('table[id=table]').mDatatable({
+                    data: {
+                        saveState: { cookie: false }
                     },
-                };
-            }();
+                    layout: {
+                        theme: 'default',
+                        class: '',
+                        scroll: true,
+                        height: 350,
+                        footer: false
+                    },
+                    search: {
+                        input: $('#generalSearch'),
+                    },
+                    columns: [
+                        {
+                            field: '#',
+                            width: 25
+                        },
+                        {
+                            field: 'Image',
+                            width: 50
+                        },
+                        {
+                            field: 'Category',
+                            width: 75
+                        },
+                        {
+                            field: 'Name',
+                            width: 100
+                        },
+                        {
+                            field: 'Description',
+                            width: 200
+                        },
+                        {
+                            field: 'Price',
+                            width: 100
+                        },
+                        {
+                            field: 'Quantity',
+                            width: 75
+                        },
+                        {
+                            field: 'Actions',
+                            width: 100
+                        }
+                    ],
+                });
 
+                $('select[id=category]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Category');
+                });
+
+                $('select[id=category]').selectpicker();
+            };
+
+            return {
+                init: function() {
+                    itemsInit();
+                },
+            };
+        }();
+
+        $(document).ready(function() {
             items.init();
+
+            // modal confirmation
+            $('table[data-attribute="confirmable"]').on('click', '.confirm', function(e) {
+                e.preventDefault();
+
+                var $form = $(this);
+
+                $('#modalConfirmation').modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    $form.submit();
+                });
+            });
         });
     </script>
 @endsection

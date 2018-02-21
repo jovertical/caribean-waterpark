@@ -40,7 +40,8 @@ class ReservationsController extends Controller
                     })->count();
 
                     if ($count == 0) {
-                        $item->calendar_quantity = $item->quantity - $item_calendar->sum('quantity');
+                        $item->calendar_occupied = 0;
+                        $item->calendar_unoccupied = $item->quantity - $item_calendar->sum('quantity');
                         $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
 
                         $available_items->push($item);
@@ -63,13 +64,40 @@ class ReservationsController extends Controller
 
         return view('root.reservations.search_items', [
             'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
-            'selected_items' => collect([])
+            'selected_items' => session()->get('reservation.selected_items')
         ]);
     }
 
     public function addItem(Request $request, $index)
     {
-        
+        $quantity = (int) $request->input('quantity');
+
+        $available_items = session()->get('reservation.available_items')->all();
+        $selected_items = session()->get('reservation.selected_items')->all();
+        $item_added = $available_items[$index];
+
+        if ($quantity <= $item_added->calendar_unoccupied) {
+            if(! in_array($item_added->id, array_column($selected_items, 'id'))) {
+                $item_added->calendar_occupied += $quantity;
+                $item_added->calendar_unoccupied -= $quantity;
+
+                session()->push('reservation.selected_items', $item_added);
+
+                Notify::success('Item added.', 'Success!');
+
+                return redirect()->back();
+            }
+
+            $selected_items[array_search($item_added->id, array_column($selected_items, 'id'))]->quantity += $quantity;
+            $item_added->calendar_occupied += $quantity;
+            $item_added->calendar_unoccupied -= $quantity;
+
+            Notify::success('Item quantity updated.', 'Success!');
+
+            return redirect()->back();
+        }
+
+        Notify::warning('Item not added/quantity updated.', 'Whooops?');
 
         return redirect()->back();
     }

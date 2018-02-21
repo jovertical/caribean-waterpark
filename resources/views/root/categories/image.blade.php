@@ -31,7 +31,9 @@
                                 <span class="m-dropzone__msg-desc">File formats supported:
                                     <strong>jpg/jpeg</strong>, <strong>png</strong>, <strong>gif</strong>
                                     <br />
-                                    Max file size is <strong>4mb</strong>
+                                    Max number of files: <strong>1</strong>
+                                    <br />
+                                    Max file size: <strong>6mb</strong>
                                 </span>
                             </div>
                         </form>
@@ -65,7 +67,7 @@
             paramName: 'image',
             addRemoveLinks : true,
             maxFiles: 1,
-            maxFilesize: 4,
+            maxFilesize: 6,
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             init: function() {
                 var $myDropzone = this;
