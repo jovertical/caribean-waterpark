@@ -253,13 +253,6 @@
                                         </li>
 
                                         <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="{{ route('root.user-roles.index') }}" class="m-menu__link">
-                                                <i class="m-menu__link-icon flaticon-web"></i>
-                                                <span class="m-menu__link-text">Staff Roles</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="m-menu__item" aria-haspopup="true">
                                             <a href="{{ route('root.settings') }}" class="m-menu__link">
                                                 <i class="m-menu__link-icon flaticon-cogwheel"></i>
                                                 <span class="m-menu__link-text">Settings</span>
@@ -281,6 +274,3 @@
 
 </header>
 <!-- end::Header -->
-
-
-

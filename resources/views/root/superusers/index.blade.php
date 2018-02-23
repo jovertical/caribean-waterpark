@@ -73,7 +73,7 @@
     </div>
     <!--/. Portlet -->
 
-    @component('root.components.modal')
+    @component('root.components.modal_confirmation')
         @slot('title')
             Confirm action
         @endslot

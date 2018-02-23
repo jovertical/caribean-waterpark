@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body">
                <div class="m-scrollable" data-scrollbar-shown="true" data-scrollable="true" data-max-height="100">
                     <p>{{ $slot }}</p>
                 </div>

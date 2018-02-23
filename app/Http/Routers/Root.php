@@ -28,8 +28,6 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::get('superusers/{id}/image/uploaded', 'SuperusersController@uploadedImage')->name('superusers.image.uploaded');
         Route::delete('superusers/{id}/image/destroy', 'SuperusersController@destroyImage')->name('superusers.image.destroy');
 
-        Route::resource('user-roles', 'UserRolesController');
-
         Route::get('settings', 'SettingsController@index')->name('settings');
 
         Route::resource('categories', 'CategoriesController');

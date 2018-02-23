@@ -113,58 +113,56 @@
         </div>
 
         <div class="col-lg">
-            @if(count($available_items))
-                @foreach($available_items as $index => $available_item)
-                    @if($available_item->calendar_unoccupied > 0)
-                        <div class="m-portlet">
-                            <div class="m-portlet__body">
-                                <div class="m-widget5">
-                                    <div class="m-widget5__item">
-                                        <div class="m-widget5__pic">
-                                            <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}" class="m-widget7__img"  alt="Image">
-                                        </div>
-
-                                        <div class="m-widget5__content">
-                                            <h4 class="m-widget5__title">{{ ucfirst(strtolower($available_item->name)) }}</h4>
-
-                                            <p class="m-widget5__desc">
-                                                {!! Str::limit($available_item->description, 50) !!}
-                                            </p>
-
-                                            <div class="m-widget5__info">
-                                                <label class="m-widget5__info-label">Available:</label>
-                                                <span class="m-widget5__info-author m--font-warning">
-                                                    {{ $available_item->calendar_unoccupied }}</span>
-                                                <label class="m-widget5__info-label">Price:</label>
-                                                <span class="m-widget5__info-date m--font-info">
-                                                    ₱{{ Helper::moneyFormat($available_item->calendar_price) }}</span>
-                                            </div>
-                                        </div>
+            @foreach($available_items as $index => $available_item)
+                @if($available_item->calendar_unoccupied > 0)
+                    <div class="m-portlet">
+                        <div class="m-portlet__body">
+                            <div class="m-widget5">
+                                <div class="m-widget5__item">
+                                    <div class="m-widget5__pic">
+                                        <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}" class="m-widget7__img"  alt="Image">
                                     </div>
 
-                                    <div data-attribute="confirmable">
-                                        <form method="POST" action="{{ route('root.reservations.add-item', $index) }}" class="confirm" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
-                                            {{ csrf_field() }}
+                                    <div class="m-widget5__content">
+                                        <h4 class="m-widget5__title">{{ ucfirst(strtolower($available_item->name)) }}</h4>
 
-                                            <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">
+                                        <p class="m-widget5__desc">
+                                            {!! Str::limit($available_item->description, 50) !!}
+                                        </p>
 
-                                            <div class="m-widget19__action">
-                                                <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom" data-toggle="modal" data-target="#modalConfirmation">Add</button>
-                                            </div>
-                                        </form>
+                                        <div class="m-widget5__info">
+                                            <label class="m-widget5__info-label">Available:</label>
+                                            <span class="m-widget5__info-author m--font-warning">
+                                                {{ $available_item->calendar_unoccupied }}</span>
+                                            <label class="m-widget5__info-label">Price:</label>
+                                            <span class="m-widget5__info-date m--font-info">
+                                            ₱{{ Helper::moneyFormat($available_item->calendar_price) }}</span>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <div data-attribute="confirmable">
+                                    <form method="POST" action="{{ route('root.reservations.add-item', $index) }}" class="confirm" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
+                                        {{ csrf_field() }}
+
+                                        <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">
+
+                                        <div class="m-widget19__action">
+                                            <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom" data-toggle="modal" data-target="#modalConfirmation">Add</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <!--/. Item -->
-                    @endif
-                @endforeach
+                    </div>
+                    <!--/. Item -->
+                @endif
+            @endforeach
 
-                <!-- Pagination -->
-                <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
-                    {{ $available_items->appends(Request::all())->links() }}
-                </div>
-            @endif
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
+                {{ $available_items->appends(Request::all())->links() }}
+            </div>
         </div>
     </div>
 

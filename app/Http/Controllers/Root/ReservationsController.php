@@ -43,6 +43,8 @@ class ReservationsController extends Controller
                         $item->calendar_occupied = 0;
                         $item->calendar_unoccupied = $item->quantity - $item_calendar->sum('quantity');
                         $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
+                        $item->order_quantity = 0;
+                        $item->order_price = 0;
 
                         $available_items->push($item);
                     }
@@ -55,8 +57,8 @@ class ReservationsController extends Controller
         if ((session()->get('reservation.checkin_date') != $checkin_date->format('Y-m-d')) OR
             (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d'))) {
 
-            session(['reservation.available_items' => $items]);
-            session(['reservation.selected_items' => collect([])]);
+            session(['reservation.available_items' => $items->all()]);
+            session(['reservation.selected_items' => []]);
         }
 
         session(['reservation.checkin_date' => $checkin_date->format('Y-m-d')]);
@@ -72,14 +74,16 @@ class ReservationsController extends Controller
     {
         $quantity = (int) $request->input('quantity');
 
-        $available_items = session()->get('reservation.available_items')->all();
-        $selected_items = session()->get('reservation.selected_items')->all();
+        $available_items = session()->get('reservation.available_items');
+        $selected_items = session()->get('reservation.selected_items');
         $item_added = $available_items[$index];
 
         if ($quantity <= $item_added->calendar_unoccupied) {
             if(! in_array($item_added->id, array_column($selected_items, 'id'))) {
                 $item_added->calendar_occupied += $quantity;
                 $item_added->calendar_unoccupied -= $quantity;
+                $item_added->order_quantity = $quantity;
+                $item_added->order_price = $item_added->calendar_price * $quantity;
 
                 session()->push('reservation.selected_items', $item_added);
 
@@ -90,27 +94,56 @@ class ReservationsController extends Controller
 
             $item_added->calendar_occupied += $quantity;
             $item_added->calendar_unoccupied -= $quantity;
+            $selected_items[array_search($item_added->id, array_column($selected_items, 'id'))]->order_quantity += $quantity;
+            $item_added->order_price = $item_added->calendar_price * $item_added->order_quantity;
 
             Notify::success('Item quantity updated.', 'Success!');
 
             return back();
         }
 
-        Notify::warning('Item not added/quantity updated.', 'Whooops?');
+        Notify::warning('Item not added or quantity updated.', 'Whooops?');
 
         return back();
     }
 
     public function removeItem(Request $request, $index)
     {
+        $quantity = (int) $request->input('quantity');
 
+        $available_items = session()->get('reservation.available_items');
+        $selected_items = session()->get('reservation.selected_items');
+        $item_removed = $selected_items[$index];
+
+        if ($quantity <= $item_removed->order_quantity) {
+            $item_removed->calendar_occupied -= $quantity;
+            $item_removed->calendar_unoccupied += $quantity;
+            $item_removed->order_quantity -= $quantity;
+            $item_removed->order_price = $item_removed->calendar_price * $item_removed->order_quantity;
+
+            if ($item_removed->order_quantity == 0) {
+                session()->pull('reservation.selected_items.'.$index);
+
+                Notify::success('Item removed.', 'Success!');
+
+                return back();
+            }
+
+            Notify::success('Item quantity updated.', 'Success!');
+
+            return back();
+        }
+
+        Notify::warning('Item not removed or quantity updated.', 'Whooops?');
+
+        return back();
     }
 
     public function showItems()
     {
         $items = session()->get('reservation.selected_items');
 
-        return view('root.reservation.show_items', ['items' => $items]);
+        return view('root.reservation.show_items', ['items' => $items ?? []]);
     }
 
     public function index()
