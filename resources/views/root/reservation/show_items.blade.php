@@ -58,44 +58,48 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                
-                                <div class="bordered-box">
-                                    <p>
-                                        <span>VATTABLE:</span>
-
-                                        <span class="pull-right m--font-bolder">{{ Helper::moneyFormat(500) }}</span>
-                                    </p>
-
-                                    <p>
-                                        <span>SUBTOTAL:</span>
-
-                                        <span class="pull-right m--font-bolder">{{ Helper::moneyFormat(500) }}</span>
-                                    </p>
-
-                                    <p>
-                                        <span>DISCOUNT:</span>
-
-                                        <span class="pull-right m--font-boldest"></span>
-                                    </p>
-                                </div>
-
-                                <div class="bordered-box">
-                                    <p>
-                                        <span>TOTAL:</span>
-
-                                        <span class="pull-right m--font-boldest">{{ Helper::moneyFormat(10000) }}</span>
-                                    </p>
-                                </div>
-
-                                <div class="box box-solid">
-                                    <div class="mr-4 d-flex justify-content-end">
-                                        <button type="submit" id="submit" class="btn btn-brand">Checkout</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <!--end::Section-->
+
+                    <div class="bordered-box">
+                        <p>
+                            <span>VATTABLE:</span>
+
+                            <span class="pull-right m--font-bolder">{{ Helper::moneyFormat(500) }}</span>
+                        </p>
+
+                        <p>
+                            <span>SUBTOTAL:</span>
+
+                            <span class="pull-right m--font-bolder">{{ Helper::moneyFormat(500) }}</span>
+                        </p>
+
+                        <p>
+                            <span>DISCOUNT:</span>
+
+                            <span class="pull-right m--font-boldest"></span>
+                        </p>
+                    </div>
+
+                    <div class="box">
+                        <p>
+                            <span>TOTAL:</span>
+
+                            <span class="pull-right m--font-boldest">{{ Helper::moneyFormat(10000) }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit box box-solid">
+                    <div class="m-section" style="padding: 2.2rem 2.2rem;">
+                        <div class="m-section__content">
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" id="submit" class="btn btn-brand">Checkout</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!--end::Form-->
             </div>
