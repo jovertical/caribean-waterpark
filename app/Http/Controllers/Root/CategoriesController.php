@@ -110,6 +110,27 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
+    public function toggle($id)
+    {
+        try {
+            $category = Category::findOrFail($id);
+
+            $category->active = $category->active ? false : true;
+
+            if ($category->save()) {
+                Notify::success('Category toggled.', 'Success!');
+
+                return redirect()->back();
+            }
+
+            Notify::warning('Cannot toggle category', 'Ooops?');
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+
+        return redirect()->back();
+    }
+
     public function selectImage($id)
     {
         try {

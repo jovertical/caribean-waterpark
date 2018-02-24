@@ -50,14 +50,14 @@
             <table id="table" class="m-datatable" width="100%" data-form="table">
                 <thead>
                     <tr>
-                        <th title="#">#</th>
-                        <th title="Image">Image</th>
-                        <th title="Name">Name</th>
-                        <th title="Gender">Gender</th>
-                        <th title="Birthdate">Birthdate</th>
-                        <th title="Email">Email</th>
-                        <th title="Phone">Phone</th>
-                        <th title="Actions">Actions</th>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Birthdate</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -85,10 +85,10 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            var superusers = function() {
-                //== Private functions
+              var superusers = function() {
+                //== Private functions 
 
-                // superusers initializer
+                // superusers initializer      
                 var superusersInit = function() {
 
                     var datatable = $('#table').mDatatable({

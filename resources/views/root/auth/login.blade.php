@@ -39,9 +39,8 @@
                             <div class="row m-login__form-sub">
                                 <div class="col m--align-left m-login__form-left">
                                     <label class="m-checkbox  m-checkbox--focus">
-                                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ?
-                                            'checked' : '' }}> Remember me
-                                        <span></span>
+                                        <input type="checkbox" name="" id="" {{ old('remember') ? 'checked' : '' }}>
+                                            Remember me<span></span>
                                     </label>
                                 </div>
                                 <div class="col m--align-right m-login__form-right">

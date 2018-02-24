@@ -6,9 +6,24 @@
 @endsection
 
 @section('content')
-    @if ($categories->count() == 0)
+    @if (! Session::has('message'))
+        @if ($categories->count() == 0)
+            @component('root.components.alert')
+                @slot('type')
+                    warning
+                @endslot
+
+                There are no categories yet. <a href="{{ route('root.categories.create') }}" class="m-link">Create one?</a>
+            @endcomponent
+        @endif
+
+    @else
         @component('root.components.alert')
-            There are no categories yet. <a href="{{ route('root.categories.create') }}" class="m-link">Create one?</a>
+            @slot('type')
+                {{ Session::get('message.type') }}
+            @endslot
+
+            {{ Session::get('message.body') }}
         @endcomponent
     @endif
 

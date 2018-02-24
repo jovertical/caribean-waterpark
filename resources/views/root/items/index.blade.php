@@ -81,6 +81,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Quantity</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -158,8 +159,13 @@
                             width: 75
                         },
                         {
-                            field: 'Actions',
+                            field: 'Status',
                             width: 100
+                        },
+                        {
+                            field: 'Actions',
+                            width: 100,
+                            sortable: false
                         }
                     ],
                 });

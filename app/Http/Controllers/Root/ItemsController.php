@@ -130,6 +130,28 @@ class ItemsController extends Controller
         return redirect()->back();
     }
 
+    public function toggle($id)
+    {
+        try {
+            $item = Item::findOrFail($id);
+
+            $item->active = $item->active ? false : true;
+
+            if ($item->save()) {
+                Notify::success('Item toggled.', 'Success!');
+
+                return redirect()->back();
+            }
+
+            Notify::warning('Cannot toggle item', 'Ooops?');
+
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+
+        return redirect()->back();
+    }
+
     public function selectImage($id)
     {
         try {

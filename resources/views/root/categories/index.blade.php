@@ -79,6 +79,7 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Items</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -152,10 +153,15 @@
                             width: 50
                         },
                         {
-                            field: 'Actions',
+                            field: 'Status',
                             width: 100
+                        },
+                        {
+                            field: 'Actions',
+                            width: 100,
+                            sortable: false
                         }
-                    ],
+                    ]
                 });
 
                 $('select[id=type]').on('change', function() {
