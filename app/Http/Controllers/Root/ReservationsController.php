@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
+use App\Traits\{ComputesCosts};
 use App\{Reservation, Category, Item, ItemCalendar};
 use Helper;
 use Str, Carbon, Notify;
@@ -10,6 +11,8 @@ use App\Http\Controllers\Controller;
 
 class ReservationsController extends Controller
 {
+    use ComputesCosts;
+
     public function searchItems(Request $request)
     {
         $checkin_date = Carbon::parse($request->input('ci'));
@@ -58,12 +61,15 @@ class ReservationsController extends Controller
         if ((session()->get('reservation.checkin_date') != $checkin_date->format('Y-m-d')) OR
             (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d'))) {
 
+            // set the items array as empty
             session(['reservation.available_items' => $items->all()]);
             session(['reservation.selected_items' => []]);
         }
 
+        // set reservation dates
         session(['reservation.checkin_date' => $checkin_date->format('Y-m-d')]);
         session(['reservation.checkout_date' => $checkout_date->format('Y-m-d')]);
+        session(['reservation.days' => $checkin_date->diffInDays($checkout_date)]);
 
         return view('root.reservation.search_items', [
             'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
@@ -77,6 +83,7 @@ class ReservationsController extends Controller
 
         $available_items = session()->get('reservation.available_items');
         $selected_items = session()->get('reservation.selected_items');
+
         $item_added = $available_items[$index];
 
         if ($quantity <= $item_added->calendar_unoccupied) {
@@ -86,7 +93,13 @@ class ReservationsController extends Controller
                 $item_added->order_quantity = $quantity;
                 $item_added->order_price = $item_added->calendar_price * $quantity;
 
+                // push the item to the selected_items array
                 session()->push('reservation.selected_items', $item_added);
+
+                // re-compute item costs
+                session([
+                    'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
+                ]);
 
                 Notify::success(Str::ucfirst($item_added->name).' added.', 'Success!');
 
@@ -97,6 +110,11 @@ class ReservationsController extends Controller
             $item_added->calendar_unoccupied -= $quantity;
             $selected_items[array_search($item_added->id, array_column($selected_items, 'id'))]->order_quantity += $quantity;
             $item_added->order_price = $item_added->calendar_price * $item_added->order_quantity;
+
+            // re-compute item costs
+            session([
+                'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
+            ]);
 
             Notify::success(Str::ucfirst($item_added->name).' quantity updated.', 'Success!');
 
@@ -114,6 +132,7 @@ class ReservationsController extends Controller
 
         $available_items = session()->get('reservation.available_items');
         $selected_items = session()->get('reservation.selected_items');
+
         $item_removed = $selected_items[$index];
 
         if ($quantity <= $item_removed->order_quantity) {
@@ -123,12 +142,23 @@ class ReservationsController extends Controller
             $item_removed->order_price = $item_removed->calendar_price * $item_removed->order_quantity;
 
             if ($item_removed->order_quantity == 0) {
+                // pull the item from the selected_items array
                 session()->pull('reservation.selected_items.'.$index);
+
+                // re-compute item costs
+                session([
+                    'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
+                ]);
 
                 Notify::success(Str::ucfirst($item_removed->name).' removed.', 'Success!');
 
                 return back();
             }
+
+            // re-compute item costs
+            session([
+                'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
+            ]);
 
             Notify::success(Str::ucfirst($item_removed->name).' quantity updated.', 'Success!');
 
@@ -140,11 +170,38 @@ class ReservationsController extends Controller
         return back();
     }
 
+    public function clearItems()
+    {
+        try {
+            session(['reservation.selected_items' => []]);
+
+            // re-compute item costs
+            session([
+                'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
+            ]);
+
+            Notify::success('Items removed.', 'Success!');
+        } catch (Exception $e) {
+            Notify::error($e, 'Whooops!');
+        }
+
+        return back();
+    }
+
     public function showItems()
     {
-        $items = session()->get('reservation.selected_items');
+        $items = session()->get('reservation.selected_items') ?? [];
+        $item_costs = session()->get('reservation.item_costs');
 
-        return view('root.reservation.show_items', ['items' => $items ?? []]);
+        return view('root.reservation.show_items', [
+            'items' => $items,
+            'item_costs' => $item_costs
+        ]);
+    }
+
+    protected function canCheckout()
+    {
+        return false;
     }
 
     public function index()

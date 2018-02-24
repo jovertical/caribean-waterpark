@@ -1,5 +1,5 @@
-<!-- Modal Confirmation -->
-<div class="modal fade" id="modalConfirmation" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="{{ $name ?? 'modalConfirmation' }}" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body text-{{ $content_position ?? 'center' }}">
                <div class="m-scrollable" data-scrollbar-shown="true" data-scrollable="true" data-max-height="100">
                     <p>{{ $slot }}</p>
                 </div>

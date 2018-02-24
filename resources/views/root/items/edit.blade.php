@@ -115,7 +115,7 @@
                             <div class="col-lg-2"></div>
                             <div class="col-lg-6">
                                 <button type="submit" id="submit" class="btn btn-brand">Update</button>
-                                <a type="button" href="{{ route('root.items.index') }}" class="btn btn-secondary">Cancel</a>
+                                <a href="{{ route('root.items.index') }}" class="btn btn-secondary">Cancel</a>
                             </div>
                         </div>
                     </div>

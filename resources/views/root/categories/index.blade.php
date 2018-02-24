@@ -96,12 +96,16 @@
     </div>
     <!--/. Portlet -->
 
-    @component('root.components.modal_confirmation')
+    @component('root.components.modal')
+        @slot('name')
+            deleteCategory
+        @endslot
+
         @slot('title')
             Confirm action
         @endslot
 
-        You can't undo this action. Are you sure?
+        You are deleting this category. Doing so will also delete the items under it. You can't undo this action!
     @endcomponent
 @endsection
 
@@ -186,8 +190,9 @@
                 e.preventDefault();
 
                 var $form = $(this);
+                var $modal = $($form.data('target'));
 
-                $('#modalConfirmation').modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                $modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
                     $form.submit();
                 });
             });

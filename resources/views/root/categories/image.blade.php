@@ -54,7 +54,7 @@
                         <div class="row">
                             <div class="col-lg-2"></div>
                             <div class="col-lg-6">
-                                <a type="submit" id="submit" href="{{ route('root.categories.index') }}" class="btn btn-brand">Finish</a>
+                                <a href="{{ route('root.categories.index') }}" class="btn btn-brand">Finish</a>
                             </div>
                         </div>
                     </div>

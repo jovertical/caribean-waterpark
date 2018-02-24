@@ -9,7 +9,7 @@
     <td>{{ Str::ucfirst($item->category->name) }}</td>
     <td>{{ Str::ucfirst($item->name) }}</td>
     <td>{!! Str::limit($item->description, 25) !!}</td>
-    <td>₱{{ Helper::moneyFormat($item->price) }}</td>
+    <td>{{ Helper::moneyFormat($item->price) }}</td>
     <td>{{ $item->quantity }}</td>
     <td>
         <span class="m-badge m-badge--{{ $item->active ? 'success' : '' }} m-badge--wide text-white">
@@ -45,11 +45,11 @@
                 <button type="submit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit item"><i class="la la-edit"></i></button>
             </form>
 
-            <form method="POST" action="{{ route('root.items.destroy', $item->id) }}" class="confirm">
+            <form method="POST" action="{{ route('root.items.destroy', $item->id) }}" class="confirm" data-target="#deleteItem">
                 {{ method_field('DELETE') }}
                 {{ csrf_field() }}
 
-                <button type="submit" data-toggle="modal" data-target="#modalConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete item"><i class="la la-trash"></i>
+                <button type="submit" data-toggle="modal" data-target="#deleteItem" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete item"><i class="la la-trash"></i>
                 </button>
             </form>
         </span>

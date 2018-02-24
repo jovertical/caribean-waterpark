@@ -142,13 +142,13 @@
                                 </div>
 
                                 <div data-attribute="confirmable">
-                                    <form method="POST" action="{{ route('root.reservations.add-item', $index) }}" class="confirm" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
+                                    <form method="POST" action="{{ route('root.reservations.add-item', $index) }}" class="confirm" data-target="#addItem" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
                                         {{ csrf_field() }}
 
                                         <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">
 
                                         <div class="m-widget19__action">
-                                            <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom" data-toggle="modal" data-target="#modalConfirmation">Add</button>
+                                            <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom" data-toggle="modal" data-target="#addItem">Add</button>
                                         </div>
                                     </form>
                                 </div>
@@ -166,9 +166,17 @@
         </div>
     </div>
 
-    @component('root.components.modal_confirmation')
+    @component('root.components.modal')
+        @slot('name')
+            addItem
+        @endslot
+
         @slot('title')
             Confirm action
+        @endslot
+
+        @slot('content_position')
+            left
         @endslot
 
         <div class="form-group">
@@ -234,7 +242,7 @@
                 e.preventDefault();
 
                 var $form = $(this);
-                var $modal = $("#modalConfirmation");
+                var $modal = $($form.data('target'));
                 var $quantity = $('input[id=quantity]');
 
                 $('#modalTitle').text('Add/increase in cart: ' + $form.data('item-name'));
