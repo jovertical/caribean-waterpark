@@ -17,47 +17,57 @@ class ReservationsController extends Controller
     {
         $checkin_date = Carbon::parse($request->input('ci'));
         $checkout_date = Carbon::parse($request->input('co'));
+        $earliest = Carbon::now();
 
         $items = collect([]);
 
         if (($request->input('ci') != null) AND ($request->input('co') != null)) {
-            if ($checkin_date <= $checkout_date) {
-                $items =    Item::with('category')->whereHas('category', function($category) {
-                                $category->where('type', 'accomodation');
-                                $category->where('active', true);
-                            })
-                            ->where('active', true)
-                            ->orderBy('price');
+             // check for invalid date
+            if (($checkin_date <= $earliest) OR ($checkout_date <= $earliest) OR ($checkin_date >= $checkout_date)) {
+                // set reservation data to empty array
+                session(['reservation' => []]);
 
-                $available_items = collect([]);
+                Notify::warning('Please select a valid date.', 'Whooops?');
 
-                $items->each(function($item) use ($available_items, $checkin_date, $checkout_date) {
-                    $item_calendar =    ItemCalendar::where('item_id', $item->id)
-                                            ->whereBetween('date', [
-                                                $checkin_date->format('Y-m-d'),
-                                                $checkout_date->format('Y-m-d')
-                                            ])
-                                            ->get();
-
-                    $count = $item_calendar->filter(function($ic) use ($item) {
-                        return $ic->quantity <= $item->quantity;
-                    })->count();
-
-                    if ($count == 0) {
-                        $item->calendar_occupied = 0;
-                        $item->calendar_unoccupied = $item->quantity - $item_calendar->sum('quantity');
-                        $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
-                        $item->order_quantity = 0;
-                        $item->order_price = 0;
-
-                        $available_items->push($item);
-                    }
-                });
-
-                $items = $available_items;
+                return redirect()->route('root.reservation.search-items');
             }
+
+            $items =    Item::with('category')->whereHas('category', function($category) {
+                            $category->where('type', 'accomodation');
+                            $category->where('active', true);
+                        })
+                        ->where('active', true)
+                        ->orderBy('price');
+
+            $available_items = collect([]);
+
+            $items->each(function($item) use ($available_items, $checkin_date, $checkout_date) {
+                $item_calendar =    ItemCalendar::where('item_id', $item->id)
+                                        ->whereBetween('date', [
+                                            $checkin_date->format('Y-m-d'),
+                                            $checkout_date->format('Y-m-d')
+                                        ])
+                                        ->get();
+
+                $count = $item_calendar->filter(function($ic) use ($item) {
+                    return $ic->quantity <= $item->quantity;
+                })->count();
+
+                if ($count == 0) {
+                    $item->calendar_occupied = 0;
+                    $item->calendar_unoccupied = $item->quantity - $item_calendar->sum('quantity');
+                    $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
+                    $item->order_quantity = 0;
+                    $item->order_price = 0;
+
+                    $available_items->push($item);
+                }
+            });
+
+            $items = $available_items;
         }
 
+        // check if dates are the same, if not clear the items array.
         if ((session()->get('reservation.checkin_date') != $checkin_date->format('Y-m-d')) OR
             (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d'))) {
 

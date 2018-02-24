@@ -4,7 +4,7 @@
     @component('root.components.sidebar')
         <!-- Cart -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="{{ route('root.reservations.show-items') }}" class="m-menu__link">
+            <a href="{{ route('root.reservation.show-items') }}" class="m-menu__link">
                 <i class="m-menu__link-icon la la-shopping-cart"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
@@ -33,7 +33,7 @@
             @endif
 
             <div class="m-portlet">
-                <form method="GET" action="{{ route('root.reservations.search-items') }}">
+                <form method="GET" action="{{ route('root.reservation.search-items') }}">
                     <div class="m-portlet__body">
                         <div class="form-group m-form__group row justify-content-center">
 
@@ -142,7 +142,7 @@
                                 </div>
 
                                 <div data-attribute="confirmable">
-                                    <form method="POST" action="{{ route('root.reservations.add-item', $index) }}" class="confirm" data-target="#addItem" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
+                                    <form method="POST" action="{{ route('root.reservation.add-item', $index) }}" class="confirm" data-target="#addItem" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
                                         {{ csrf_field() }}
 
                                         <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">

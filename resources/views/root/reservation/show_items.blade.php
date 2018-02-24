@@ -13,7 +13,7 @@
                     warning
                 @endslot
 
-                There are no items yet. <a href="{{ route('root.reservations.search-items') }}" class="m-link">Search now?</a>
+                There are no items yet. <a href="{{ route('root.reservation.search-items') }}" class="m-link">Search now?</a>
             @endcomponent
         @endif
     @else
@@ -63,7 +63,7 @@
                                                     <th>{{ Helper::moneyFormat($item->order_price) }}</th>
                                                     <th>
                                                         <div data-attribute="confirmable">
-                                                            <form method="POST" action="{{ route('root.reservations.remove-item',
+                                                            <form method="POST" action="{{ route('root.reservation.remove-item',
                                                                 $index) }}" class="confirm" data-target="#removeItem"
                                                                     data-item-index="{{ $index }}" data-item-name="{{ $item->name }}">
                                                                 {{ csrf_field() }}
@@ -125,7 +125,7 @@
                             <div class="m-section__content">
                                 <div class="d-flex justify-content-end" data-attribute="confirmable">
                                     <div>
-                                        <form method="POST" action="{{ route('root.reservations.clear-items') }}" class="confirm"
+                                        <form method="POST" action="{{ route('root.reservation.clear-items') }}" class="confirm"
                                             data-target="#clearItems" style="display: inline-block;">
                                             {{ csrf_field() }}
 
