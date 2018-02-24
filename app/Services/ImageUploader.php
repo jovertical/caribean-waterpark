@@ -9,7 +9,7 @@ class ImageUploader {
     public static function upload($file, $directory) 
     {
         $file_ext = $file->getClientOriginalExtension();
-        $file_name = Helper::create_filename($file_ext);
+        $file_name = Helper::createFilename($file_ext);
         $thumbnail = ['height' => 500, 'width' => 500];
 
         $base_directory = 'storage/'.$directory;

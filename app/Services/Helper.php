@@ -8,7 +8,7 @@ use Carbon;
 
 class Helper {
 
-    public static function create_filename($ext)
+    public static function createFilename($ext)
     {
         $name = str_random(25);
 
@@ -53,9 +53,9 @@ class Helper {
         return '/root/assets/app/media/img/misc/noimage.png';
     }
 
-    public static function moneyFormat(float $amount)
+    public static function moneyFormat(float $amount, $currency_sign = '₱')
     {
-        return number_format($amount, 2, '.', ',');
+        return $currency_sign.number_format($amount, 2, '.', ',');
     }
 
     public static function paginate($data, $perPage = 10)

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use App\{Reservation, Category, Item, ItemCalendar};
 use Helper;
-use Carbon, Notify;
+use Str, Carbon, Notify;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -21,6 +21,7 @@ class ReservationsController extends Controller
             if ($checkin_date <= $checkout_date) {
                 $items =    Item::with('category')->whereHas('category', function($category) {
                                 $category->where('type', 'accomodation');
+                                $category->where('active', true);
                             })
                             ->where('active', true)
                             ->orderBy('price');
@@ -87,7 +88,7 @@ class ReservationsController extends Controller
 
                 session()->push('reservation.selected_items', $item_added);
 
-                Notify::success('Item added.', 'Success!');
+                Notify::success(Str::ucfirst($item_added->name).' added.', 'Success!');
 
                 return back();
             }
@@ -97,12 +98,12 @@ class ReservationsController extends Controller
             $selected_items[array_search($item_added->id, array_column($selected_items, 'id'))]->order_quantity += $quantity;
             $item_added->order_price = $item_added->calendar_price * $item_added->order_quantity;
 
-            Notify::success('Item quantity updated.', 'Success!');
+            Notify::success(Str::ucfirst($item_added->name).' quantity updated.', 'Success!');
 
             return back();
         }
 
-        Notify::warning('Item not added or quantity updated.', 'Whooops?');
+        Notify::warning(Str::ucfirst($item_added->name).' not added or quantity not updated.', 'Whooops?');
 
         return back();
     }
@@ -124,17 +125,17 @@ class ReservationsController extends Controller
             if ($item_removed->order_quantity == 0) {
                 session()->pull('reservation.selected_items.'.$index);
 
-                Notify::success('Item removed.', 'Success!');
+                Notify::success(Str::ucfirst($item_removed->name).' removed.', 'Success!');
 
                 return back();
             }
 
-            Notify::success('Item quantity updated.', 'Success!');
+            Notify::success(Str::ucfirst($item_removed->name).' quantity updated.', 'Success!');
 
             return back();
         }
 
-        Notify::warning('Item not removed or quantity updated.', 'Whooops?');
+        Notify::warning(Str::ucfirst($item_removed->name).' not removed or quantity not updated.', 'Whooops?');
 
         return back();
     }

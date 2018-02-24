@@ -136,7 +136,7 @@
                                                 {{ $available_item->calendar_unoccupied }}</span>
                                             <label class="m-widget5__info-label">Price:</label>
                                             <span class="m-widget5__info-date m--font-info">
-                                            ₱{{ Helper::moneyFormat($available_item->calendar_price) }}</span>
+                                                {{ Helper::moneyFormat($available_item->calendar_price) }}</span>
                                         </div>
                                     </div>
                                 </div>

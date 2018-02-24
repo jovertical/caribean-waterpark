@@ -115,9 +115,16 @@ class CategoriesController extends Controller
         try {
             $category = Category::findOrFail($id);
 
-            $category->active = $category->active ? false : true;
+            $active = $category->active ? false : true;
+
+            $category->active = $active;
 
             if ($category->save()) {
+                $category->items->map(function($item) use ($active) {
+                    $item->active = $active;
+                    $item->save();
+                });
+
                 Notify::success('Category toggled.', 'Success!');
 
                 return redirect()->back();

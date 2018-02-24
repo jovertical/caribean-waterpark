@@ -76,7 +76,7 @@
         <script src="/root/assets/demo/demo2/base/scripts.bundle.js" type="text/javascript"></script>
         
         <!-- Main -->
-        {{-- <script src="/root/assets/app/js/main.js" type="text/javascript"></script> --}}
+        <script src="/root/assets/app/js/main.js" type="text/javascript"></script>
 
         {!! Toastr::message() !!}
 
