@@ -134,7 +134,7 @@ class ItemsController extends Controller
     {
         try {
             $item = Item::findOrFail($id);
-
+            
             $item->active = $item->active ? false : true;
 
             if ($item->save()) {

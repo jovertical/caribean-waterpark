@@ -23,6 +23,7 @@ class CreateReservationsTable extends Migration
             $table->float('price_deductable')->nullable();
             $table->float('price_payable');
             $table->float('price_paid')->nullable();
+            $table->text('note')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

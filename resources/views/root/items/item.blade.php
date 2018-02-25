@@ -12,26 +12,16 @@
     <td>{{ Helper::moneyFormat($item->price) }}</td>
     <td>{{ $item->quantity }}</td>
     <td>
-        <span class="m-badge m-badge--{{ $item->active ? 'success' : '' }} m-badge--wide text-white">
-            {{ $item->active ? 'Active' : 'Inactive' }}
-        </span>
+        {{ $item->active ? 1 : 2 }}
     </td>
     <td>
         <span class="d-flex" style="overflow: visible;">
             <div class="dropdown">
-                <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
+                <a href="javascript:void(0);" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
 
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" onclick="event.preventDefault();
-                        document.getElementById('form-item-{{ $item->id }}').submit();" class="dropdown-item">
-                        <i class="la la-toggle-{{ $item->active ? 'on' : 'off' }}"></i> Toggle status
+                    <a href="javascript:void(0);" data-form="#toggleItem" data-action="{{ route('root.items.toggle', $item->id) }}" data-toggle="modal" data-target="#toggleItemConfirmation" class="dropdown-item toggle-item" title="Toggle item"><i class="la la-toggle-on"></i>Toggle
                     </a>
-
-                    <form method="POST" action="{{ route('root.items.toggle', $item->id) }}"
-                        id="form-item-{{ $item->id }}" style="display: none;">
-                        {{ method_field('PATCH') }}
-                        {{ csrf_field() }}
-                    </form>
 
                     <a href="{{ route('root.items.image', $item->id) }}" class="dropdown-item">
                         <i class="la la-image"></i> View image
@@ -39,19 +29,12 @@
                 </div>
             </div>
 
-            <form method="GET" action="{{ route('root.items.edit', $item->id) }}">
-                {{ method_field('PUT') }}
+            <a href="javascript:void(0);" data-form="#editItem" data-action="{{ route('root.items.edit', $item->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill edit-item" title="Edit item"><i class="la la-edit"></i>
+            </a>
 
-                <button type="submit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit item"><i class="la la-edit"></i></button>
-            </form>
-
-            <form method="POST" action="{{ route('root.items.destroy', $item->id) }}" class="confirm" data-target="#deleteItem">
-                {{ method_field('DELETE') }}
-                {{ csrf_field() }}
-
-                <button type="submit" data-toggle="modal" data-target="#deleteItem" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete item"><i class="la la-trash"></i>
-                </button>
-            </form>
+            <a href="javascript:void(0);" data-form="#destroyItem" data-action="{{ route('root.items.destroy', $item->id) }}" data-toggle="modal" data-target="#destroyItemConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill destroy-item" title="Delete item">
+                <i class="la la-trash"></i>
+            </a>
         </span>
     </td>
 </tr>

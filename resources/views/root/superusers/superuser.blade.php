@@ -2,31 +2,29 @@
     <td>{{ $index + 1 }}</td>
     <td>
         <span>
-            <img src="/root/assets/app/media/img/users/user4.jpg" class="img-fluid rounded-circle">
+            <img src="{{ Helper::fileUrl($superuser, 'thumbnail') }}" class="img-fluid rounded-circle">
         </span>
     </td>
-    <td>{{ Str::ucfirst($superuser->last_name).', '.Str::ucfirst($superuser->first_name) }}</td>
-    <td>{{ Str::ucfirst($superuser->gender) }}</td>
+    <td>{{ ucfirst($superuser->last_name).', '.ucfirst($superuser->first_name) }}</td>
+    <td>{{ ucfirst($superuser->gender) }}</td>
     <td>{{ $superuser->birthdate }}</td>
     <td>{{ $superuser->email }}</td>
     <td>{{ $superuser->phone_number }}</td>
     <td>
-        <span class="d-flex">
+        <span class="m-badge m-badge--{{ $superuser->active ? 'success' : '' }} m-badge--wide text-white">
+            {{ $superuser->active ? 'Active' : 'Inactive' }}
+        </span>
+    </td>
+    <td>
+        <span class="d-flex" style="overflow: visible;">
             <a href="{{ route('root.superusers.image', $superuser->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View image"><i class="la la-image"></i></a>
 
-            <form method="GET" action="{{ route('root.superusers.edit', $superuser->id) }}">
-                {{ method_field('PUT') }}
+            <a href="#" data-form="#editSuperuser" data-action="{{ route('root.superusers.edit', $superuser->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill submit" title="Edit superuser"><i class="la la-edit"></i>
+            </a>
 
-                <button type="submit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit superuser"><i class="la la-edit"></i></button>
-            </form>
-
-            <form method="POST" action="{{ route('root.superusers.destroy', $superuser->id) }}" class="form-confirm">
-                {{ method_field('DELETE') }}
-                {{ csrf_field() }}
-
-                <button type="submit" data-toggle="modal" data-target="#modal" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete superuser">
-                    <i class="la la-trash"></i></button>
-            </form>
+            <a href="#" data-form="#destroySuperuser" data-action="{{ route('root.superusers.destroy', $superuser->id) }}" data-toggle="modal" data-target="#destroySuperuserConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill confirm-submit" title="Delete superuser">
+                <i class="la la-trash"></i>
+            </a>
         </span>
     </td>
 </tr>

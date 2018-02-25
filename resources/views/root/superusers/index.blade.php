@@ -1,5 +1,10 @@
 @extends('root.layouts.main')
 
+@section('sidebar')
+    @component('root.components.sidebar')
+    @endcomponent
+@endsection
+
 @section('content')
     <!-- Portlet -->
     <div class="m-portlet m-portlet--mobile">
@@ -57,6 +62,7 @@
                         <th>Birthdate</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -73,83 +79,129 @@
     </div>
     <!--/. Portlet -->
 
-    @component('root.components.modal_confirmation')
-        @slot('title')
-            Confirm action
-        @endslot
+    <!-- Edit Form -->
+    <form method="GET" action="" id="editSuperuser" style="display: none;">
+        {{ method_field('PUT') }}
+    </form>
 
-        You can't undo this action. Are you sure?
+    <!-- Delete Form -->
+    <form method="POST" action="" id="destroySuperuser" style="display: none;">
+        {{ method_field('DELETE') }}
+        {{ csrf_field() }}
+    </form>
+
+    <!-- Delete Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            destroySuperuserConfirmation
+        @endslot
     @endcomponent
 @endsection
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
-              var superusers = function() {
-                //== Private functions 
+        var superusers = function() {
 
-                // superusers initializer      
-                var superusersInit = function() {
+            // superusers init
+            var superusersInit = function() {
 
-                    var datatable = $('#table').mDatatable({
-                        data: {
-                            saveState: { cookie: false },
-                        },
-                        layout: {
-                            theme: 'default',
-                            class: '',
-                            scroll: true,
-                            height: 350,
-                            footer: false
-                        },
-                        search: {
-                            input: $('#generalSearch'),
-                        },
-                        columns: [
-                            {
-                                field: '#',
-                                width: 25
-                            },
-                            {
-                                field: 'Image',
-                                width: 50
-                            },
-                            {
-                                field: 'Name',
-                                width: 100
-                            },
-                            {
-                                field: 'Gender',
-                                width: 50
-                            },
-                            {
-                                field: 'Birthdate',
-                                width: 75
-                            },
-                            {
-                                field: 'Email',
-                                width: 100
-                            },                           
-                            {
-                                field: 'Phone',
-                                width: 100
-                            },
-                            {
-                                field: 'Actions',
-                                width: 100
-                            }
-                        ],
-                    });
-                };
-
-                return {
-                    init: function() {
-                        superusersInit();
+                var datatable = $('#table').mDatatable({
+                    data: {
+                        saveState: { cookie: false },
                     },
-                };
-            }();
+                    layout: {
+                        theme: 'default',
+                        class: '',
+                        scroll: true,
+                        height: 350,
+                        footer: false
+                    },
+                    search: {
+                        input: $('#generalSearch'),
+                    },
+                    columns: [
+                        {
+                            field: '#',
+                            width: 30,
+                            type: 'number'
+                        },
+                        {
+                            field: 'Image',
+                            width: 50,
+                            sortable: false
+                        },
+                        {
+                            field: 'Name',
+                            width: 100
+                        },
+                        {
+                            field: 'Gender',
+                            width: 50
+                        },
+                        {
+                            field: 'Birthdate',
+                            width: 75
+                        },
+                        {
+                            field: 'Email',
+                            width: 200
+                        },
+                        {
+                            field: 'Phone',
+                            width: 100
+                        },
+                        {
+                            field: 'Status',
+                            width: 75
+                        },
+                        {
+                            field: 'Actions',
+                            width: 100,
+                            sortable: false
+                        }
+                    ],
+                });
+            };
 
+            return {
+                init: function() {
+                    superusersInit();
+                },
+            };
+        }();
+
+        $(document).ready(function() {
             superusers.init();
+
+            $('.submit').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                form.submit();
+            });
+
+            // modal confirmation
+            $('.confirm-submit').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
         });
     </script>
 @endsection

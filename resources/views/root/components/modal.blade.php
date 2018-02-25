@@ -3,14 +3,14 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">{{ $title }}</h5>
+                <h5 class="modal-title" id="modalTitle">{{ $title ?? 'Confirm action' }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body text-{{ $content_position ?? 'center' }}">
                <div class="m-scrollable" data-scrollbar-shown="true" data-scrollable="true" data-max-height="100">
-                    <p>{{ $slot }}</p>
+                    <p>{{ $slot ?? "You can't undo this action. Are you sure?" }}</p>
                 </div>
             </div>
             <div class="modal-footer">

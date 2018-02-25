@@ -47,6 +47,24 @@
                             </div>
                             <!--/. Category -->
 
+                            <!-- Status -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>Status:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <select class="form-control m-bootstrap-select" id="status">
+                                            <option value="">All</option>
+                                            <option value="1">Active</option>
+                                            <option value="2">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-md-none m--margin-bottom-10"></div>
+                            </div>
+                            <!--/. Status -->
+
                             <!-- Search -->
                             <div class="col-md-4">
                                 <div class="m-input-icon m-input-icon--left">
@@ -70,8 +88,8 @@
             </div>
             <!--end: Search Form -->
 
-            <!-- Categories -->
-            <table id="table" class="m-datatable" width="100%" data-attribute="confirmable">
+            <!-- Items -->
+            <table id="table" class="m-datatable" width="100%">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -92,22 +110,45 @@
                     @endforeach
                 </tbody>
             </table>
-            <!--/. Categories -->
+            <!--/. Items -->
         </div>
         <!--/. Portlet body -->
     </div>
     <!--/. Portlet -->
 
+    <!-- Edit Form -->
+    <form method="GET" action="" id="editItem" style="display: none;">
+        {{ method_field('PUT') }}
+    </form>
+
+    <!-- Destroy Form -->
+    <form method="POST" action="" id="destroyItem" style="display: none;">
+        {{ method_field('DELETE') }}
+        {{ csrf_field() }}
+    </form>
+
+    <!-- Destroy Modal -->
     @component('root.components.modal')
         @slot('name')
-            deleteItem
-        @endslot
-
-        @slot('title')
-            Confirm action
+            destroyItemConfirmation
         @endslot
 
         You are deleting this item. You can't undo this action!
+    @endcomponent
+
+    <!-- Toggle Form -->
+    <form method="POST" action="" id="toggleItem" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+    </form>
+
+    <!-- Toggle Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            toggleItemConfirmation
+        @endslot
+
+        You are toggling this item.
     @endcomponent
 @endsection
 
@@ -116,7 +157,7 @@
         var items = function() {
             //== Private functions
 
-            // category initializer
+            // category init
             var itemsInit = function() {
 
                 var datatable = $('table[id=table]').mDatatable({
@@ -136,7 +177,8 @@
                     columns: [
                         {
                             field: '#',
-                            width: 25
+                            width: 30,
+                            type: 'number'
                         },
                         {
                             field: 'Image',
@@ -164,7 +206,15 @@
                         },
                         {
                             field: 'Status',
-                            width: 100
+                            width: 100,
+                            template: function(row) {
+                            var status = {
+                                1: {'title': 'Active', 'class': 'm-badge--success'},
+                                2: {'title': 'Inactive', 'class': ' m-badge--metal'},
+                            };
+
+                            return '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' + status[row.Status].title + '</span>';
+                            },
                         },
                         {
                             field: 'Actions',
@@ -176,9 +226,11 @@
 
                 $('select[id=category]').on('change', function() {
                     datatable.search($(this).val().toLowerCase(), 'Category');
-                });
+                }).selectpicker();
 
-                $('select[id=category]').selectpicker();
+                $('select[id=status]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Status');
+                }).selectpicker();
             };
 
             return {
@@ -191,15 +243,51 @@
         $(document).ready(function() {
             items.init();
 
-            // modal confirmation
-            $('table[data-attribute="confirmable"]').on('click', '.confirm', function(e) {
+            // edit
+            $('.edit-item').on('click', function(e) {
                 e.preventDefault();
 
-                var $form = $(this);
-                var $modal = $($form.data('target'));
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
 
-                $modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
-                    $form.submit();
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                form.submit();
+            });
+
+            // delete confirmation
+            $('.destroy-item').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+
+            // toggle
+            $('.toggle-item').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
                 });
             });
         });
