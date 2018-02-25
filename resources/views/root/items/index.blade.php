@@ -167,8 +167,7 @@
                     layout: {
                         theme: 'default',
                         class: '',
-                        scroll: true,
-                        height: 350,
+                        scroll: false,
                         footer: false
                     },
                     search: {

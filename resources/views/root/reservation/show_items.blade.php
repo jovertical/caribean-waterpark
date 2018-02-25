@@ -161,7 +161,13 @@
         <div class="form-group">
             <label class="form-control-label">Quantity:</label>
 
-            <input type="number" id="quantity" class="form-control" value="1">
+            <div class="input-group m-input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="la la-calculator"></i></span>
+                </div>
+
+                <input type="number" id="quantity" class="form-control m-input" value="1">
+            </div>
         </div>
     @endcomponent
 

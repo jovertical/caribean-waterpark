@@ -44,7 +44,7 @@
                                         <span class="input-group-text"><i class="la la-calendar"></i></span>
                                     </div>
                                     <input type="text" name="ci" id="ci" class="form-control m-input"
-                                        value="{{ Request::input('ci') }}">
+                                        value="{{ Request::input('ci') }}" readonly>
                                 </div>
                             </div>
 
@@ -56,7 +56,7 @@
                                         <span class="input-group-text"><i class="la la-calendar"></i></span>
                                     </div>
                                     <input type="text" name="co" id="co" class="form-control m-input"
-                                        value="{{ Request::input('co') }}">
+                                        value="{{ Request::input('co') }}" readonly>
                                 </div>
                             </div>
 
@@ -182,7 +182,13 @@
         <div class="form-group">
             <label class="form-control-label">Quantity:</label>
 
-            <input type="number" id="quantity" class="form-control" value="1">
+            <div class="input-group m-input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="la la-calculator"></i></span>
+                </div>
+
+                <input type="number" id="quantity" class="form-control" value="1">
+            </div>
         </div>
     @endcomponent
 @endsection

@@ -23,6 +23,7 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::delete('users/{id}/image/destroy', 'UsersController@destroyImage')->name('users.image.destroy');
 
         Route::resource('superusers', 'SuperusersController');
+        Route::patch('superusers/{id}/toggle', 'CategoriesController@toggle')->name('superusers.toggle');
         Route::get('superusers/{id}/image', 'SuperusersController@selectImage')->name('superusers.image');
         Route::post('superusers/{id}/image/upload', 'SuperusersController@uploadImage')->name('superusers.image.upload');
         Route::get('superusers/{id}/image/uploaded', 'SuperusersController@uploadedImage')->name('superusers.image.uploaded');

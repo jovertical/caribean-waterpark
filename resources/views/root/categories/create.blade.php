@@ -23,7 +23,9 @@
             <div class="m-portlet__body">
                 <!-- Type -->
                 <div class="form-group m-form__group row {{ $errors->has('type') ? 'has-danger' : '' }}">
-                    <label for="name" class="col-lg-2 col-form-label">Type: </label>
+                    <label for="type" class="col-lg-2 col-form-label">
+                        Type <span class="m--font-danger">*</span>
+                    </label>
 
                     <div class="col-lg-6">
                         <select name="type" id="type" class="form-control m-bootstrap-select" required>
@@ -32,6 +34,10 @@
                             <option value="miscellaneous">Miscellaneous</option>
                         </select>
 
+                        <div id="type-error" class="form-control-feedback">
+                            <span class="m--font-danger">{{ $errors->first('type') }}</span>
+                        </div>
+
                         <span class="m-form__help">It will define the properties of <strong>items</strong> created under this category.</span>
                     </div>
                 </div>
@@ -39,7 +45,9 @@
 
                 <!-- Name -->
                 <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}" required>
-                    <label for="name" class="col-lg-2 col-form-label">Name: </label>
+                    <label for="name" class="col-lg-2 col-form-label">
+                        Name <span class="m--font-danger">*</span>
+                    </label>
 
                     <div class="col-lg-6">
                         <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
@@ -47,7 +55,7 @@
                                 old('name') }}">
 
                         <div id="name-error" class="form-control-feedback">
-                            {{ $errors->first('name') }}
+                            <span class="m--font-danger">{{ $errors->first('name') }}</span>
                         </div>
 
                         <span class="m-form__help">The name of this category.</span>
@@ -57,7 +65,9 @@
 
                 <!-- Description -->
                 <div class="form-group m-form__group row {{ $errors->has('description') ? 'has-danger' : '' }}">
-                    <label for="description" class="col-lg-2 col-form-label">Description</label>
+                    <label for="description" class="col-lg-2 col-form-label">
+                        Description
+                    </label>
 
                     <div class="col-lg-6">
                         <textarea name="description" id="description" class="summernote"
@@ -65,7 +75,7 @@
                         </textarea>
 
                         <div id="description-error" class="form-control-feedback">
-                            {{ $errors->first('description') }}
+                            <span class="m--font-danger">{{ $errors->first('description') }}</span>
                         </div>
                     </div>
                 </div>
@@ -107,14 +117,12 @@
                         },
 
                         description: {
-                            maxlength: 500
+                            maxlength: 510
                         },
                     },
 
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-category-update]');
-
-                        $('button[type=submit]').removeClass('m-loader m-loader--light m-loader--right');
 
                         mApp.scrollTo(form, -200);
                     },
@@ -122,27 +130,27 @@
             }
             //. form validate
 
-            // description
-            var descriptionInit = function () {
+            // summernote
+            var summernoteInit = function () {
                 $('.summernote').summernote({
                     height: 150
                 });
             }
-            //. description
+            //. summernote
 
-            // type
-            var typeInit = function () {
+            // select
+            var selectInit = function () {
                 $('select[id=type]').selectpicker({
                     //
                 });
             }
-            //. type
+            //. select
 
             return {
                 init: function() {
                     formValidationInit();
-                    descriptionInit();
-                    typeInit();
+                    summernoteInit();
+                    selectInit();
                 }
             };
         }();

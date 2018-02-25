@@ -19,4 +19,14 @@ class Category extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = strtolower($value);
+    }
+
+    public function getNameAttribute($value)
+    {
+        return ucfirst($value);
+    }
 }

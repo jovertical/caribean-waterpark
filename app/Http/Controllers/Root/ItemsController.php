@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use App\{Category, Item};
 use ImageUploader;
-use Storage, File, Str, URL;
+use Storage, File, URL;
 use Carbon, Image, Notify;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -40,7 +40,7 @@ class ItemsController extends Controller
             $item = new Item;
 
             $item->category_id  = $request->input('category');
-            $item->name         = Str::lower($request->input('name'));
+            $item->name         = $request->input('name');
             $item->description  = $request->input('description');
             $item->price        = $request->input('price');
             $item->quantity     = $request->input('quantity');
@@ -56,7 +56,7 @@ class ItemsController extends Controller
             Notify::error($e->getMessage(), 'Ooops!');
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function edit($id)
@@ -75,7 +75,7 @@ class ItemsController extends Controller
             Notify::error($e->getMessage(), 'Ooops!');
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function update(Request $request, $id)
@@ -91,7 +91,7 @@ class ItemsController extends Controller
             $item = Item::findOrFail($id);
 
             $item->category_id  = $request->input('category');
-            $item->name         = Str::lower($request->input('name'));
+            $item->name         = $request->input('name');
             $item->description  = $request->input('description');
             $item->price        = $request->input('price');
             $item->quantity     = $request->input('quantity');
@@ -107,7 +107,7 @@ class ItemsController extends Controller
             Notify::error($e->getMessage(), 'Ooops!');
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function destroy($id)
@@ -118,7 +118,7 @@ class ItemsController extends Controller
             if ($item->delete()) {
                 Notify::success('Item deleted.', 'Success!');
 
-                return redirect()->back();
+                return back();
             }
 
             Notify::warning('Cannot delete item', 'Ooops?');
@@ -127,7 +127,7 @@ class ItemsController extends Controller
             Notify::error($e->getMessage(), 'Ooops!');
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function toggle($id)
@@ -140,7 +140,7 @@ class ItemsController extends Controller
             if ($item->save()) {
                 Notify::success('Item toggled.', 'Success!');
 
-                return redirect()->back();
+                return back();
             }
 
             Notify::warning('Cannot toggle item', 'Ooops?');
@@ -149,7 +149,7 @@ class ItemsController extends Controller
             Notify::error($e->getMessage(), 'Ooops!');
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function selectImage($id)
@@ -167,7 +167,7 @@ class ItemsController extends Controller
             Notify::error($e->getMessage(), 'Ooops!');
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function uploadedImage(Request $request, $id)

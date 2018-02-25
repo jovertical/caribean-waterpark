@@ -24,7 +24,9 @@
             <div class="m-portlet__body">
                 <!-- Category -->
                 <div class="form-group m-form__group row {{ $errors->has('category') ? 'has-danger' : '' }}">
-                    <label for="name" class="col-lg-2 col-form-label">Category: </label>
+                    <label for="category" class="col-lg-2 col-form-label">
+                        Category <span class="m--font-danger">*</span>
+                    </label>
 
                     <div class="col-lg-6">
                         <select name="category" id="category" class="form-control m-bootstrap-select" required>
@@ -32,9 +34,14 @@
 
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ $category->id == $item->category_id ? 'selected' : '' }}>
-                                    {{ Str::ucfirst($category->name) }}</option>
+                                    {{ $category->name }}
+                                </option>
                             @endforeach
                         </select>
+
+                        <div id="category-error" class="form-control-feedback">
+                            <span class="m--font-danger">{{ $errors->first('category') }}</span>
+                        </div>
 
                         <span class="m-form__help">The category this item is under.</span>
                     </div>
@@ -43,14 +50,17 @@
 
                 <!-- Name -->
                 <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}">
-                    <label for="name" class="col-lg-2 col-form-label">Name: </label>
+                    <label for="name" class="col-lg-2 col-form-label">
+                        Name <span class="m--font-danger">*</span>
+                    </label>
 
                     <div class="col-lg-6">
-                        <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{ Str::ucfirst($item->name) }}" required>
+                        <input type="text" name="name" id="name" class="form-control m-input
+                            {{ $errors->has('name') ? 'form-control-danger' :'' }}" placeholder="Please enter a name"
+                                value="{{ $item->name }}" required>
 
                         <div id="name-error" class="form-control-feedback">
-                            {{ $errors->first('name') }}
+                            <span class="m--font-danger">{{ $errors->first('name') }}</span>
                         </div>
 
                         <span class="m-form__help">The name of this item.</span>
@@ -68,7 +78,7 @@
                         </textarea>
 
                         <div id="description-error" class="form-control-feedback">
-                            {{ $errors->first('description') }}
+                            <span class="m--font-danger">{{ $errors->first('description') }}</span>
                         </div>
                     </div>
                 </div>
@@ -76,14 +86,16 @@
 
                 <!-- Price -->
                 <div class="form-group m-form__group row {{ $errors->has('price') ? 'has-danger' : '' }}">
-                    <label for="price" class="col-lg-2 col-form-label">Price: </label>
+                    <label for="price" class="col-lg-2 col-form-label">
+                        Price <span class="m--font-danger">*</span>
+                    </label>
 
                     <div class="col-lg-6">
                         <input type="number" name="price" id="price" class="form-control m-input {{ $errors->has('price') ?
                             'form-control-danger' :'' }}" placeholder="Please enter a price" value="{{ $item->price }}" required>
 
                         <div id="price-error" class="form-control-feedback">
-                            {{ $errors->first('price') }}
+                            <span class="m--font-danger">{{ $errors->first('price') }}</span>
                         </div>
 
                         <span class="m-form__help">The price of this item.</span>
@@ -93,14 +105,17 @@
 
                 <!-- Quantity -->
                 <div class="form-group m-form__group row {{ $errors->has('quantity') ? 'has-danger' : '' }}">
-                    <label for="quantity" class="col-lg-2 col-form-label">Quantity: </label>
+                    <label for="quantity" class="col-lg-2 col-form-label">
+                        Quantity 
+                    </label>
 
                     <div class="col-lg-6">
-                        <input type="number" name="quantity" id="quantity" class="form-control m-input {{ $errors->has('quantity') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a quantity" value="{{ $item->quantity }}">
+                        <input type="number" name="quantity" id="quantity" class="form-control m-input
+                            {{ $errors->has('quantity') ? 'form-control-danger' :'' }}" placeholder="Please enter a quantity"
+                                value="{{ $item->quantity }}">
 
                         <div id="quantity-error" class="form-control-feedback">
-                            {{ $errors->first('quantity') }}
+                            <span class="m--font-danger">{{ $errors->first('quantity') }}</span>
                         </div>
 
                         <span class="m-form__help">How many are this item. <em><strong>Empty</strong> means no limit.</em></span>
@@ -144,7 +159,7 @@
                         },
 
                         description: {
-                            maxlength: 500
+                            maxlength: 510
                         },
 
                         price: {
@@ -155,35 +170,33 @@
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-item-update]');
 
-                        $('button[type=submit]').removeClass('m-loader m-loader--light m-loader--right');
-
                         mApp.scrollTo(form, -200);
                     },
                 });
             }
             //. form validate
 
-            // description
-            var descriptionInit = function () {
+            // summernote
+            var summernoteInit = function () {
                 $('.summernote').summernote({
                     height: 150
                 });
             }
-            //. description
+            //. summernote
 
-            // category
-            var categoryInit = function () {
+            // select
+            var selectInit = function () {
                 $('select[id=category]').selectpicker({
                     //
                 });
             }
-            //. category
+            //. select
 
             return {
                 init: function() {
                     formValidationInit();
-                    descriptionInit();
-                    categoryInit();
+                    summernoteInit();
+                    selectInit();
                 }
             };
         }();

@@ -16,28 +16,53 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function role()
-    {
-        return $this->hasOne(Role::class);
-    }
-
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
     }
 
+    public function setFirstNameAttribute($value)
+    {
+        $this->attributes['first_name'] = strtolower($value);
+    }
+
     public function getFirstNameAttribute($value)
     {
-        return strtolower($value);
+        return ucfirst($value);
+    }
+
+    public function setMiddleNameAttribute($value)
+    {
+        $this->attributes['middle_name'] = strtolower($value);
     }
 
     public function getMiddleNameAttribute($value)
     {
-        return strtolower($value);
+        return ucfirst($value);
+    }
+
+    public function setLastNameAttribute($value)
+    {
+        $this->attributes['last_name'] = strtolower($value);
     }
 
     public function getLastNameAttribute($value)
     {
-        return strtolower($value);
+        return ucfirst($value);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function setGenderAttribute($value)
+    {
+        $this->attributes['gender'] = strtolower($value);
+    }
+
+    public function getGenderAttribute($value)
+    {
+        return ucfirst($value);
     }
 }

@@ -18,7 +18,7 @@
                             <a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
                                 <span></span>
                             </a>
-                        
+
                             <!-- begin::Responsive Header Menu Toggler-->
                              <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block m-brand__toggler--active">
                                 <span></span>
@@ -51,18 +51,18 @@
                                     <div class="m-dropdown__wrapper">
                                         <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
                                         <div class="m-dropdown__inner">
-                                            <div class="m-dropdown__header m--align-center" style="background: url(./assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
+                                            <div class="m-dropdown__header m--align-center"
+                                                style="background: url(/root/assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
                                                 <div class="m-card-user m-card-user--skin-dark">
                                                     <div class="m-card-user__pic">
                                                         <img src="/root/assets/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless" alt=""/>
                                                     </div>
                                                     <div class="m-card-user__details">
                                                         <span class="m-card-user__name m--font-weight-500">
-                                                            {{ Auth::user()->first_name }}
-                                                            {{ Auth::user()->last_name }}
+                                                            {{ Auth::user()->full_name }}
                                                         </span>
 
-                                                        <a href="#" class="m-card-user__email m--font-weight-300 m-link">
+                                                        <a href="javascript:void(0);" class="m-card-user__email m--font-weight-300 m-link">
                                                             {{ Auth::user()->email }}
                                                         </a>
                                                     </div>
@@ -127,7 +127,7 @@
                     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light">
                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow">
                             <!-- Dashboard -->
-                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'dashboard' ? 
+                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'dashboard' ?
                                 'm-menu__item--active' : '' }}"  aria-haspopup="true">
                                 <a href="{{ route('root.home') }}" class="m-menu__link">
                                     <span class="m-menu__item-here"></span>
@@ -137,8 +137,8 @@
                             <!--/. Dashboard -->
 
                             <!-- Inventory -->
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel 
-                                {{ Helper::activeMenu(Request::segment(2)) == 'inventory' ? 'm-menu__item--active' : '' }}" 
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel
+                                {{ Helper::activeMenu(Request::segment(2)) == 'inventory' ? 'm-menu__item--active' : '' }}"
                                     data-menu-submenu-toggle="click" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__item-here"></span>
@@ -177,7 +177,7 @@
                             <!--/. Inventory -->
 
                             <!-- Reservations -->
-                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'reservations' ? 
+                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'reservations' ?
                                 'm-menu__item--active' : '' }}"  aria-haspopup="true">
                                 <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
@@ -225,8 +225,8 @@
                             <!--/. Reports -->
 
                             <!-- Manage -->
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel 
-                                {{ Helper::activeMenu(Request::segment(2)) == 'manage' ? 
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel
+                                {{ Helper::activeMenu(Request::segment(2)) == 'manage' ?
                                     'm-menu__item--active' : '' }}"  data-menu-submenu-toggle="click" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__item-here"></span>

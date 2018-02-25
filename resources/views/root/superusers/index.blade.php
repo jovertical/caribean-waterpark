@@ -28,6 +28,24 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
+                            <!-- Status -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>Status:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <select class="form-control m-bootstrap-select" id="status">
+                                            <option value="">All</option>
+                                            <option value="1">Active</option>
+                                            <option value="2">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-md-none m--margin-bottom-10"></div>
+                            </div>
+                            <!--/. Status -->
+
                             <!-- Search -->
                             <div class="col-md-4">
                                 <div class="m-input-icon m-input-icon--left">
@@ -84,17 +102,34 @@
         {{ method_field('PUT') }}
     </form>
 
-    <!-- Delete Form -->
+    <!-- Destroy Form -->
     <form method="POST" action="" id="destroySuperuser" style="display: none;">
         {{ method_field('DELETE') }}
         {{ csrf_field() }}
     </form>
 
-    <!-- Delete Modal -->
+    <!-- Destroy Modal -->
     @component('root.components.modal')
         @slot('name')
             destroySuperuserConfirmation
         @endslot
+
+        You are deleting this superuser. You can't undo this action!
+    @endcomponent
+
+    <!-- Toggle Form -->
+    <form method="POST" action="" id="toggleSuperuser" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+    </form>
+
+    <!-- Toggle Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            toggleSuperuserConfirmation
+        @endslot
+
+        You are toggling this superuser.
     @endcomponent
 @endsection
 
@@ -112,8 +147,7 @@
                     layout: {
                         theme: 'default',
                         class: '',
-                        scroll: true,
-                        height: 350,
+                        scroll: false,
                         footer: false
                     },
                     search: {
@@ -152,7 +186,15 @@
                         },
                         {
                             field: 'Status',
-                            width: 75
+                            width: 75,
+                            template: function(row) {
+                            var status = {
+                                1: {'title': 'Active', 'class': 'm-badge--success'},
+                                2: {'title': 'Inactive', 'class': ' m-badge--metal'},
+                            };
+
+                            return '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' + status[row.Status].title + '</span>';
+                            },
                         },
                         {
                             field: 'Actions',
@@ -161,6 +203,10 @@
                         }
                     ],
                 });
+
+                $('select[id=status]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Status');
+                }).selectpicker();
             };
 
             return {
@@ -173,7 +219,8 @@
         $(document).ready(function() {
             superusers.init();
 
-            $('.submit').on('click', function(e) {
+            // edit
+            $('.edit-superuser').on('click', function(e) {
                 e.preventDefault();
 
                 var link = $(this);
@@ -186,8 +233,25 @@
                 form.submit();
             });
 
-            // modal confirmation
-            $('.confirm-submit').on('click', function(e) {
+            // delete confirmation
+            $('.destroy-superuser').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+
+            // toggle
+            $('.toggle-superuser').on('click', function(e) {
                 e.preventDefault();
 
                 var link = $(this);

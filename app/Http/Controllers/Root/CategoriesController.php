@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use App\{Category};
 use ImageUploader;
-use File, Str, URL;
+use File, URL;
 use Carbon, Image, Notify;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -35,7 +35,7 @@ class CategoriesController extends Controller
             $category = new Category;
 
             $category->type         = $request->input('type');
-            $category->name         = Str::lower($request->input('name'));
+            $category->name         = $request->input('name');
             $category->description  = $request->input('description');
 
             if ($category->save()) {
@@ -72,7 +72,7 @@ class CategoriesController extends Controller
             $category = Category::findOrFail($id);
 
             $category->type         = $request->input('type');
-            $category->name         = Str::lower($request->input('name'));
+            $category->name         = $request->input('name');
             $category->description  = $request->input('description');
 
             if ($category->save()) {
