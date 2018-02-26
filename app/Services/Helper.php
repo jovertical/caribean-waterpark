@@ -15,6 +15,26 @@ class Helper {
         return  "{$name}.{$ext}";
     }
 
+    public static function createLoginCredential($last_name, $counter)
+    {
+        $length = strlen($counter);
+
+        $length = $length < 6 ? 6 : $counter;
+
+        return strtoupper($last_name).'-'.str_pad($counter+1, $length, '0', STR_PAD_LEFT);
+    }
+
+    public static function createRandomToken()
+    {
+        $key = config('app.key');
+
+        if (Str::startsWith($key, 'base64:')) {
+            $key = base64_decode(substr($key, 7));
+        }
+
+        return hash_hmac('sha256', Str::random(40), $key);
+    }
+
     public static function activeMenu($segment_2)
     {
         $segments = [

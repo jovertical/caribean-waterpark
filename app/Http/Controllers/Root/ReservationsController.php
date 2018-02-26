@@ -82,7 +82,7 @@ class ReservationsController extends Controller
         session(['reservation.days' => $checkin_date->diffInDays($checkout_date)]);
 
         return view('root.reservation.search_items', [
-            'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
+            'available_items' => Helper::paginate(session()->get('reservation.available_items')),
             'selected_items' => session()->get('reservation.selected_items')
         ]);
     }

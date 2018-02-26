@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Root;
 
+use App\Notifications\LoginCredential;
 use App\{User};
-use ImageUploader;
+use Helper, ImageUploader;
 use Storage, File, Str, URL;
 use Carbon, Image, Notify;
 use Illuminate\Http\Request;
@@ -38,11 +39,13 @@ class SuperusersController extends Controller
 
         try {
             $superuser = new User;
+            $login_credential = Helper::createLoginCredential($request->input('last_name'), User::count());
 
             $superuser->verified        = true;
-            $superuser->name            = $request->input('email');
+            $superuser->type            = 'superuser';
+            $superuser->name            = $login_credential;
             $superuser->email           = $request->input('email');
-            $superuser->password        = bcrypt($request->input('last_name').'_'.date('Y'));
+            $superuser->password        = bcrypt($login_credential);
             $superuser->first_name      = $request->input('first_name');
             $superuser->middle_name     = $request->input('middle_name');
             $superuser->last_name       = $request->input('last_name');
@@ -52,6 +55,8 @@ class SuperusersController extends Controller
             $superuser->phone_number    = $request->input('phone_number');
 
             if ($superuser->save()) {
+                $superuser->notify(new LoginCredential($login_credential, $login_credential));
+
                 Notify::success('Superuser created.', 'Success!');
 
                 return redirect()->route('root.superusers.image', $superuser);
@@ -84,7 +89,6 @@ class SuperusersController extends Controller
         ]);
 
         try {
-            $superuser->name            = $request->input('email');
             $superuser->email           = $request->input('email');
             $superuser->first_name      = $request->input('first_name');
             $superuser->middle_name     = $request->input('middle_name');

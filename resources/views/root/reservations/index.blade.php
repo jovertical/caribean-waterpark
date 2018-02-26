@@ -91,8 +91,8 @@
             </div>
             <!--end: Search Form -->
 
-            <!-- Categories -->
-            <table id="table" class="m-datatable" width="100%" data-form="table">
+            <!-- Reservations -->
+            <table id="table" class="m-datatable" width="100%">
                 <thead>
                     <tr>
                         <th title="#">#</th>
@@ -113,7 +113,7 @@
                     @endforeach
                 </tbody>
             </table>
-            <!--/. Categories -->
+            <!--/. Reservations -->
         </div>
         <!--/. Portlet body -->
     </div>
@@ -139,14 +139,13 @@
                         layout: {
                             theme: 'default',
                             class: '',
-                            scroll: true,
-                            height: 350,
+                            scroll: false,
                             footer: false
                         },
                         columns: [
                             {
                                 field: '#',
-                                width: 25
+                                width: 30
                             },
                             {
                                 field: 'Source',
@@ -178,7 +177,8 @@
                             },
                             {
                                 field: 'Actions',
-                                width: 100
+                                width: 100,
+                                sortable: false
                             }
                         ],
                     });

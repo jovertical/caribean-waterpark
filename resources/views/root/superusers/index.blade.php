@@ -155,7 +155,7 @@
                         },
                         {
                             field: 'Gender',
-                            width: 50
+                            width: 75
                         },
                         {
                             field: 'Birthdate',
@@ -163,7 +163,7 @@
                         },
                         {
                             field: 'Email',
-                            width: 200
+                            width: 150
                         },
                         {
                             field: 'Phone',

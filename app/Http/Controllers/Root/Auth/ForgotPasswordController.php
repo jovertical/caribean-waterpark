@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Root\Auth;
 
-use App\User;
-use App\PasswordReset;
+use App\{User, PasswordReset};
 use App\Notifications\PasswordResetLink;
-use Illuminate\Support\Str;
+use Helper;
+use Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -28,7 +28,7 @@ class ForgotPasswordController extends Controller
         ]);
 
         $email = $request->input('email');
-        $token = $this->generateResetToken();
+        $token = Helper::createRandomToken();
 
         $user = User::where('email', $email)->first();
         $user->notify(new PasswordResetLink($token));
@@ -42,17 +42,6 @@ class ForgotPasswordController extends Controller
         return redirect()->back();
     }
 
-    protected function generateResetToken() 
-    {
-        $key = config('app.key');
-
-        if (Str::startsWith($key, 'base64:')) {
-            $key = base64_decode(substr($key, 7));
-        }
-
-        return hash_hmac('sha256', Str::random(40), $key);
-    }
-
     protected function saveResetToken(User $user, $token) 
     {
         PasswordReset::where('email', $user->email)->delete();
@@ -60,7 +49,6 @@ class ForgotPasswordController extends Controller
         $password_reset = new PasswordReset;
         $password_reset->email = $user->email;
         $password_reset->token = $token;
-        $password_reset->created_at = \Carbon\Carbon::now();
         $password_reset->save();
     }
 }

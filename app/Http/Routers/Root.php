@@ -1,8 +1,7 @@
 <?php
 
-Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], function () {
-
-    Route::group(['namespace' => 'Auth'], function() {
+Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () {
+    Route::namespace('Auth')->group(function() {
         Route::get('login', 'LoginController@showLoginForm')->name('login');
         Route::post('login', 'LoginController@login');
         Route::post('logout', 'LoginController@logout')->name('logout');
@@ -11,6 +10,9 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
         Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
         Route::post('password/reset/{token}', 'ResetPasswordController@reset');
+
+        Route::get('credentials/set/{token}', 'SetCredentialsController@showSetForm')->name('credentials.set');
+        Route::post('credentials/set/{token}', 'SetCredentialsController@set');
     });
 
     Route::middleware('root.auth')->group(function() {

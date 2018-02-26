@@ -13,9 +13,4 @@ class Reservation extends Model
     {
         return $this->hasMany(ReservationItem::class);
     }
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 }

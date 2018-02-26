@@ -16,6 +16,33 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        $user = auth()->check() ? auth()->user() : null;
+
+        self::creating(function ($model) use ($user) {
+            $model->slug = str_random(10);
+
+            if ($user != null) {
+                $model->created_by = $user->id;
+            }
+        });
+
+        self::updating(function($model) use ($user) {
+            if ($user != null) {
+                $model->updated_by = $user->id;
+            }
+        });
+
+        self::deleting(function($model) use ($user) {
+            if ($user != null) {
+                $model->deleted_by = $user->id;
+            }
+        });
+    }
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class);

@@ -24,16 +24,36 @@ class Model extends Eloquent
         $user = auth()->check() ? auth()->user() : null;
 
         self::creating(function ($model) use ($user) {
-            $model->slug = str_random(10);
-            $model->created_by = $user->id;
+            if (isset($model->slug)) {
+                $model->slug = str_random(10);
+            }
+
+            if ($user != null) {
+                if (isset($model->created_by)) {
+                    $model->created_by = $user->id;
+                }
+            }
         });
 
         self::updating(function($model) use ($user) {
-            $model->updated_by = $user->id;
+            if ($user != null) {
+                if (isset($model->updated_by)) {
+                    $model->updated_by = $user->id;
+                }
+            }
         });
 
         self::deleting(function($model) use ($user) {
-            $model->deleted_by = $user->id;
+            if ($user != null) {
+                if (isset($model->deleted_by)) {
+                    $model->deleted_by = $user->id;
+                }
+            }
         });
+    }
+    
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

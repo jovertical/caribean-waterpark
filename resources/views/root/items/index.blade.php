@@ -193,7 +193,7 @@
                         },
                         {
                             field: 'Description',
-                            width: 200
+                            width: 100
                         },
                         {
                             field: 'Price',

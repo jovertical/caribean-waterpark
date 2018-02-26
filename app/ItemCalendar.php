@@ -18,9 +18,4 @@ class ItemCalendar extends Model
     {
         return $this->belongsTo(Item::class, 'item_id');
     }
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 }

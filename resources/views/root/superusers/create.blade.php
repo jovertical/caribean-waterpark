@@ -236,8 +236,6 @@
                     invalidHandler: function(event, validator) {
                         var form = $('form[id=form-superuser-update]');
 
-                        $('button[type=submit]').removeClass('m-loader m-loader--light m-loader--right');
-
                         mApp.scrollTo(form, -200);
                     },
                 });

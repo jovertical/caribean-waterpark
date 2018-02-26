@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Root\Auth;
 
 use Toastr as Notify;
-use App\User;
-use App\PasswordReset;
+use App\{User, PasswordReset};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,9 +19,10 @@ class ResetPasswordController extends Controller
 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('root.auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email]
-        );
+        return view('root.auth.passwords.reset', [
+            'token' => $token, 
+            'email' => $request->email
+        ]);
     }
 
     public function reset(Request $request, $token)

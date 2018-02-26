@@ -6,7 +6,7 @@ use File, Image;
 
 class ImageUploader {
 
-    public static function upload($file, $directory) 
+    public static function upload($file, $directory)
     {
         $file_ext = $file->getClientOriginalExtension();
         $file_name = Helper::createFilename($file_ext);
@@ -27,6 +27,8 @@ class ImageUploader {
 
         if (in_array($file_ext, ['jpeg', 'jpg', 'png', 'gif'])) {
             Image::make($base_directory.'/'.$file_name)
+                ->widen($thumbnail['width'])
+                ->heighten($thumbnail['width'])
                 ->crop($thumbnail['width'], $thumbnail['height'])
                 ->save($thumbs_directory.'/'.$file_name, 95);
         }
