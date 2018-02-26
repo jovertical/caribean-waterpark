@@ -43,7 +43,7 @@
                                 <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
                                     <a href="#" class="m-nav__link m-dropdown__toggle">
                                         <span class="m-topbar__userpic m--hide">
-                                            <img src="/root/assets/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless m--img-centered" alt=""/>
+                                            <img src="{{ Helper::fileUrl(Auth::user(), 'thumbnail') }}" class="m--img-rounded m--marginless m--img-centered" alt=""/>
                                         </span>
                                         <span class="m-topbar__welcome">Hello,&nbsp;</span>
                                         <span class="m-topbar__username">{{ Auth::user()->name }}</span>
@@ -55,7 +55,7 @@
                                                 style="background: url(/root/assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
                                                 <div class="m-card-user m-card-user--skin-dark">
                                                     <div class="m-card-user__pic">
-                                                        <img src="/root/assets/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless" alt=""/>
+                                                        <img src="{{ Helper::fileUrl(Auth::user(), 'thumbnail') }}" class="m--img-rounded m--marginless" alt=""/>
                                                     </div>
                                                     <div class="m-card-user__details">
                                                         <span class="m-card-user__name m--font-weight-500">

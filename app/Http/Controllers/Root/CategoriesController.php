@@ -177,7 +177,7 @@ class CategoriesController extends Controller
             $category->file_name = $upload['file_name'];
 
             if ($category->save()) {
-                 return response()->json($upload);
+                return response()->json($upload);
             }
         } catch(Exception $e) {
             return response()->json($e, 400);

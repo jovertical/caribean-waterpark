@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     {
         \App\User::create([
             'slug' => str_random(10),
-            'name' => 'jovert',
+            'name' => 'jovert123',
             'email' => 'jobert.lota18@gmail.com',
             'password' => bcrypt('secret'),
             'verified' => true,
@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
 
         \App\User::create([
             'slug' => str_random(10),
-            'name' => 'chito',
+            'name' => 'chito123',
             'email' => 'chito@example.com',
             'password' => bcrypt('secret'),
             'verified' => true,
@@ -39,7 +39,7 @@ class UsersTableSeeder extends Seeder
 
         \App\User::create([
             'slug' => str_random(10),
-            'name' => 'arnie',
+            'name' => 'arnie123',
             'email' => 'arnie@example.com',
             'password' => bcrypt('secret'),
             'verified' => true,
@@ -48,7 +48,7 @@ class UsersTableSeeder extends Seeder
 
         \App\User::create([
             'slug' => str_random(10),
-            'name' => 'kennent',
+            'name' => 'kennent123',
             'email' => 'kennent@example.com',
             'password' => bcrypt('secret'),
             'verified' => true,

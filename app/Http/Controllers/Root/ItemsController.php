@@ -191,9 +191,9 @@ class ItemsController extends Controller
     public function uploadImage(Request $request, Item $item)
     {
         try {
-            $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
-
             if ($item->images()->count() < 5) {
+                $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
+                
                 $item->images()->create([
                     'count'             => $item->images->count() + 1,
                     'file_path'         => $upload['file_path'],

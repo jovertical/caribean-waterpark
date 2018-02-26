@@ -31,7 +31,7 @@
 
         <!-- Demo 2 bundle -->
         <link href="/root/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css" />
-        
+
         <!-- Main -->
         <link href="/root/assets/app/css/main.css" rel="stylesheet" type="text/css" />
 
@@ -46,7 +46,7 @@
             @auth
                 <!-- Header -->
                 @include('root.partials.header')
-            
+
                 <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
                     <!-- Sidebar -->
                     @yield('sidebar')
@@ -54,7 +54,7 @@
                     <div class="m-grid__item m-grid__item--fluid m-wrapper">
                         <!-- Sub-header -->
                         @include('root.partials.sub_header')
-                        
+
                         @endauth
                             <div class="m-content">
                                 <!-- Content -->
@@ -63,10 +63,11 @@
                         @auth
                     </div>
                 </div>
-            @endauth
 
-            <!-- Footer -->
-            @include('root.partials.footer')
+                <!-- Footer -->
+                @include('root.partials.footer')
+
+            @endauth
         </div>
 
         <!-- Vendor bundle -->
@@ -74,7 +75,7 @@
 
         <!-- Demo 2 bundle -->
         <script src="/root/assets/demo/demo2/base/scripts.bundle.js" type="text/javascript"></script>
-        
+
         <!-- Main -->
         <script src="/root/assets/app/js/main.js" type="text/javascript"></script>
 

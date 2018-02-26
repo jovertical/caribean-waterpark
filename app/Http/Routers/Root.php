@@ -17,13 +17,14 @@ Route::group(['namespace' => 'Root', 'prefix' => 'superuser', 'as' => 'root.'], 
         Route::get('/', 'HomeController@index')->name('home');
 
         Route::resource('users', 'UsersController');
+        Route::patch('users/{user}/toggle', 'UsersController@toggle')->name('users.toggle');
         Route::get('users/{user}/image', 'UsersController@selectImage')->name('users.image');
         Route::post('users/{user}/image/upload', 'UsersController@uploadImage')->name('users.image.upload');
         Route::get('users/{user}/image/uploaded', 'UsersController@uploadedImage')->name('users.image.uploaded');
         Route::delete('users/{user}/image/destroy', 'UsersController@destroyImage')->name('users.image.destroy');
 
         Route::resource('superusers', 'SuperusersController');
-        Route::patch('superusers/{superuser}/toggle', 'CategoriesController@toggle')->name('superusers.toggle');
+        Route::patch('superusers/{superuser}/toggle', 'SuperusersController@toggle')->name('superusers.toggle');
         Route::get('superusers/{superuser}/image', 'SuperusersController@selectImage')->name('superusers.image');
         Route::post('superusers/{superuser}/image/upload', 'SuperusersController@uploadImage')->name('superusers.image.upload');
         Route::get('superusers/{superuser}/image/uploaded', 'SuperusersController@uploadedImage')->name('superusers.image.uploaded');

@@ -102,21 +102,6 @@
         {{ method_field('PUT') }}
     </form>
 
-    <!-- Destroy Form -->
-    <form method="POST" action="" id="destroySuperuser" style="display: none;">
-        {{ method_field('DELETE') }}
-        {{ csrf_field() }}
-    </form>
-
-    <!-- Destroy Modal -->
-    @component('root.components.modal')
-        @slot('name')
-            destroySuperuserConfirmation
-        @endslot
-
-        You are deleting this superuser. You can't undo this action!
-    @endcomponent
-
     <!-- Toggle Form -->
     <form method="POST" action="" id="toggleSuperuser" style="display: none;">
         {{ method_field('PATCH') }}

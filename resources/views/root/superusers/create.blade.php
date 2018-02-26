@@ -136,8 +136,8 @@
                     <div class="col-lg-6">
                         <select name="gender" id="gender" class="form-control m-bootstrap-select" required>
                             <option value="" disabled selected>Please select gender</option>
-                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
-                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="male" {{ strtolower(old('gender')) == 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ strtolower(old('gender')) == 'female' ? 'selected' : '' }}>Female</option>
                         </select>
 
                         <div id="gender-error" class="form-control-feedback">
