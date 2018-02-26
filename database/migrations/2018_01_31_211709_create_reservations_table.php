@@ -15,6 +15,7 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('user_id');
             $table->date('checkin');
             $table->date('checkout');

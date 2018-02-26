@@ -13,4 +13,9 @@ class ReservationCoupon extends Model
     {
         return $this->belongsTo(Coupon::class, 'coupon_id');
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

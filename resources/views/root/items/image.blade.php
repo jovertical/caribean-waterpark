@@ -13,7 +13,7 @@
                 <div class="m-portlet__head-title">
                     <span class="m-portlet__head-icon m--hide"><i class="la la-gear"></i></span>
 
-                    <h3 class="m-portlet__head-text">Select image for <em>{{ Str::ucfirst($item->name) }}</em></h3>
+                    <h3 class="m-portlet__head-text">Select image for <em>{{ $item->name }}</em></h3>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                     <label class="col-lg-2 col-form-label">Image: </label>
 
                     <div class="col-lg-6">
-                        <form method="POST" action="{{ route('root.items.image.upload', $item->id) }}" class="m-dropzone dropzone" id="form-item-upload">
+                        <form method="POST" action="{{ route('root.items.image.upload', $item) }}" class="m-dropzone dropzone" id="form-item-upload">
                             {{ csrf_field() }}
 
                             <div class="m-dropzone__msg dz-message">
@@ -88,7 +88,7 @@
 
                     $.ajax({
                         type: 'DELETE',
-                        url: '{{ route('root.items.image.destroy', $item->id) }}',
+                        url: '{{ route('root.items.image.destroy', $item) }}',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -102,7 +102,7 @@
                     });
                 });
 
-                $.get('{{ route('root.items.image.uploaded', $item->id) }}', function(data) {
+                $.get('{{ route('root.items.image.uploaded', $item) }}', function(data) {
                     $.each(data.images, function (index, file) {
                         var file = {directory: file.directory, name: file.name, size: file.size};
 

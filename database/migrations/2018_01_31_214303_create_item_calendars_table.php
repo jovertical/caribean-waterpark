@@ -15,6 +15,7 @@ class CreateItemCalendarsTable extends Migration
     {
         Schema::create('item_calendars', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('reservation_id');
             $table->integer('item_id');
             $table->date('date');

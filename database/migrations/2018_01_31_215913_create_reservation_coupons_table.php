@@ -15,6 +15,7 @@ class CreateReservationCouponsTable extends Migration
     {
         Schema::create('reservation_coupons', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('reservation_id');
             $table->integer('coupon_id');
             $table->float('price_deductable')->nullable();

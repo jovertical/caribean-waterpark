@@ -65,8 +65,8 @@ class SuperusersController extends Controller
         return back();
     }
 
-    public function edit($id)
+    public function edit(User $superuser)
     {
-
+        return view('root.categories.edit', ['superuser' => $superuser]);
     }
 }

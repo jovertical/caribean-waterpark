@@ -48,7 +48,7 @@ class ItemsController extends Controller
             if ($item->save()) {
                 Notify::success('Item created.', 'Success!');
 
-                return redirect()->route('root.items.image', $item->id);
+                return redirect()->route('root.items.image', $item);
             }
 
             Notify::warning('Cannot create a item', 'Ooops?');
@@ -59,11 +59,9 @@ class ItemsController extends Controller
         return back();
     }
 
-    public function edit($id)
+    public function edit(Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-
             if ($item != null) {
                 $categories = Category::all();
 
@@ -78,18 +76,16 @@ class ItemsController extends Controller
         return back();
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Item $item)
     {
         $this->validate($request, [
             'category'      => 'required|integer',
-            'name'          => "required|max:100|unique:items,name,{$id},id,deleted_at,NULL",
+            'name'          => "required|max:100|unique:items,name,{$item->id},id,deleted_at,NULL",
             'description'   => 'max:500',
             'price'         => 'required'
         ]);
 
         try {
-            $item = Item::findOrFail($id);
-
             $item->category_id  = $request->input('category');
             $item->name         = $request->input('name');
             $item->description  = $request->input('description');
@@ -110,11 +106,9 @@ class ItemsController extends Controller
         return back();
     }
 
-    public function destroy($id)
+    public function destroy(Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-
             if ($item->delete()) {
                 Notify::success('Item deleted.', 'Success!');
 
@@ -130,11 +124,9 @@ class ItemsController extends Controller
         return back();
     }
 
-    public function toggle($id)
+    public function toggle(Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-            
             $item->active = $item->active ? false : true;
 
             if ($item->save()) {
@@ -152,17 +144,14 @@ class ItemsController extends Controller
         return back();
     }
 
-    public function selectImage($id)
+    public function selectImage(Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-
             if ($item != null) {
                 return view('root.items.image', ['item' => $item]);
             }
 
             Notify::warning('Cannot find item', 'Ooops?');
-
         } catch (Exception $e) {
             Notify::error($e->getMessage(), 'Ooops!');
         }
@@ -170,11 +159,9 @@ class ItemsController extends Controller
         return back();
     }
 
-    public function uploadedImage(Request $request, $id)
+    public function uploadedImage(Request $request, Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-
             $item_images = $item->images;
 
             $images = [];
@@ -201,11 +188,9 @@ class ItemsController extends Controller
         return response()->json([]);
     }
 
-    public function uploadImage(Request $request, $id)
+    public function uploadImage(Request $request, Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-
             $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
 
             if ($item->images()->count() < 5) {
@@ -225,11 +210,9 @@ class ItemsController extends Controller
         return response()->json('File not uploaded.');
     }
 
-    public function destroyImage(Request $request, $id)
+    public function destroyImage(Request $request, Item $item)
     {
         try {
-            $item = Item::findOrFail($id);
-
             $file_name = $request->input('file_name');
 
             $item_image =   $item->images->filter(function($image) use ($file_name) {

@@ -15,6 +15,7 @@ class CreateItemCouponApplicablesTable extends Migration
     {
         Schema::create('item_coupon_applicables', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('item_id');
             $table->integer('coupon_id');
 

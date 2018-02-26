@@ -13,4 +13,9 @@ class Coupon extends Model
     {
         return $this->hasMany(ItemCouponApplicables::class);
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

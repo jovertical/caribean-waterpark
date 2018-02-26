@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('root.items.update', $item->id) }}" id="form-item-update" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
+        <form method="POST" action="{{ route('root.items.update', $item) }}" id="form-item-update" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
             {{ method_field('PATCH') }}
             {{ csrf_field() }}
 

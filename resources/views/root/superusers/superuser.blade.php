@@ -30,11 +30,11 @@
             </div>
 
             <a href="javascript:void(0);" data-form="#editSuperuser" data-action="{{ route('root.superusers.edit',
-                $superuser->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill edit-superuser" title="Edit superuser"><i class="la la-edit"></i>
+                $superuser) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill edit-superuser" title="Edit superuser"><i class="la la-edit"></i>
             </a>
 
-            <a href="javascript:void(0);" data-form="#destroySuperuser" data-action="{{ route('root.superusers.destroy',
-                $superuser->id) }}" data-toggle="modal" data-target="#destroySuperuserConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill destroy-superuser" title="Delete superuser">
+            <a href="javascript:void(0);" data-form="#destroySuperuser" data-action="{{ route('root.superusers.destroy', 
+                $superuser) }}" data-toggle="modal" data-target="#destroySuperuserConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill destroy-superuser" title="Delete superuser">
                 <i class="la la-trash"></i>
             </a>
         </span>

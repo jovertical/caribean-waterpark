@@ -21,18 +21,19 @@ class Model extends Eloquent
     {
         parent::boot();
 
-        $user = auth()->check() ? auth()->user()->id : null;
+        $user = auth()->check() ? auth()->user() : null;
 
         self::creating(function ($model) use ($user) {
-            $model->created_by = $user;
+            $model->slug = str_random(10);
+            $model->created_by = $user->id;
         });
 
         self::updating(function($model) use ($user) {
-            $model->updated_by = $user;
+            $model->updated_by = $user->id;
         });
 
         self::deleting(function($model) use ($user) {
-            $model->deleted_by = $user;
+            $model->deleted_by = $user->id;
         });
     }
 }

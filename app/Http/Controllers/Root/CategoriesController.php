@@ -41,7 +41,7 @@ class CategoriesController extends Controller
             if ($category->save()) {
                 Notify::success('Category created.', 'Success!');
 
-                return redirect()->route('root.categories.image', $category->id);
+                return redirect()->route('root.categories.image', $category);
             }
 
             Notify::warning('Cannot create a category', 'Ooops?');
@@ -53,24 +53,20 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
-    public function edit($id)
+    public function edit(Category $category)
     {
-        $category = Category::findOrFail($id);
-
         return view('root.categories.edit', ['category' => $category]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         $this->validate($request, [
             'type'          => 'required',
-            'name'          => "required|max:100|unique:categories,name,{$id},id,deleted_at,NULL",
+            'name'          => "required|max:100|unique:categories,name,{$category->id},id,deleted_at,NULL",
             'description'   => 'max:500'
         ]);
 
         try {
-            $category = Category::findOrFail($id);
-
             $category->type         = $request->input('type');
             $category->name         = $request->input('name');
             $category->description  = $request->input('description');
@@ -90,11 +86,9 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
         try {
-            $category = Category::findOrFail($id);
-
             if ($category->delete()) {
                 Notify::success('Category deleted.', 'Success!');
 
@@ -110,11 +104,9 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
-    public function toggle($id)
+    public function toggle(Category $category)
     {
         try {
-            $category = Category::findOrFail($id);
-
             $active = $category->active ? false : true;
 
             $category->active = $active;
@@ -138,11 +130,9 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
-    public function selectImage($id)
+    public function selectImage(Category $category)
     {
         try {
-            $category = Category::findOrFail($id);
-
             if ($category != null) {
                 return view('root.categories.image', ['category' => $category]);
             }
@@ -156,10 +146,8 @@ class CategoriesController extends Controller
         return redirect()->back();
     }
 
-    public function uploadedImage(Request $request, $id)
+    public function uploadedImage(Request $request, Category $category)
     {
-        $category = Category::findOrFail($id);
-
         $thumbs_directory = $category->file_directory.'/thumbnails';
 
         if (File::exists($thumbs_directory.'/'.$category->file_name)) {
@@ -179,11 +167,9 @@ class CategoriesController extends Controller
         return response()->json('No image.');
     }
 
-    public function uploadImage(Request $request, $id)
+    public function uploadImage(Request $request, Category $category)
     {
         try {
-            $category = Category::findOrFail($id);
-
             $upload = ImageUploader::upload($request->file('image'), "categories/{$category->id}");
 
             $category->file_path = $upload['file_path'];
@@ -200,11 +186,9 @@ class CategoriesController extends Controller
         return response()->json('File not uploaded.');
     }
 
-    public function destroyImage(Request $request, $id)
+    public function destroyImage(Request $request, Category $category)
     {
        try {
-            $category = Category::findOrFail($id);
-
             $file_name = $request->input('file_name');
 
             if (File::exists($category->file_directory.'/'.$file_name)) {

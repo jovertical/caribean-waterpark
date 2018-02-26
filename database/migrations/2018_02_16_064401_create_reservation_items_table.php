@@ -15,6 +15,7 @@ class CreateReservationItemsTable extends Migration
     {
         Schema::create('reservation_items', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('reservation_id');
             $table->integer('item_id');
             $table->integer('quantity');

@@ -28,7 +28,8 @@
                     <label class="col-lg-2 col-form-label">Image: </label>
 
                     <div class="col-lg-6">
-                        <form method="POST" action="{{ route('root.categories.image.upload', $category->id) }}" class="m-dropzone dropzone" id="form-category-upload">
+                        <form method="POST" action="{{ route('root.categories.image.upload', $category) }}" class="m-dropzone dropzone"
+                        id="form-category-upload">
                             {{ csrf_field() }}
 
                             <div class="m-dropzone__msg dz-message">
@@ -84,10 +85,10 @@
 
                 $myDropzone.on('removedfile', function(file) {
                     var fileUploaded = file.previewElement.querySelector("[data-dz-name]").innerHTML;
-                    
+
                     $.ajax({
                         type: 'DELETE',
-                        url: '{{ route('root.categories.image.destroy', $category->id) }}',
+                        url: '{{ route('root.categories.image.destroy', $category) }}',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -101,7 +102,7 @@
                     });
                 });
 
-                $.get('{{ route('root.categories.image.uploaded', $category->id) }}', function(data) {
+                $.get('{{ route('root.categories.image.uploaded', $category) }}', function(data) {
                     $.each(data.images, function (index, image) {
                         var file = {directory: image.directory, name: image.name, size: image.size};
 

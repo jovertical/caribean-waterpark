@@ -15,6 +15,7 @@ class CreateItemImagesTable extends Migration
     {
         Schema::create('item_images', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('item_id');
             $table->integer('count');
             $table->text('file_path')->nullable();
