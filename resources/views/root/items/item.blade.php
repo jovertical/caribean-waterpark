@@ -21,11 +21,12 @@
 
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0);" data-form="#toggleItem" data-action="{{ route('root.items.toggle', $item) }}"
-                    data-toggle="modal" data-target="#toggleItemConfirmation" class="dropdown-item toggle-item" title="Toggle item"><i class="la la-toggle-on"></i>Toggle
+                    data-toggle="modal" data-target="#toggleItemConfirmation" class="dropdown-item toggle-item" title="Toggle item">
+                        <i class="la la-toggle-{{ $item->active ? 'on' : 'off' }}"></i>Toggle
                     </a>
 
                     <a href="{{ route('root.items.image', $item) }}" class="dropdown-item">
-                        <i class="la la-image"></i> View image
+                        <i class="la la-image"></i> Image
                     </a>
                 </div>
             </div>

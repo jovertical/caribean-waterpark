@@ -15,13 +15,9 @@ class Helper {
         return  "{$name}.{$ext}";
     }
 
-    public static function createLoginCredential($last_name, $counter)
+    public static function createLoginCredential($email)
     {
-        $length = strlen($counter);
-
-        $length = $length < 6 ? 6 : $counter;
-
-        return strtoupper($last_name).'-'.str_pad($counter+1, $length, '0', STR_PAD_LEFT);
+        return substr($email, 0, strrpos($email, '@'));
     }
 
     public static function createRandomToken()

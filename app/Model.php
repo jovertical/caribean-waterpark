@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -24,8 +25,8 @@ class Model extends Eloquent
         $user = auth()->check() ? auth()->user() : null;
 
         self::creating(function ($model) use ($user) {
-            if (isset($model->slug)) {
-                $model->slug = str_random(10);
+            if (Schema::hasColumn($model->getTable(), 'slug')) {
+                $model->slug = str_random(20);
             }
 
             if ($user != null) {

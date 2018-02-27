@@ -63,7 +63,7 @@
                                                         </span>
 
                                                         <a href="javascript:void(0);" class="m-card-user__email m--font-weight-300 m-link">
-                                                            {{ Auth::user()->email }}
+                                                            {{ Str::limit(Auth::user()->email, 25) }}
                                                         </a>
                                                     </div>
                                                 </div>

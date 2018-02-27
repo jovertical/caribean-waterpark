@@ -44,7 +44,7 @@
                             </div>
                         </form>
 
-                        <span class="m-form__help">This will help in marketing your items.</span>
+                        <span class="m-form__help"></span>
                     </div>
                 </div>
                 <!--/. Image -->

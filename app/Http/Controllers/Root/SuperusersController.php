@@ -39,7 +39,7 @@ class SuperusersController extends Controller
 
         try {
             $superuser = new User;
-            $login_credential = Helper::createLoginCredential($request->input('last_name'), User::count());
+            $login_credential = Helper::createLoginCredential($request->input('email'));
 
             $superuser->verified        = true;
             $superuser->type            = 'superuser';

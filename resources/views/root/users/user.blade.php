@@ -20,11 +20,11 @@
 
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0);" data-form="#toggleUser" 
-                    data-action="{{ route('root.users.toggle', $user) }}" data-toggle="modal" data-target="#toggleUserConfirmation" class="dropdown-item toggle-user" title="Toggle user"><i class="la la-toggle-on"></i>Toggle
+                    data-action="{{ route('root.users.toggle', $user) }}" data-toggle="modal" data-target="#toggleUserConfirmation" class="dropdown-item toggle-user" title="Toggle user"><i class="la la-toggle-{{ $user->active ? 'on' : 'off' }}"></i>Toggle
                     </a>
 
                     <a href="{{ route('root.users.image', $user) }}" class="dropdown-item">
-                        <i class="la la-image"></i> View image
+                        <i class="la la-image"></i> Image
                     </a>
                 </div>
             </div>

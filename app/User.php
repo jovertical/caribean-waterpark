@@ -23,7 +23,7 @@ class User extends Authenticatable
         $user = auth()->check() ? auth()->user() : null;
 
         self::creating(function ($model) use ($user) {
-            $model->slug = str_random(10);
+            $model->slug = str_random(20);
 
             if ($user != null) {
                 $model->created_by = $user->id;

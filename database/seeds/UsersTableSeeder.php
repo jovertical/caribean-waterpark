@@ -12,7 +12,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         \App\User::create([
-            'slug' => str_random(10),
+            'slug' => str_random(20),
             'name' => 'jovert123',
             'email' => 'jobert.lota18@gmail.com',
             'password' => bcrypt('secret'),
@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         \App\User::create([
-            'slug' => str_random(10),
+            'slug' => str_random(20),
             'name' => 'chito123',
             'email' => 'chito@example.com',
             'password' => bcrypt('secret'),
@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         \App\User::create([
-            'slug' => str_random(10),
+            'slug' => str_random(20),
             'name' => 'arnie123',
             'email' => 'arnie@example.com',
             'password' => bcrypt('secret'),
@@ -47,7 +47,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         \App\User::create([
-            'slug' => str_random(10),
+            'slug' => str_random(20),
             'name' => 'kennent123',
             'email' => 'kennent@example.com',
             'password' => bcrypt('secret'),
@@ -56,7 +56,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         \App\User::create([
-            'slug' => str_random(10),
+            'slug' => str_random(20),
             'name' => 'aldrin',
             'email' => 'aldrin@example.com',
             'password' => bcrypt('secret'),
@@ -65,7 +65,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         \App\User::create([
-            'slug' => str_random(10),
+            'slug' => str_random(20),
             'name' => 'andrew',
             'email' => 'andrew@example.com',
             'password' => bcrypt('secret'),

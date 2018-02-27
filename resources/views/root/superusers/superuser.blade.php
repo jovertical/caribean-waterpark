@@ -20,11 +20,12 @@
 
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0);" data-form="#toggleSuperuser" 
-                    data-action="{{ route('root.superusers.toggle', $superuser) }}" data-toggle="modal" data-target="#toggleSuperuserConfirmation" class="dropdown-item toggle-superuser" title="Toggle superuser"><i class="la la-toggle-on"></i>Toggle
+                    data-action="{{ route('root.superusers.toggle', $superuser) }}" data-toggle="modal" data-target="#toggleSuperuserConfirmation" class="dropdown-item toggle-superuser" title="Toggle superuser">
+                        <i class="la la-toggle-{{ $superuser->active ? 'on' : 'off' }}"></i>Toggle
                     </a>
 
                     <a href="{{ route('root.superusers.image', $superuser) }}" class="dropdown-item">
-                        <i class="la la-image"></i> View image
+                        <i class="la la-image"></i> Image
                     </a>
                 </div>
             </div>

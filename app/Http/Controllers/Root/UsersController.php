@@ -39,7 +39,7 @@ class UsersController extends Controller
 
         try {
             $user = new User;
-            $login_credential = Helper::createLoginCredential($request->input('last_name'), User::count());
+            $login_credential = Helper::createLoginCredential($request->input('email'));
 
             $user->verified        = true;
             $user->type            = 'user';
