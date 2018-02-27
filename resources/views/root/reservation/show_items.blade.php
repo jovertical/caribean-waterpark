@@ -132,7 +132,7 @@
                                             <button type="submit" data-toggle="modal" data-target="#clearItems" class="btn btn-secondary">Clear cart</button>
                                         </form>
 
-                                        <a href="#" class="btn btn-brand">Checkout</a>
+                                        <a href="{{ route('root.reservation.customer') }}" class="btn btn-brand">Checkout</a>
                                     </div>
                                 </div>
                             </div>

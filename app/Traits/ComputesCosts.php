@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait ComputesCosts {
 
-    public function computeItemCosts(array $items, float $discount = null)
+    public function computeItemCosts(array $items, float $deductable = null)
     {
         $vat_rate = 12;
 

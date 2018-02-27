@@ -17,13 +17,13 @@ class ReservationsController extends Controller
     {
         $checkin_date = Carbon::parse($request->input('ci'));
         $checkout_date = Carbon::parse($request->input('co'));
-        $earliest = Carbon::now();
+        $earliest = Carbon::parse(now()->addDays(1)->format('Y-m-d'));
 
         $items = collect([]);
 
         if (($request->input('ci') != null) AND ($request->input('co') != null)) {
              // check for invalid date
-            if (($checkin_date <= $earliest) OR ($checkout_date <= $earliest) OR ($checkin_date >= $checkout_date)) {
+            if (($checkin_date < $earliest) OR ($checkout_date < $earliest) OR ($checkin_date > $checkout_date)) {
                 // set reservation data to empty array
                 session(['reservation' => []]);
 
@@ -111,7 +111,7 @@ class ReservationsController extends Controller
                     'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
                 ]);
 
-                Notify::success(Str::ucfirst($item_added->name).' added.', 'Success!');
+                Notify::success($item_added->name.' added.', 'Success!');
 
                 return back();
             }
@@ -126,12 +126,12 @@ class ReservationsController extends Controller
                 'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
             ]);
 
-            Notify::success(Str::ucfirst($item_added->name).' quantity updated.', 'Success!');
+            Notify::success($item_added->name.' quantity updated.', 'Success!');
 
             return back();
         }
 
-        Notify::warning(Str::ucfirst($item_added->name).' not added or quantity not updated.', 'Whooops?');
+        Notify::warning($item_added->name.' not added or quantity not updated.', 'Whooops?');
 
         return back();
     }
@@ -160,7 +160,7 @@ class ReservationsController extends Controller
                     'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
                 ]);
 
-                Notify::success(Str::ucfirst($item_removed->name).' removed.', 'Success!');
+                Notify::success($item_removed->name.' removed.', 'Success!');
 
                 return back();
             }
@@ -170,12 +170,12 @@ class ReservationsController extends Controller
                 'reservation.item_costs' => $this->computeItemCosts(session()->get('reservation.selected_items'))
             ]);
 
-            Notify::success(Str::ucfirst($item_removed->name).' quantity updated.', 'Success!');
+            Notify::success($item_removed->name.' quantity updated.', 'Success!');
 
             return back();
         }
 
-        Notify::warning(Str::ucfirst($item_removed->name).' not removed or quantity not updated.', 'Whooops?');
+        Notify::warning($item_removed->name.' not removed or quantity not updated.', 'Whooops?');
 
         return back();
     }
@@ -207,6 +207,11 @@ class ReservationsController extends Controller
             'items' => $items,
             'item_costs' => $item_costs
         ]);
+    }
+
+    public function customer()
+    {
+        return view('root.reservation.customer');
     }
 
     protected function canCheckout()

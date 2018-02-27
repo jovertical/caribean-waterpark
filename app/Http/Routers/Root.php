@@ -61,5 +61,6 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
         Route::post('reservations/remove-item/{index}', 'ReservationsController@removeItem')->name('reservation.remove-item');
         Route::post('reservations/clear-items', 'ReservationsController@clearItems')->name('reservation.clear-items');
         Route::get('reservations/show-items', 'ReservationsController@showItems')->name('reservation.show-items');
+        Route::get('reservations/customer', 'ReservationsController@customer')->name('reservation.customer');
     });
 });
