@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
+use App\Notifications\LoginCredential;
 use App\Traits\{ComputesCosts};
 use App\{User, Reservation, Category, Item, ItemCalendar};
 use Helper;
@@ -247,12 +248,60 @@ class ReservationsController extends Controller
     }
 
     /**
-     * Store the reservation.
+     * Store the user for the next reservation.
      * @param  Request $request
+     * @return null
+     */
+    public function storeUser(Request $request)
+    {
+        $this->validate($request, [
+            'email'         => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+            'first_name'    => 'required|string|max:255',
+            'middle_name'   => 'max:255',
+            'last_name'     => 'required|string|max:255',
+            'birthdate'     => 'max:255',
+            'address'       => 'max:510',
+            'phone_number'  => 'max:255'
+        ]);
+
+        try {
+            $user = new User;
+            $login_credential = Helper::createLoginCredential($request->input('email'));
+
+            $user->verified        = true;
+            $user->type            = 'user';
+            $user->name            = $login_credential;
+            $user->email           = $request->input('email');
+            $user->password        = bcrypt($login_credential);
+            $user->first_name      = $request->input('first_name');
+            $user->middle_name     = $request->input('middle_name');
+            $user->last_name       = $request->input('last_name');
+            $user->birthdate       = $request->input('birthdate');
+            $user->gender          = $request->input('gender');
+            $user->address         = $request->input('address');
+            $user->phone_number    = $request->input('phone_number');
+
+            if ($user->save()) {
+                $user->notify(new LoginCredential($login_credential, $login_credential));
+
+                // Proceed to reservation.
+                return $this->store($user);
+            }
+
+            Notify::warning('Cannot create a user', 'Ooops?');
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+
+        return back();
+    }
+
+    /**
+     * Store the reservation.
      * @param  User    $user
      * @return
      */
-    public function store(Request $request, User $user)
+    public function store(User $user)
     {
         $items = session()->get('reservation.selected_items');
         $checkin_date = session()->get('reservation.checkin_date');
