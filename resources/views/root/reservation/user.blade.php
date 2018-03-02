@@ -266,10 +266,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Gender</th>
-                                    <th>Birthdate</th>
+                                    <th>Customer</th>
+                                    <th>Reservations</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Actions</th>
@@ -280,14 +278,8 @@
                                 @foreach($users as $index => $user)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>
-                                            <span>
-                                                <img src="{{ Helper::fileUrl($user, 'thumbnail') }}" class="img-fluid rounded-circle">
-                                            </span>
-                                        </td>
                                         <td>{{ $user->full_name }}</td>
-                                        <td>{{ $user->gender }}</td>
-                                        <td>{{ $user->birthdate }}</td>
+                                        <td>{{ $user->reservations->count() }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone_number }}</td>
                                         <td>
@@ -400,16 +392,56 @@
                             type: 'number'
                         },
                         {
-                            field: 'Name',
+                            field: 'Customer',
+                            width: 175,
+                            template: function(data) {
+                                var number = mUtil.getRandomInt(1, 14);
+                                var image;
+
+                                if (image == '') {
+                                    output =    '<div class="m-card-user m-card-user--sm">\
+                                                    <div class="m-card-user__pic">\
+                                                        <img src="' + image + '" class="m--img-rounded m--marginless" alt="photo">\
+                                                    </div>\
+                                                    <div class="m-card-user__details">\
+                                                        <span class="m-card-user__name">' + data.Customer + '</span>\
+                                                        <a href="" class="m-card-user__email m-link">' + data.Customer + '</a>\
+                                                    </div>\
+                                                </div>';
+                                } else {
+                                    var stateNo = mUtil.getRandomInt(0, 7);
+
+                                    var states = [
+                                        'success',
+                                        'brand',
+                                        'danger',
+                                        'accent',
+                                        'warning',
+                                        'metal',
+                                        'primary',
+                                        'info'
+                                    ];
+
+                                    var state = states[stateNo];
+                                }
+
+                                output =    '<div class="m-card-user m-card-user--sm">\
+                                                <div class="m-card-user__pic">\
+                                                    <div class="m-card-user__no-photo m--bg-fill-' + state + '">\
+                                                        <span>' + data.Customer.substring(0, 1) + '</span>\
+                                                    </div>\
+                                                </div>\
+                                                <div class="m-card-user__details">\
+                                                    <span class="m-card-user__name">' + data.Customer + '</span>\
+                                                </div>\
+                                            </div>';
+
+                                return output;
+                            },
+                        },
+                        {
+                            field: 'Reservations',
                             width: 100
-                        },
-                        {
-                            field: 'Gender',
-                            width: 75
-                        },
-                        {
-                            field: 'Birthdate',
-                            width: 75
                         },
                         {
                             field: 'Email',

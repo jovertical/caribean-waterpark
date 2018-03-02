@@ -31,6 +31,13 @@ class Helper {
         return hash_hmac('sha256', Str::random(40), $key);
     }
 
+    public static function createPaddedCounter($counter)
+    {
+        $length = strlen($counter);
+
+        return str_pad($counter, $length > 4 ? $counter : $length, '0', STR_PAD_LEFT);
+    }
+
     public static function activeMenu($segment_2)
     {
         $segments = [

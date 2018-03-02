@@ -26,7 +26,6 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'type'          => 'required',
             'name'          => 'required|max:100|unique:categories,name,NULL,id,deleted_at,NULL',
             'description'   => 'max:500'
         ]);
@@ -34,7 +33,6 @@ class CategoriesController extends Controller
         try {
             $category = new Category;
 
-            $category->type         = $request->input('type');
             $category->name         = $request->input('name');
             $category->description  = $request->input('description');
 
@@ -61,13 +59,11 @@ class CategoriesController extends Controller
     public function update(Request $request, Category $category)
     {
         $this->validate($request, [
-            'type'          => 'required',
             'name'          => "required|max:100|unique:categories,name,{$category->id},id,deleted_at,NULL",
             'description'   => 'max:500'
         ]);
 
         try {
-            $category->type         = $request->input('type');
             $category->name         = $request->input('name');
             $category->description  = $request->input('description');
 
