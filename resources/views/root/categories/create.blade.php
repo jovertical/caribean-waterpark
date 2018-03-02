@@ -85,10 +85,6 @@
             var formValidationInit = function () {
                 $("form[id=form-category-store]").validate({
                     rules: {
-                        type: {
-                            required: true
-                        },
-
                         name: {
                             required: true,
                             maxlength: 255
