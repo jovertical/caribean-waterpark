@@ -20,7 +20,7 @@ class CreateItemsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->float('price');
-            $table->integer('quantity')->nullable();
+            $table->integer('quantity');
             $table->boolean('active')->default(true);
             
             $table->integer('created_by')->nullable();

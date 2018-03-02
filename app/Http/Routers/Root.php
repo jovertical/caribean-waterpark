@@ -56,11 +56,13 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
 
         Route::get('reservations', 'ReservationsController@index')->name('reservations.index');
 
-        Route::get('reservations/search-items', 'ReservationsController@searchItems')->name('reservation.search-items');
-        Route::post('reservations/add-item/{index}', 'ReservationsController@addItem')->name('reservation.add-item');
-        Route::post('reservations/remove-item/{index}', 'ReservationsController@removeItem')->name('reservation.remove-item');
-        Route::post('reservations/clear-items', 'ReservationsController@clearItems')->name('reservation.clear-items');
-        Route::get('reservations/show-items', 'ReservationsController@showItems')->name('reservation.show-items');
-        Route::get('reservations/customer', 'ReservationsController@customer')->name('reservation.customer');
+        Route::get('reservation/search', 'ReservationsController@searchItems')->name('reservation.search-items');
+        Route::post('reservation/cart/{index}/add', 'ReservationsController@addItem')->name('reservation.add-item');
+        Route::post('reservation/cart/{index}/remove', 'ReservationsController@removeItem')->name('reservation.remove-item');
+        Route::post('reservation/cart/clear', 'ReservationsController@clearItems')->name('reservation.clear-items');
+        Route::get('reservation/cart', 'ReservationsController@showItems')->name('reservation.show-items');
+        
+        Route::get('reservation/user', 'ReservationsController@user')->name('reservation.user');
+        Route::post('reservation/store', 'ReservationsController@store')->name('reservation.store');
     });
 });

@@ -132,7 +132,7 @@
                 <!-- Quantity -->
                 <div class="form-group m-form__group row {{ $errors->has('quantity') ? 'has-danger' : '' }}">
                     <label for="quantity" class="col-lg-2 col-form-label">
-                        Quantity
+                        Quantity <span class="m--font-danger">*</span>
                     </label>
 
                     <div class="col-lg-6">
@@ -144,7 +144,7 @@
                             <span class="m--font-danger">{{ $errors->first('quantity') }}</span>
                         </div>
 
-                        <span class="m-form__help">How many are this item. <em><strong>Empty</strong> means no limit.</em></span>
+                        <span class="m-form__help">How many are this item.</span>
                     </div>
                 </div>
                 <!--/. Quantity -->

@@ -118,7 +118,7 @@
                             <span class="m--font-danger">{{ $errors->first('quantity') }}</span>
                         </div>
 
-                        <span class="m-form__help">How many are this item. <em><strong>Empty</strong> means no limit.</em></span>
+                        <span class="m-form__help">How many are this item. </span>
                     </div>
                 </div>
                 <!--/. Quantity -->

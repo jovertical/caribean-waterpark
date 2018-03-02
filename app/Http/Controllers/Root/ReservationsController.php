@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Root;
 
 use App\Traits\{ComputesCosts};
-use App\{Reservation, Category, Item, ItemCalendar};
+use App\{User, Reservation, Category, Item, ItemCalendar};
 use Helper;
 use Str, Carbon, Notify;
 use Illuminate\Http\Request;
@@ -13,6 +13,11 @@ class ReservationsController extends Controller
 {
     use ComputesCosts;
 
+    /**
+     * Search calendar for available items, compute costs as well.
+     * @param  Request $request
+     * @return view
+     */
     public function searchItems(Request $request)
     {
         $checkin_date = Carbon::parse($request->input('ci'));
@@ -33,7 +38,6 @@ class ReservationsController extends Controller
             }
 
             $items =    Item::with('category')->whereHas('category', function($category) {
-                            $category->where('type', 'accomodation');
                             $category->where('active', true);
                         })
                         ->where('active', true)
@@ -87,6 +91,12 @@ class ReservationsController extends Controller
         ]);
     }
 
+    /**
+     * Add specific item to the cart.
+     * @param  Request $request
+     * @param  int  $index
+     * @return back
+     */
     public function addItem(Request $request, $index)
     {
         $quantity = (int) $request->input('quantity');
@@ -136,6 +146,12 @@ class ReservationsController extends Controller
         return back();
     }
 
+    /**
+     * Remove specific item from the cart.
+     * @param  Request $request
+     * @param  int  $index
+     * @return back
+     */
     public function removeItem(Request $request, $index)
     {
         $quantity = (int) $request->input('quantity');
@@ -180,6 +196,10 @@ class ReservationsController extends Controller
         return back();
     }
 
+    /**
+     * Clear all cart items
+     * @return back
+     */
     public function clearItems()
     {
         try {
@@ -198,6 +218,10 @@ class ReservationsController extends Controller
         return back();
     }
 
+    /**
+     * Show selected items
+     * @return view
+     */
     public function showItems()
     {
         $items = session()->get('reservation.selected_items') ?? [];
@@ -209,16 +233,47 @@ class ReservationsController extends Controller
         ]);
     }
 
-    public function customer()
+    /**
+     *
+     * @return view
+     */
+    public function user()
     {
-        return view('root.reservation.customer');
+        $users = User::get()->all();
+
+        return view('root.reservation.user', [
+            'users' => $users
+        ]);
     }
 
-    protected function canCheckout()
+    /**
+     * Validate selected items
+     * @param  array $reservation
+     * @return boolean
+     */
+    protected function selectedItemsValid(array $selected_items, $checkin_date, $checkout_date)
     {
-        return false;
+        foreach($selected_items as $index => $selected_item) {
+            $count =    ItemCalendar::where('item_id', $selected_item->id)
+                            ->whereBetween('date', [
+                                $checkin_date,
+                                $checkout_date
+                            ])
+                            ->where('quantity', '>=', $selected_item->quantity)
+                            ->count();
+
+            if ($count > 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    /**
+     * list of all reservations
+     * @return view
+     */
     public function index()
     {
         $reservations = Reservation::latest()->get();

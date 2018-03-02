@@ -21,28 +21,6 @@
             {{ csrf_field() }}
 
             <div class="m-portlet__body">
-                <!-- Type -->
-                <div class="form-group m-form__group row {{ $errors->has('type') ? 'has-danger' : '' }}">
-                    <label for="type" class="col-lg-2 col-form-label">
-                        Type <span class="m--font-danger">*</span>
-                    </label>
-
-                    <div class="col-lg-6">
-                        <select name="type" id="type" class="form-control m-bootstrap-select" required>
-                            <option value="" disabled selected>Please select a type</option>
-                            <option value="accomodation">Accomodation</option>
-                            <option value="miscellaneous">Miscellaneous</option>
-                        </select>
-
-                        <div id="type-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('type') }}</span>
-                        </div>
-
-                        <span class="m-form__help">It will define the properties of <strong>items</strong> created under this category.</span>
-                    </div>
-                </div>
-                <!--/. Type -->
-
                 <!-- Name -->
                 <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}" required>
                     <label for="name" class="col-lg-2 col-form-label">
@@ -138,19 +116,10 @@
             }
             //. summernote
 
-            // select
-            var selectInit = function () {
-                $('select[id=type]').selectpicker({
-                    //
-                });
-            }
-            //. select
-
             return {
                 init: function() {
                     formValidationInit();
                     summernoteInit();
-                    selectInit();
                 }
             };
         }();

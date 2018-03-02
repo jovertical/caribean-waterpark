@@ -22,29 +22,6 @@
             {{ csrf_field() }}
 
             <div class="m-portlet__body">
-                <!-- Type -->
-                <div class="form-group m-form__group row {{ $errors->has('type') ? 'has-danger' : '' }}">
-                    <label for="type" class="col-lg-2 col-form-label">
-                        Type <span class="m--font-danger">*</span>
-                    </label>
-
-                    <div class="col-lg-6">
-                        <select name="type" id="type" class="form-control m-bootstrap-select">
-                            <option value="" disabled>Please select a type</option>
-                            <option value="accomodation" {{ $category->type == 'accomodation' ? 'selected' : '' }}>Accomodation
-                            </option>
-                            <option value="miscellaneous" {{ $category->type == 'miscellaneous' ? 'selected' : '' }}>Miscellaneous</option>
-                        </select>
-
-                        <div id="type-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('type') }}</span>
-                        </div>
-
-                        <span class="m-form__help">It will define the properties of <strong>items</strong> created under this category.</span>
-                    </div>
-                </div>
-                <!--/. Type -->
-
                 <!-- Name -->
                 <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}">
                     <label for="name" class="col-lg-2 col-form-label">
@@ -53,8 +30,7 @@
 
                     <div class="col-lg-6">
                         <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
-                            'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{
-                                $category->name }}">
+                            'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{ $category->name }}">
 
                         <div id="name-error" class="form-control-feedback">
                             <span class="m--font-danger">{{ $errors->first('name') }}</span>
@@ -134,19 +110,10 @@
             }
             //. summernote
 
-            // select
-            var selectInit = function () {
-                $('select[id=type]').selectpicker({
-                    //
-                });
-            }
-            //. select
-
             return {
                 init: function() {
                     formValidationInit();
                     summernoteInit();
-                    selectInit();
                 }
             };
         }();

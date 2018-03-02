@@ -4,7 +4,7 @@ namespace App;
 
 class ReservationItem extends Model
 {
-    public function reservation()
+    public function cart()
     {
         return $this->belongsTo(Reservation::class, 'reservation_id');
     }

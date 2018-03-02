@@ -28,24 +28,6 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
-                            <!-- Type -->
-                            <div class="col-md-4">
-                                <div class="m-form__group m-form__group--inline">
-                                    <div class="m-form__label">
-                                        <label>Type:</label>
-                                    </div>
-                                    <div class="m-form__control">
-                                        <select class="form-control m-bootstrap-select" id="type">
-                                            <option value="">All</option>
-                                            <option value="accomodation">Accomodation</option>
-                                            <option value="miscellaneous">Miscellaneous</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="d-md-none m--margin-bottom-10"></div>
-                            </div>
-                            <!--/. Type -->
-
                             <!-- Status -->
                             <div class="col-md-4">
                                 <div class="m-form__group m-form__group--inline">
@@ -183,10 +165,6 @@
                             sortable: false
                         },
                         {
-                            field: 'Type',
-                            width: 75
-                        },
-                        {
                             field: 'Name',
                             width: 100
                         },
@@ -217,10 +195,6 @@
                         }
                     ]
                 });
-
-                $('select[id=type]').on('change', function() {
-                    datatable.search($(this).val().toLowerCase(), 'Type');
-                }).selectpicker();
 
                 $('select[id=status]').on('change', function() {
                     datatable.search($(this).val().toLowerCase(), 'Status');

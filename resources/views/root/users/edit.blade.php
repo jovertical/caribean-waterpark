@@ -25,13 +25,13 @@
                 <!-- Firstname -->
                 <div class="form-group m-form__group row {{ $errors->has('first_name') ? 'has-danger' : '' }}">
                     <label for="first_name" class="col-lg-2 col-form-label">
-                        Firstname <span class="m--font-danger">*</span>
+                        Firstname
                     </label>
 
                     <div class="col-lg-6">
                         <input type="text" name="first_name" id="first_name" class="form-control m-input
                             {{ $errors->has('first_name') ? 'form-control-danger' :'' }}" placeholder="Please enter a firstname"
-                                value="{{ old('first_name') ?? $user->first_name }}" required maxlength="255">
+                                value="{{ old('first_name') ?? $user->first_name }}" maxlength="255">
 
                         <div id="first_name-error" class="form-control-feedback">
                             <span class="m--font-danger">{{ $errors->first('first_name') }}</span>
@@ -65,13 +65,13 @@
                 <!-- Lastname -->
                 <div class="form-group m-form__group row {{ $errors->has('last_name') ? 'has-danger' : '' }}">
                     <label for="last_name" class="col-lg-2 col-form-label">
-                        Lastname <span class="m--font-danger">*</span>
+                        Lastname
                     </label>
 
                     <div class="col-lg-6">
                         <input type="text" name="last_name" id="last_name" class="form-control m-input
                             {{ $errors->has('last_name') ? 'form-control-danger' :'' }}" placeholder="Please enter a lastname"
-                                value="{{ old('last_name') ?? $user->last_name }}" required maxlength="255">
+                                value="{{ old('last_name') ?? $user->last_name }}" maxlength="255">
 
                         <div id="last_name-error" class="form-control-feedback">
                             <span class="m--font-danger">{{ $errors->first('last_name') }}</span>
@@ -105,7 +105,7 @@
                 <!-- Birthdate -->
                 <div class="form-group m-form__group row {{ $errors->has('birthdate') ? 'has-danger' : '' }}">
                     <label for="birthdate" class="col-lg-2 col-form-label">
-                        Birthdate <span class="m--font-danger">*</span>
+                        Birthdate
                     </label>
 
                     <div class="col-lg-6">
@@ -116,7 +116,7 @@
 
                             <input type="text" name="birthdate" id="birthdate" class="form-control m-input
                                 {{ $errors->has('birthdate') ? 'form-control-danger' :'' }}" placeholder="Please enter birthdate"
-                                    value="{{ old('birthdate') ?? $user->birthdate }}" required readonly>
+                                    value="{{ old('birthdate') ?? $user->birthdate }}" readonly>
                         </div>
 
                         <div id="birthdate-error" class="form-control-feedback">
@@ -131,11 +131,11 @@
                 <!-- Gender -->
                 <div class="form-group m-form__group row {{ $errors->has('gender') ? 'has-danger' : '' }}">
                     <label for="gender" class="col-lg-2 col-form-label">
-                        Gender <span class="m--font-danger">*</span>
+                        Gender
                     </label>
 
                     <div class="col-lg-6">
-                        <select name="gender" id="gender" class="form-control m-bootstrap-select" required>
+                        <select name="gender" id="gender" class="form-control m-bootstrap-select">
                             <option value="" disabled selected>Please select gender</option>
                             <option value="male" {{ strtolower($user->gender) == 'male' ? 'selected' : '' }}>Male</option>
                             <option value="female" {{ strtolower($user->gender) == 'female' ? 'selected' : '' }}>Female</option>
@@ -153,12 +153,12 @@
                 <!-- Address -->
                 <div class="form-group m-form__group row {{ $errors->has('address') ? 'has-danger' : '' }}">
                     <label for="address" class="col-lg-2 col-form-label">
-                        Address <span class="m--font-danger">*</span>
+                        Address
                     </label>
 
                     <div class="col-lg-6">
                         <textarea name="address" id="address" class="form-control m-input" {{ $errors->has('address') ?
-                            'form-control-danger' :'' }} required rows="3">{{ old('address') ?? $user->address }}</textarea>
+                            'form-control-danger' :'' }} rows="3">{{ old('address') ?? $user->address }}</textarea>
 
                         <div id="address-error" class="form-control-feedback">
                             <span class="m--font-danger">{{ $errors->first('address') }}</span>
@@ -169,7 +169,9 @@
 
                 <!-- Phone number -->
                 <div class="form-group m-form__group row {{ $errors->has('last_name') ? 'has-danger' : '' }}">
-                    <label for="last_name" class="col-lg-2 col-form-label">Phone number: </label>
+                    <label for="last_name" class="col-lg-2 col-form-label">
+                        Phone number
+                    </label>
 
                     <div class="col-lg-6">
                         <div class="input-group m-input-group">
@@ -216,21 +218,9 @@
             var formValidationInit = function () {
                 $("form[id=form-user-update]").validate({
                     rules: {
-                        category: {
-                            required: true
-                        },
-
-                        name: {
+                        email: {
                             required: true,
                             maxlength: 255
-                        },
-
-                        description: {
-                            maxlength: 500
-                        },
-
-                        price: {
-                            required: true
                         }
                     },
 
