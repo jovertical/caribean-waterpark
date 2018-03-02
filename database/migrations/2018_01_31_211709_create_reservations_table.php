@@ -17,13 +17,13 @@ class CreateReservationsTable extends Migration
             $table->increments('id');
             $table->string('slug')->unique();
             $table->integer('user_id');
-            $table->date('checkin');
-            $table->date('checkout');
-            $table->enum('status', ['pending', 'paid', 'reserved', 'cancelled', 'waiting', 'void']);
-            $table->float('price_taxable')->nullable();
-            $table->float('price_deductable')->nullable();
+            $table->date('checkin_date');
+            $table->date('checkout_date');
+            $table->enum('status', ['pending', 'reserved', 'paid', 'cancelled', 'waiting', 'void'])->default('pending');
+            $table->float('price_taxable')->default(0.00);
+            $table->float('price_deductable')->default(0.00);
             $table->float('price_payable');
-            $table->float('price_paid')->nullable();
+            $table->float('price_paid')->default(0.00);
             $table->enum('source', ['frontend', 'root']);
             $table->text('note')->nullable();
 

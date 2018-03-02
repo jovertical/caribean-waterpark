@@ -180,12 +180,13 @@
                             field: 'Status',
                             width: 75,
                             template: function(row) {
-                            var status = {
-                                1: {'title': 'Active', 'class': 'm-badge--success'},
-                                2: {'title': 'Inactive', 'class': ' m-badge--metal'},
-                            };
+                                var status = {
+                                    1: {'title': 'Active', 'class': 'm-badge--success'},
+                                    2: {'title': 'Inactive', 'class': ' m-badge--metal'},
+                                };
 
-                            return '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' + status[row.Status].title + '</span>';
+                                return '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' +
+                                            status[row.Status].title + '</span>';
                             },
                         },
                         {

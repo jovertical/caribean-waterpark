@@ -400,11 +400,6 @@
                             type: 'number'
                         },
                         {
-                            field: 'Image',
-                            width: 50,
-                            sortable: false
-                        },
-                        {
                             field: 'Name',
                             width: 100
                         },

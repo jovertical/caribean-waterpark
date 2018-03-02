@@ -5,8 +5,8 @@
             <img src="{{ Helper::fileUrl($category, 'thumbnail') }}" class="img-fluid rounded-circle">
         </span>
     </td>
-    <td>{{ Str::ucfirst($category->type) }}</td>
-    <td>{{ Str::ucfirst($category->name) }}</td>
+    <td>{{ $category->type }}</td>
+    <td>{{ $category->name }}</td>
     <td>{!! Str::limit($category->description, 25) !!}</td>
     <td>{{ $category->items->count() }}</td>
     <td>

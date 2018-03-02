@@ -30,7 +30,7 @@ class Model extends Eloquent
             }
 
             if ($user != null) {
-                if (isset($model->created_by)) {
+                if (Schema::hasColumn($model->getTable(), 'created_by')) {
                     $model->created_by = $user->id;
                 }
             }
@@ -38,7 +38,7 @@ class Model extends Eloquent
 
         self::updating(function($model) use ($user) {
             if ($user != null) {
-                if (isset($model->updated_by)) {
+                if (Schema::hasColumn($model->getTable(), 'updated_by')) {
                     $model->updated_by = $user->id;
                 }
             }
@@ -46,8 +46,8 @@ class Model extends Eloquent
 
         self::deleting(function($model) use ($user) {
             if ($user != null) {
-                if (isset($model->deleted_by)) {
-                    $model->deleted_by = $user->id;
+                if (Schema::hasColumn($model->getTable(), 'updated_by')) {
+                    $model->updated_by = $user->id;
                 }
             }
         });

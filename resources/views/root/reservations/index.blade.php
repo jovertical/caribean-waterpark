@@ -98,10 +98,10 @@
                         <th title="#">#</th>
                         <th title="Source">Source</th>
                         <th title="Customer">Customer</th>
-                        <th title="Checkin">Checkin</th>
-                        <th title="Checkout">Checkout</th>
-                        <th title="Payable">Payable</th>
-                        <th title="Paid">Paid</th>
+                        <th title="Checkin date">Checkin</th>
+                        <th title="Checkout date">Checkout</th>
+                        <th title="Price payable">Payable</th>
+                        <th title="Price paid">Paid</th>
                         <th title="Status">Status</th>
                         <th title="Actions">Actions</th>
                     </tr>
@@ -149,19 +149,63 @@
                             },
                             {
                                 field: 'Source',
-                                width: 75
+                                width: 50
                             },
                             {
                                 field: 'Customer',
-                                width: 100
+                                width: 200,
+                                template: function(data) {
+                                    var number = mUtil.getRandomInt(1, 14);
+                                    var image;
+
+                                    if (image == '') {
+                                        output =    '<div class="m-card-user m-card-user--sm">\
+                                                        <div class="m-card-user__pic">\
+                                                            <img src="' + image + '" class="m--img-rounded m--marginless" alt="photo">\
+                                                        </div>\
+                                                        <div class="m-card-user__details">\
+                                                            <span class="m-card-user__name">' + data.Customer + '</span>\
+                                                            <a href="" class="m-card-user__email m-link">' + data.Customer + '</a>\
+                                                        </div>\
+                                                    </div>';
+                                    } else {
+                                        var stateNo = mUtil.getRandomInt(0, 7);
+
+                                        var states = [
+                                            'success',
+                                            'brand',
+                                            'danger',
+                                            'accent',
+                                            'warning',
+                                            'metal',
+                                            'primary',
+                                            'info'
+                                        ];
+
+                                        var state = states[stateNo];
+                                    }
+
+                                    output =    '<div class="m-card-user m-card-user--sm">\
+                                                    <div class="m-card-user__pic">\
+                                                        <div class="m-card-user__no-photo m--bg-fill-' + state + '">\
+                                                            <span>' + data.Customer.substring(0, 1) + '</span>\
+                                                        </div>\
+                                                    </div>\
+                                                    <div class="m-card-user__details">\
+                                                        <span class="m-card-user__name">' + data.Customer + '</span>\
+                                                    </div>\
+                                                </div>';
+
+                                    return output;
+                                },
                             },
                             {
                                 field: 'Checkin',
-                                width: 75
+                                width: 100
                             },
                             {
                                 field: 'Checkout',
-                                width: 75
+                                width: 100
                             },
                             {
                                 field: 'Payable',
@@ -173,7 +217,20 @@
                             },
                             {
                                 field: 'Status',
-                                width: 50
+                                width: 75,
+                                template: function(row) {
+                                    var status = {
+                                        1: {'title': 'Pending', 'class': ' m-badge--warning'},
+                                        2: {'title': 'Reserved', 'class': ' m-badge--info'},
+                                        3: {'title': 'Paid', 'class': ' m-badge--success'},
+                                        4: {'title': 'Cancelled', 'class': ' m-badge--danger'},
+                                        5: {'title': 'Waiting', 'class': ' m-badge--brand'},
+                                        6: {'title': 'Void', 'class': ' m-badge--metal'}
+                                    };
+
+                                    return  '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' +
+                                                '<span class="text-white">' + status[row.Status].title + '</span>' + '</span>';
+                                },
                             },
                             {
                                 field: 'Actions',

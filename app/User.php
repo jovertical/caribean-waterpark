@@ -48,6 +48,17 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
+    public function createReservation($checkin_date, $checkout_date, $item_costs)
+    {
+        return $this->reservations()->create([
+            'checkin_date'      => $checkin_date,
+            'checkout_date'     => $checkout_date,
+            'price_taxable'     => $item_costs['price_taxable'],
+            'price_deductable'  => $item_costs['price_deductable'],
+            'price_payable'     => $item_costs['price_payable'],
+        ]);
+    }
+
     public function setFirstNameAttribute($value)
     {
         $this->attributes['first_name'] = strtolower($value);

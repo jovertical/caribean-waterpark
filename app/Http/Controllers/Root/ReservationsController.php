@@ -46,23 +46,23 @@ class ReservationsController extends Controller
             $available_items = collect([]);
 
             $items->each(function($item) use ($available_items, $checkin_date, $checkout_date) {
-                $item_calendar =    ItemCalendar::where('item_id', $item->id)
+                $item_calendars =    ItemCalendar::where('item_id', $item->id)
                                         ->whereBetween('date', [
                                             $checkin_date->format('Y-m-d'),
                                             $checkout_date->format('Y-m-d')
                                         ])
                                         ->get();
 
-                $count = $item_calendar->filter(function($ic) use ($item) {
-                    return $ic->quantity <= $item->quantity;
+                $count = $item_calendars->filter(function($item_calendar) use ($item) {
+                    return $item_calendar->quantity >= $item->quantity;
                 })->count();
 
                 if ($count == 0) {
                     $item->calendar_occupied = 0;
-                    $item->calendar_unoccupied = $item->quantity - $item_calendar->sum('quantity');
+                    $item->calendar_unoccupied = $item->quantity - $item_calendars->sum('quantity');
                     $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
                     $item->order_quantity = 0;
-                    $item->order_price = 0;
+                    $item->order_price = 0.00;
 
                     $available_items->push($item);
                 }
@@ -239,7 +239,7 @@ class ReservationsController extends Controller
      */
     public function user()
     {
-        $users = User::get()->all();
+        $users = User::where('type', 'user')->get()->all();
 
         return view('root.reservation.user', [
             'users' => $users
@@ -254,43 +254,48 @@ class ReservationsController extends Controller
      */
     public function store(Request $request, User $user)
     {
-        $selected_items = session()->get('reservation.selected_items');
+        $items = session()->get('reservation.selected_items');
         $checkin_date = session()->get('reservation.checkin_date');
         $checkout_date = session()->get('reservation.checkout_date');
-
-        dd(session()->all());
+        $item_costs = session()->get('reservation.item_costs');
 
         try {
-            if ($this->selectedItemsValid($selected_items, $checkin_date, $checkout_date)) {
+            if ($this->selectedItemsValid($items, $checkin_date, $checkout_date)) {
                 // create a new reservation.
-                
-                
-                // reserve the selected items of the newly created reservation.
-                $this->reserveSelectedItems($reservation);
-            }
+                $reservation = $user->createReservation($checkin_date, $checkout_date, $item_costs);
 
+                // store the items.
+                $this->storeReservationItems($reservation, $items, $item_costs);
+
+                // store the items in the calendar.
+                $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+
+                return redirect()->route('root.reservations.index');
+            }
         } catch(Exception $e) {
             Notify::error($e->getMessage(), 'Ooops!');
         }
     }
 
     /**
-     * Validate selected items
-     * @param  array $reservation
+     * Check if items is valid in the calendar.
+     * @param  array  $items
+     * @param  string $checkin_date
+     * @param  string $checkout_date
      * @return boolean
      */
-    protected function selectedItemsValid(array $selected_items, $checkin_date, $checkout_date)
+    protected function selectedItemsValid(array $items, $checkin_date, $checkout_date)
     {
-        foreach($selected_items as $index => $selected_item) {
-            $count =    ItemCalendar::where('item_id', $selected_item->id)
+        foreach($items as $index => $item) {
+            $count =    ItemCalendar::where('item_id', $item->id)
                             ->whereBetween('date', [
                                 $checkin_date,
                                 $checkout_date
                             ])
-                            ->where('quantity', '>=', $selected_item->quantity)
+                            ->where('quantity', '>=', $item->order_quantity)
                             ->count();
 
-            if ($count > 0) {
+            if ($count == 1) {
                 return false;
             }
         }
@@ -298,9 +303,51 @@ class ReservationsController extends Controller
         return true;
     }
 
-    protected function reserveSelectedItems(array $selected_items)
+    /**
+     * Store the selected items for the reservation.
+     * @param  Reservation $reservation
+     * @param  array       $items
+     * @param  array       $item_costs
+     * @return null
+     */
+    protected function storeReservationItems(Reservation $reservation, array $items, array $item_costs)
     {
+        foreach($items as $item) {
+            $reservation->createReservationItem($item, $item_costs);
+        }
+    }
 
+    /**
+     * Store the selected items in the calendar.
+     * @param  array  $items
+     * @param  string $checkin_date
+     * @param  string $checkout_date
+     * @return null
+     */
+    protected function storeItemsInCalendar(array $items, $checkin_date, $checkout_date)
+    {
+        foreach($items as $item) {
+            $date = $checkin_date;
+
+            while ($date <= $checkout_date) {
+                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $item->id)->first();
+
+                if ($item_calendar == null) {
+                    // store item calendar.
+                    $item_calendar = new ItemCalendar;
+                    $item_calendar->item_id = $item->id;
+                    $item_calendar->date = $date;
+                    $item_calendar->quantity = $item->order_quantity;
+                    $item_calendar->save();
+                } else {
+                    // Update item calendar.
+                    $item_calendar->quantity += $item->order_quantity;
+                    $item_calendar->save();
+                }
+
+                $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
+            }
+        }
     }
 
     /**

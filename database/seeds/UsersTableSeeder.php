@@ -33,6 +33,14 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('secret'),
             'verified' => true,
             'type' => 'superuser',
+
+            'first_name' => 'chito',
+            'middle_name' => 'santiago',
+            'last_name' => 'navea',
+            'birthdate' => '1900-01-01',
+            'gender' => 'male',
+            'address' => 'sta. cruz, angat, bulacan',
+            'phone_number' => '09123456789'
         ]);
 
         \App\User::create([
@@ -41,6 +49,14 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('secret'),
             'verified' => true,
             'type' => 'superuser',
+
+            'first_name' => 'arnie',
+            'middle_name' => 'botas',
+            'last_name' => 'mariano',
+            'birthdate' => '1900-01-01',
+            'gender' => 'male',
+            'address' => 'sta. cruz, angat, bulacan',
+            'phone_number' => '09123456789'
         ]);
 
         \App\User::create([
@@ -49,6 +65,14 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('secret'),
             'verified' => true,
             'type' => 'superuser',
+
+            'first_name' => 'kennent anthony',
+            'middle_name' => 'santiago',
+            'last_name' => 'mendoza',
+            'birthdate' => '1900-01-01',
+            'gender' => 'male',
+            'address' => 'sta. cruz, angat, bulacan',
+            'phone_number' => '09123456789'
         ]);
 
         \App\User::create([
@@ -56,7 +80,15 @@ class UsersTableSeeder extends Seeder
             'email' => 'aldrin@example.com',
             'password' => bcrypt('secret'),
             'verified' => true,
-            'type' => 'user'
+            'type' => 'user',
+
+            'first_name' => 'aldrin',
+            'middle_name' => 'cruz',
+            'last_name' => 'alindogan',
+            'birthdate' => '1900-01-01',
+            'gender' => 'male',
+            'address' => 'guyong, sta. maria, bulacan',
+            'phone_number' => '09123456789'
         ]);
 
         \App\User::create([
@@ -64,7 +96,15 @@ class UsersTableSeeder extends Seeder
             'email' => 'andrew@example.com',
             'password' => bcrypt('secret'),
             'verified' => true,
-            'type' => 'user'
+            'type' => 'user',
+
+            'first_name' => 'mark andrew',
+            'middle_name' => 'lunar',
+            'last_name' => 'lovendino',
+            'birthdate' => '1900-01-01',
+            'gender' => 'male',
+            'address' => 'sta. cruz, angat, bulacan',
+            'phone_number' => '09123456789'
         ]);
     }
 }
