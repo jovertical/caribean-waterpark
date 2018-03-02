@@ -17,6 +17,7 @@
 
     <div class="row">
         <div class="col-lg">
+            <!-- New user -->
             @if (! Request::input('existing'))
                 <div class="m-portlet">
                     <div class="m-portlet__head">
@@ -29,7 +30,7 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('root.reservation.store') }}" id="form-reservation-store" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
+                    <form method="POST" action="" id="form-reservation-store" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
                         {{ csrf_field() }}
 
                         <div class="m-portlet__body">
@@ -126,7 +127,7 @@
                                         </div>
 
                                         <input type="text" name="birthdate" id="birthdate" class="form-control m-input
-                                            {{ $errors->has('birthdate') ? 'form-control-danger' :'' }}" 
+                                            {{ $errors->has('birthdate') ? 'form-control-danger' :'' }}"
                                                 placeholder="Please enter birthdate" value="{{ old('birthdate') }}" readonly>
                                     </div>
 
@@ -220,9 +221,11 @@
                 </div>
 
             @else
+            <!--/. New user -->
+
+            <!-- Existing user -->
                 <!-- Portlet -->
                 <div class="m-portlet m-portlet--mobile">
-
                     <!-- Portlet head -->
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
@@ -269,7 +272,6 @@
                                     <th>Birthdate</th>
                                     <th>Email</th>
                                     <th>Phone</th>
-                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -289,14 +291,12 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone_number }}</td>
                                         <td>
-                                            {{ $user->active ? 1 : 2 }}
-                                        </td>
-                                        <td>
                                             <span class="d-flex" style="overflow: visible;">
-                                                <a href="javascript:void(0);" data-form="#editUser" 
-                                                    data-action="{{ route('root.users.edit', $user) }}"
-                                                        class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill edit-user" title="Edit user">
-                                                            <i class="la la-check"></i>
+                                                <a href="javascript:void(0);" data-form="#checkoutUser"
+                                                    data-action="{{ route('root.reservation.store', $user) }}" data-toggle="modal"
+                                                        data-target="#checkoutUserConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill checkout-user"
+                                                            title="Checkout user">
+                                                                <i class="la la-check-circle"></i>
                                                 </a>
                                             </span>
                                         </td>
@@ -310,8 +310,25 @@
                 </div>
                 <!--/. Portlet -->
             @endif
+            <!--/. Existing user -->
+
         </div>
     </div>
+
+    <!-- Checkout Form -->
+    <form method="POST" action="" id="checkoutUser" style="display: none;">
+        {{ csrf_field() }}
+    </form>
+
+    <!-- Checkout user Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            checkoutUserConfirmation
+        @endslot
+
+        You are checking out this reservation. Are you sure?
+    @endcomponent
+
 @endsection
 
 @section('scripts')
@@ -428,6 +445,23 @@
 
         $(document).ready(function() {
             reservation.init();
+
+            // checkout user confirmation.
+            $('.checkout-user').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
         });
     </script>
 @endsection

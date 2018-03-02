@@ -247,6 +247,34 @@ class ReservationsController extends Controller
     }
 
     /**
+     * Store the reservation.
+     * @param  Request $request
+     * @param  User    $user
+     * @return
+     */
+    public function store(Request $request, User $user)
+    {
+        $selected_items = session()->get('reservation.selected_items');
+        $checkin_date = session()->get('reservation.checkin_date');
+        $checkout_date = session()->get('reservation.checkout_date');
+
+        dd(session()->all());
+
+        try {
+            if ($this->selectedItemsValid($selected_items, $checkin_date, $checkout_date)) {
+                // create a new reservation.
+                
+                
+                // reserve the selected items of the newly created reservation.
+                $this->reserveSelectedItems($reservation);
+            }
+
+        } catch(Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+    }
+
+    /**
      * Validate selected items
      * @param  array $reservation
      * @return boolean
@@ -268,6 +296,11 @@ class ReservationsController extends Controller
         }
 
         return true;
+    }
+
+    protected function reserveSelectedItems(array $selected_items)
+    {
+
     }
 
     /**
