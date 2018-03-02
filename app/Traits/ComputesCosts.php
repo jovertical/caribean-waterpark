@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Traits;
 
@@ -9,8 +9,15 @@ trait ComputesCosts {
         $vat_rate = 12;
 
         foreach ($items as $index => $item) {
-            // assign price taxable to each item
-            $item->price_taxable = $item->order_price / $vat_rate;
+            $price_taxable = $item->order_price / $vat_rate;
+            $price_deductable = 0.00;
+            $price_payable = $item->order_price - $price_deductable;
+
+            $item->costs = [
+                'price_taxable'     => $price_taxable,
+                'price_deductable'  => $price_deductable,
+                'price_payable'     => $price_payable
+            ];
         }
 
         $price_taxable = array_sum(array_column($items, 'price_taxable'));

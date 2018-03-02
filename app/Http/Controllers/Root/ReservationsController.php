@@ -23,6 +23,7 @@ class ReservationsController extends Controller
     {
         $checkin_date = Carbon::parse($request->input('ci'));
         $checkout_date = Carbon::parse($request->input('co'));
+        $days = $checkin_date->diffInDays($checkout_date) + 1;
         $earliest = Carbon::parse(now()->addDays(1)->format('Y-m-d'));
 
         $items = collect([]);
@@ -46,7 +47,7 @@ class ReservationsController extends Controller
 
             $available_items = collect([]);
 
-            $items->each(function($item) use ($available_items, $checkin_date, $checkout_date) {
+            $items->each(function($item) use ($available_items, $checkin_date, $checkout_date, $days) {
                 $item_calendars =    ItemCalendar::where('item_id', $item->id)
                                         ->whereBetween('date', [
                                             $checkin_date->format('Y-m-d'),
@@ -59,9 +60,13 @@ class ReservationsController extends Controller
                 })->count();
 
                 if ($count == 0) {
-                    $item->calendar_occupied = 0;
-                    $item->calendar_unoccupied = $item->quantity - $item_calendars->sum('quantity');
-                    $item->calendar_price = $item->price * ($checkin_date->diffInDays($checkout_date) + 1);
+                    $calendar_occupied = $item_calendars->sum('quantity');
+                    $calendar_occupied_days = $item_calendars->count();
+
+                    $item->calendar_occupied = $calendar_occupied;
+                    $item->calendar_unoccupied =    $calendar_occupied_days > 0 ? $item->quantity - $calendar_occupied /=
+                                                        $calendar_occupied_days : $item->quantity;
+                    $item->calendar_price = $item->price * $days;
                     $item->order_quantity = 0;
                     $item->order_price = 0.00;
 
@@ -84,7 +89,7 @@ class ReservationsController extends Controller
         // set reservation dates
         session(['reservation.checkin_date' => $checkin_date->format('Y-m-d')]);
         session(['reservation.checkout_date' => $checkout_date->format('Y-m-d')]);
-        session(['reservation.days' => $checkin_date->diffInDays($checkout_date)]);
+        session(['reservation.days' => $days]);
 
         return view('root.reservation.search_items', [
             'available_items' => Helper::paginate(session()->get('reservation.available_items')),
@@ -318,6 +323,9 @@ class ReservationsController extends Controller
 
                 // store the items in the calendar.
                 $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+
+                // clear reservation data in the session.
+                session()->pull('reservation');
 
                 return redirect()->route('root.reservations.index');
             }
