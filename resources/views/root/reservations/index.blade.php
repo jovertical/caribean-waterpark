@@ -55,12 +55,12 @@
                                     <div class="m-form__control">
                                         <select class="form-control m-bootstrap-select" id="status">
                                             <option value="">All</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="paid">Paid</option>
-                                            <option value="cancelled">Reserved</option>
-                                            <option value="cancelled">Cancelled</option>
-                                            <option value="waiting">Waiting</option>
-                                            <option value="void">Void</option>
+                                            <option value="1">Pending</option>
+                                            <option value="2">Reserved</option>
+                                            <option value="3">Paid</option>
+                                            <option value="4">Cancelled</option>
+                                            <option value="5">Waiting</option>
+                                            <option value="6">Void</option>
                                         </select>
                                     </div>
                                 </div>
@@ -87,6 +87,70 @@
                         </a>
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
                     </div>
+                </div>
+
+                <div class="row align-items-center mt-2">
+                    <div class="col-xl-8 order-2 order-xl-1">
+                        <div class="form-group m-form__group row align-items-center">
+                            <!-- Date -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>Date:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <select class="form-control m-bootstrap-select" id="status">
+                                            <option value="created">Created</option>
+                                            <option value="checkin">Checkin</option>
+                                            <option value="checkout">Checkout</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-md-none m--margin-bottom-10"></div>
+                            </div>
+                            <!--/. Date -->
+
+                            <!-- From -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>From:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <div class="input-group m-input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                            </div>
+
+                                            <input type="text" name="from" id="from" class="form-control m-input" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/. From -->
+
+                            <!-- To -->
+                            <div class="col-md-4">
+                                <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__label">
+                                        <label>To:</label>
+                                    </div>
+                                    <div class="m-form__control">
+                                        <div class="input-group m-input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                            </div>
+
+                                            <input type="text" name="to" id="to" class="form-control m-input" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/. To -->
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 order-1 order-xl-2 m--align-right"></div>
                 </div>
             </div>
             <!--end: Search Form -->
@@ -149,11 +213,11 @@
                             },
                             {
                                 field: 'Source',
-                                width: 50
+                                width: 75
                             },
                             {
                                 field: 'Customer',
-                                width: 200,
+                                width: 175,
                                 template: function(data) {
                                     var number = mUtil.getRandomInt(1, 14);
                                     var image;
@@ -201,19 +265,19 @@
                             },
                             {
                                 field: 'Checkin',
-                                width: 100
+                                width: 85
                             },
                             {
                                 field: 'Checkout',
-                                width: 100
+                                width: 85
                             },
                             {
                                 field: 'Payable',
-                                width: 75
+                                width: 100
                             },
                             {
                                 field: 'Paid',
-                                width: 75
+                                width: 100
                             },
                             {
                                 field: 'Status',
@@ -248,12 +312,58 @@
                         datatable.search($(this).val().toLowerCase(), 'Status');
                     });
 
-                    $('.m-bootstrap-select').selectpicker();
+                    $('select[id=date]').on('change', function() {
+                        datatable.search($(this).val().toLowerCase(), 'Date');
+                    });
+
+                    $('input[id=from]').on('change', function() {
+                        datatable.search($(this).val().toLowerCase(), 'Checkin');
+                    });
+
+                    $('input[id=to]').on('change', function() {
+                        datatable.search($(this).val().toLowerCase(), 'Checkout');
+                    });
                 };
+
+                // selects
+                var selectsInit = function () {
+                    $('.m-bootstrap-select').selectpicker({});
+                }
+                //. selects
+
+                // dates
+                var datesInit = function () {
+                    $('input[id=from]').datepicker({
+                        format: 'yyyy-mm-dd',
+                        orientation: "bottom left",
+                        todayBtn: "linked",
+                        clearBtn: true,
+                        todayHighlight: true,
+                        templates: {
+                            leftArrow: '<i class="la la-angle-left"></i>',
+                            rightArrow: '<i class="la la-angle-right"></i>'
+                        }
+                    });
+
+                    $('input[id=to]').datepicker({
+                        format: 'yyyy-mm-dd',
+                        orientation: "bottom left",
+                        todayBtn: "linked",
+                        clearBtn: true,
+                        todayHighlight: true,
+                        templates: {
+                            leftArrow: '<i class="la la-angle-left"></i>',
+                            rightArrow: '<i class="la la-angle-right"></i>'
+                        }
+                    });
+                }
+                //. dates
 
                 return {
                     init: function() {
                         categoriesInit();
+                        selectsInit();
+                        datesInit();
                     },
                 };
             }();
