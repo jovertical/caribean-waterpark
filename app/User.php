@@ -55,6 +55,7 @@ class User extends Authenticatable
             'checkin_date'      => $checkin_date,
             'checkout_date'     => $checkout_date,
             'price_taxable'     => $item_costs['price_taxable'],
+            'price_subpayable'  => $item_costs['price_subpayable'],
             'price_deductable'  => $item_costs['price_deductable'],
             'price_payable'     => $item_costs['price_payable'],
         ]);

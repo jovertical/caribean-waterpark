@@ -96,7 +96,7 @@
                                 <span>SUBTOTAL:</span>
 
                                 <span class="pull-right m--font-bolder">
-                                    {{ Helper::moneyFormat($item_costs['price_subtotal']) }}
+                                    {{ Helper::moneyFormat($item_costs['price_subpayable']) }}
                                 </span>
                             </p>
 

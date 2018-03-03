@@ -38,6 +38,9 @@
                     </a>
                 </div>
             </div>
+
+            <a href="{{ route('root.reservations.show', $reservation) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill show-reservation" title="Show reservation"><i class="la la-eye"></i>
+            </a>
         </span>
     </td>
 </tr>

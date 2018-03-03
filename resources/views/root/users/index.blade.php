@@ -22,7 +22,7 @@
         <!--/. Portlet head -->
 
         <!-- Portlet body -->
-        <div class="m-portlet__body">
+        <div class="m-portlet__body" style="width: 1000px; overflow: auto;">
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
@@ -70,14 +70,15 @@
             <!--end: Search Form -->
 
             <!-- Users -->
-            <table id="table" class="m-datatable" width="100%" data-form="table">
+            <table id="table" class="m-datatable" width="100%">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Image</th>
                         <th>Name</th>
-                        <th>Gender</th>
                         <th>Birthdate</th>
+                        <th>Gender</th>
+                        <th>Address</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Status</th>
@@ -154,12 +155,16 @@
                             width: 100
                         },
                         {
+                            field: 'Birthdate',
+                            width: 75
+                        },
+                        {
                             field: 'Gender',
                             width: 75
                         },
                         {
-                            field: 'Birthdate',
-                            width: 75
+                            field: 'Address',
+                            width: 150
                         },
                         {
                             field: 'Email',

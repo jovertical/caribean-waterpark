@@ -339,7 +339,7 @@ class ReservationsController extends Controller
                 // clear reservation data from the session.
                 session()->pull('reservation');
 
-                return redirect()->route('root.reservations.index');
+                return redirect()->route('root.reservations.show', $reservation);
             }
         } catch(Exception $e) {
             Notify::error($e->getMessage(), 'Ooops!');
@@ -355,6 +355,16 @@ class ReservationsController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         return $request->input('status');
+    }
+
+    /**
+     * Show reservation.
+     * @param  Reservation $reservation
+     * @return view
+     */
+    public function show(Reservation $reservation)
+    {
+        return view('root.reservations.show', ['reservation' => $reservation]);
     }
 
     /**

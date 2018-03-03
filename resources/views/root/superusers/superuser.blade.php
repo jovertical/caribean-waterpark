@@ -6,8 +6,9 @@
         </span>
     </td>
     <td>{{ $superuser->full_name }}</td>
-    <td>{{ $superuser->gender }}</td>
     <td>{{ $superuser->birthdate }}</td>
+    <td>{{ $superuser->gender }}</td>
+    <td>{{ $superuser->address }}</td>
     <td>{{ $superuser->email }}</td>
     <td>{{ $superuser->phone_number }}</td>
     <td>

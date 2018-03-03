@@ -20,17 +20,18 @@ class Reservation extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function reservation_items()
+    public function items()
     {
         return $this->hasMany(ReservationItem::class);
     }
 
     public function createReservationItem($item, $item_costs)
     {
-        return $this->reservation_items()->create([
+        return $this->items()->create([
             'item_id'           => $item->id,
             'quantity'          => $item->order_quantity,
             'price_taxable'     => $item->costs['price_taxable'],
+            'price_subpayable'  => $item->costs['price_subpayable'],
             'price_deductable'  => $item->costs['price_deductable'],
             'price_payable'     => $item->costs['price_payable']
         ]);
@@ -100,5 +101,31 @@ class Reservation extends Model
         }
 
         return $status_code;
+    }
+
+    public function getStatusClassAttribute($value)
+    {
+        switch (strtolower($this->status)) {
+            case 'pending':
+                    $status_class = 'warning';
+                break;
+            case 'reserved':
+                    $status_class = 'info';
+                break;
+            case 'paid':
+                    $status_class = 'success';
+                break;
+            case 'cancelled':
+                    $status_class = 'danger';
+                break;
+            case 'waiting':
+                    $status_class = 'brand';
+                break;
+            case 'void':
+                    $status_class = 'metal';
+                break;
+        }
+
+        return $status_class;
     }
 }

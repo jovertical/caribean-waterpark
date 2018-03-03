@@ -45,29 +45,24 @@
             @auth
                 <!-- Header -->
                 @include('root.partials.header')
-            @endauth
 
-            <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
-
-                @auth
+                <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
                     <!-- Sidebar -->
                     @yield('sidebar')
-                @endauth
 
-                <div class="m-grid__item m-grid__item--fluid m-wrapper">
-                    @auth
+                    <div class="m-grid__item m-grid__item--fluid m-wrapper">
                         <!-- Sub-header -->
                         @include('root.partials.sub_header')
-                    @endauth
 
-                    <div class="m-content">
-                        <!-- Content -->
-                        @yield('content')
+                        @endauth
+                            <div class="m-content">
+                                <!-- Content -->
+                                @yield('content')
+                            </div>
+                        @auth
                     </div>
                 </div>
-            </div>
 
-            @auth
                 <!-- Footer -->
                 @include('root.partials.footer')
             @endauth
