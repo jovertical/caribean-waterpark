@@ -48,9 +48,10 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
-    public function createReservation($checkin_date, $checkout_date, $item_costs)
+    public function createReservation($reference_number, $checkin_date, $checkout_date, $item_costs)
     {
         return $this->reservations()->create([
+            'reference_number'  => $reference_number,
             'checkin_date'      => $checkin_date,
             'checkout_date'     => $checkout_date,
             'price_taxable'     => $item_costs['price_taxable'],

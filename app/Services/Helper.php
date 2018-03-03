@@ -35,7 +35,7 @@ class Helper {
     {
         $length = strlen($counter);
 
-        return str_pad($counter, $length > 4 ? $counter : $length, '0', STR_PAD_LEFT);
+        return str_pad($counter, $length > 4 ? $length : 4, '0', STR_PAD_LEFT);
     }
 
     public static function activeMenu($segment_2)

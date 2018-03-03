@@ -312,11 +312,12 @@ class ReservationsController extends Controller
         $checkin_date = session()->get('reservation.checkin_date');
         $checkout_date = session()->get('reservation.checkout_date');
         $item_costs = session()->get('reservation.item_costs');
+        $reference_number = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
 
         try {
             if ($this->selectedItemsValid($items, $checkin_date, $checkout_date)) {
                 // create a new reservation.
-                $reservation = $user->createReservation($checkin_date, $checkout_date, $item_costs);
+                $reservation = $user->createReservation($reference_number, $checkin_date, $checkout_date, $item_costs);
 
                 // store the items.
                 $this->storeReservationItems($reservation, $items, $item_costs);
@@ -324,7 +325,7 @@ class ReservationsController extends Controller
                 // store the items in the calendar.
                 $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
 
-                // clear reservation data in the session.
+                // clear reservation data from the session.
                 session()->pull('reservation');
 
                 return redirect()->route('root.reservations.index');

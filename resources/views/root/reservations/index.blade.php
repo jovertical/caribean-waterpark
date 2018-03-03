@@ -22,7 +22,8 @@
         <!--/. Portlet head -->
 
         <!-- Portlet body -->
-        <div class="m-portlet__body">
+
+        <div class="m-portlet__body" style="width: 1000px; overflow: auto;">
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
@@ -37,8 +38,8 @@
                                     <div class="m-form__control">
                                         <select class="form-control m-bootstrap-select" id="source">
                                             <option value="">All</option>
-                                            <option value="user">Customer</option>
-                                            <option value="superuser">Staff</option>
+                                            <option value="frontend">Customer</option>
+                                            <option value="root">Staff</option>
                                         </select>
                                     </div>
                                 </div>
@@ -156,27 +157,30 @@
             <!--end: Search Form -->
 
             <!-- Reservations -->
-            <table id="table" class="m-datatable" width="100%">
-                <thead>
-                    <tr>
-                        <th title="#">#</th>
-                        <th title="Source">Source</th>
-                        <th title="Customer">Customer</th>
-                        <th title="Checkin date">Checkin</th>
-                        <th title="Checkout date">Checkout</th>
-                        <th title="Price payable">Payable</th>
-                        <th title="Price paid">Paid</th>
-                        <th title="Status">Status</th>
-                        <th title="Actions">Actions</th>
-                    </tr>
-                </thead>
+            <div>
+                <table id="table" class="m-datatable">
+                    <thead>
+                        <tr>
+                            <th title="#">#</th>
+                            <th title="Source">Source</th>
+                            <th title="Reference number">Reference #</th>
+                            <th title="Customer">Customer</th>
+                            <th title="Checkin date">Checkin</th>
+                            <th title="Checkout date">Checkout</th>
+                            <th title="Price payable">Payable</th>
+                            <th title="Price paid">Paid</th>
+                            <th title="Status">Status</th>
+                            <th title="Actions">Actions</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    @foreach($reservations as $index => $reservation)
-                        @include('root.reservations.reservation')
-                    @endforeach
-                </tbody>
-            </table>
+                    <tbody>
+                        @foreach($reservations as $index => $reservation)
+                            @include('root.reservations.reservation')
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             <!--/. Reservations -->
         </div>
         <!--/. Portlet body -->
@@ -187,13 +191,13 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            var categories = function() {
+            var reservations = function() {
                 //== Private functions
 
-                // category initializer
-                var categoriesInit = function() {
+                // reservations initializer
+                var reservationsInit = function() {
 
-                    var datatable = $('table[id=table]').mDatatable({
+                    var datatable = $('.m-datatable').mDatatable({
                         data: {
                             saveState: { cookie: false },
                         },
@@ -203,7 +207,7 @@
                         layout: {
                             theme: 'default',
                             class: '',
-                            scroll: false,
+                            scroll: true,
                             footer: false
                         },
                         columns: [
@@ -214,6 +218,10 @@
                             {
                                 field: 'Source',
                                 width: 75
+                            },
+                            {
+                                field: 'Reference #',
+                                width: 100
                             },
                             {
                                 field: 'Customer',
@@ -361,14 +369,14 @@
 
                 return {
                     init: function() {
-                        categoriesInit();
+                        reservationsInit();
                         selectsInit();
                         datesInit();
                     },
                 };
             }();
 
-            categories.init();
+            reservations.init();
         });
     </script>
 @endsection

@@ -42,31 +42,34 @@
     <body class="m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 
         <div class="m-grid m-grid--hor m-grid--root m-page">
-
             @auth
                 <!-- Header -->
                 @include('root.partials.header')
+            @endauth
 
-                <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
+            <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
+
+                @auth
                     <!-- Sidebar -->
                     @yield('sidebar')
+                @endauth
 
-                    <div class="m-grid__item m-grid__item--fluid m-wrapper">
+                <div class="m-grid__item m-grid__item--fluid m-wrapper">
+                    @auth
                         <!-- Sub-header -->
                         @include('root.partials.sub_header')
+                    @endauth
 
-                        @endauth
-                            <div class="m-content">
-                                <!-- Content -->
-                                @yield('content')
-                            </div>
-                        @auth
+                    <div class="m-content">
+                        <!-- Content -->
+                        @yield('content')
                     </div>
                 </div>
+            </div>
 
+            @auth
                 <!-- Footer -->
                 @include('root.partials.footer')
-
             @endauth
         </div>
 
