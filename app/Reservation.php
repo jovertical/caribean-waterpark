@@ -30,6 +30,7 @@ class Reservation extends Model
         return $this->items()->create([
             'item_id'           => $item->id,
             'quantity'          => $item->order_quantity,
+            'price'             => $item->price,
             'price_taxable'     => $item->costs['price_taxable'],
             'price_subpayable'  => $item->costs['price_subpayable'],
             'price_deductable'  => $item->costs['price_deductable'],

@@ -19,6 +19,7 @@ class CreateReservationItemsTable extends Migration
             $table->integer('reservation_id');
             $table->integer('item_id');
             $table->integer('quantity');
+            $table->float('price')->default(0.00);
             $table->float('price_taxable')->default(0.00);
             $table->float('price_subpayable')->default(0.00);
             $table->float('price_deductable')->default(0.00);

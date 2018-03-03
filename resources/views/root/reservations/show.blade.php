@@ -96,7 +96,7 @@
                                         <th scope="row" style="width: 5%;">{{ $index + 1 }}</th>
                                         <td>{{ ucfirst(strtolower($item->item->name)) }}</td>
                                         <th>{{ $item->quantity }}</th>
-                                        <th>{{ Helper::moneyFormat($item->price_payable) }}</th>
+                                        <th>{{ Helper::moneyFormat($item->price) }}</th>
                                         <th>{{ Helper::moneyFormat($item->price_payable) }}</th>
                                     </tr>
                                 @endforeach
