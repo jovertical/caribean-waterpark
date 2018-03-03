@@ -15,6 +15,17 @@ class ReservationsController extends Controller
     use ComputesCosts;
 
     /**
+     * list of all reservations
+     * @return view
+     */
+    public function index()
+    {
+        $reservations = Reservation::latest()->get();
+
+        return view('root.reservations.index', ['reservations' => $reservations]);
+    }
+
+    /**
      * Search calendar for available items, compute costs as well.
      * @param  Request $request
      * @return view
@@ -336,6 +347,17 @@ class ReservationsController extends Controller
     }
 
     /**
+     * Update reservation
+     * @param  Request     $request
+     * @param  Reservation $reservation
+     * @return redirect
+     */
+    public function update(Request $request, Reservation $reservation)
+    {
+        return $request->input('status');
+    }
+
+    /**
      * Check if items is valid in the calendar.
      * @param  array  $items
      * @param  string $checkin_date
@@ -408,14 +430,4 @@ class ReservationsController extends Controller
         }
     }
 
-    /**
-     * list of all reservations
-     * @return view
-     */
-    public function index()
-    {
-        $reservations = Reservation::latest()->get();
-
-        return view('root.reservations.index', ['reservations' => $reservations]);
-    }
 }

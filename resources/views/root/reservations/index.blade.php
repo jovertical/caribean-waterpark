@@ -186,197 +186,335 @@
         <!--/. Portlet body -->
     </div>
     <!--/. Portlet -->
+
+    <!-- Update Reservation to Reserved Form -->
+    <form method="POST" action="" id="updateReservationToReserved" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+        <input type="hidden" name="status" id="status" class="status">
+    </form>
+
+    <!-- Update Reservation to Reserved Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToReservedConfirmation
+        @endslot
+
+        <p class="update-reservation-modal-text"></p>
+    @endcomponent
+
+    <!-- Update Reservation to Paid Form -->
+    <form method="POST" action="" id="updateReservationToPaid" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+        <input type="hidden" name="status" id="status" class="status">
+    </form>
+
+    <!-- Update Reservation to Paid Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToPaidConfirmation
+        @endslot
+
+        <p class="update-reservation-modal-text"></p>
+    @endcomponent
+
+    <!-- Update Reservation to Cancelled Form -->
+    <form method="POST" action="" id="updateReservationToCancelled" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+        <input type="hidden" name="status" id="status" class="status">
+    </form>
+
+    <!-- Update Reservation to Cancelled Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToCancelledConfirmation
+        @endslot
+
+        <p class="update-reservation-modal-text"></p>
+    @endcomponent
 @endsection
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            var reservations = function() {
-                //== Private functions
+        var reservations = function() {
+            //== Private functions
 
-                // reservations initializer
-                var reservationsInit = function() {
+            // reservations initializer
+            var reservationsInit = function() {
 
-                    var datatable = $('.m-datatable').mDatatable({
-                        data: {
-                            saveState: { cookie: false },
+                var datatable = $('.m-datatable').mDatatable({
+                    data: {
+                        saveState: { cookie: false },
+                    },
+                    search: {
+                        input: $('#generalSearch'),
+                    },
+                    layout: {
+                        theme: 'default',
+                        class: '',
+                        scroll: false,
+                        footer: false
+                    },
+                    columns: [
+                        {
+                            field: '#',
+                            width: 30
                         },
-                        search: {
-                            input: $('#generalSearch'),
+                        {
+                            field: 'Source',
+                            width: 75
                         },
-                        layout: {
-                            theme: 'default',
-                            class: '',
-                            scroll: true,
-                            footer: false
+                        {
+                            field: 'Reference #',
+                            width: 100
                         },
-                        columns: [
-                            {
-                                field: '#',
-                                width: 30
-                            },
-                            {
-                                field: 'Source',
-                                width: 75
-                            },
-                            {
-                                field: 'Reference #',
-                                width: 100
-                            },
-                            {
-                                field: 'Customer',
-                                width: 175,
-                                template: function(data) {
-                                    var number = mUtil.getRandomInt(1, 14);
-                                    var image;
+                        {
+                            field: 'Customer',
+                            width: 175,
+                            template: function(data) {
+                                var number = mUtil.getRandomInt(1, 14);
+                                var image;
 
-                                    if (image == '') {
-                                        output =    '<div class="m-card-user m-card-user--sm">\
-                                                        <div class="m-card-user__pic">\
-                                                            <img src="' + image + '" class="m--img-rounded m--marginless" alt="photo">\
-                                                        </div>\
-                                                        <div class="m-card-user__details">\
-                                                            <span class="m-card-user__name">' + data.Customer + '</span>\
-                                                            <a href="" class="m-card-user__email m-link">' + data.Customer + '</a>\
-                                                        </div>\
-                                                    </div>';
-                                    } else {
-                                        var stateNo = mUtil.getRandomInt(0, 7);
-
-                                        var states = [
-                                            'success',
-                                            'brand',
-                                            'danger',
-                                            'accent',
-                                            'warning',
-                                            'metal',
-                                            'primary',
-                                            'info'
-                                        ];
-
-                                        var state = states[stateNo];
-                                    }
-
+                                if (image == '') {
                                     output =    '<div class="m-card-user m-card-user--sm">\
                                                     <div class="m-card-user__pic">\
-                                                        <div class="m-card-user__no-photo m--bg-fill-' + state + '">\
-                                                            <span>' + data.Customer.substring(0, 1) + '</span>\
-                                                        </div>\
+                                                        <img src="' + image + '" class="m--img-rounded m--marginless" alt="photo">\
                                                     </div>\
                                                     <div class="m-card-user__details">\
                                                         <span class="m-card-user__name">' + data.Customer + '</span>\
+                                                        <a href="" class="m-card-user__email m-link">' + data.Customer + '</a>\
                                                     </div>\
                                                 </div>';
+                                } else {
+                                    var stateNo = mUtil.getRandomInt(0, 7);
 
-                                    return output;
-                                },
+                                    var states = [
+                                        'success',
+                                        'brand',
+                                        'danger',
+                                        'accent',
+                                        'warning',
+                                        'metal',
+                                        'primary',
+                                        'info'
+                                    ];
+
+                                    var state = states[stateNo];
+                                }
+
+                                output =    '<div class="m-card-user m-card-user--sm">\
+                                                <div class="m-card-user__pic">\
+                                                    <div class="m-card-user__no-photo m--bg-fill-' + state + '">\
+                                                        <span>' + data.Customer.substring(0, 1) + '</span>\
+                                                    </div>\
+                                                </div>\
+                                                <div class="m-card-user__details">\
+                                                    <span class="m-card-user__name">' + data.Customer + '</span>\
+                                                </div>\
+                                            </div>';
+
+                                return output;
                             },
-                            {
-                                field: 'Checkin',
-                                width: 85
+                        },
+                        {
+                            field: 'Checkin',
+                            width: 85
+                        },
+                        {
+                            field: 'Checkout',
+                            width: 85
+                        },
+                        {
+                            field: 'Payable',
+                            width: 100
+                        },
+                        {
+                            field: 'Paid',
+                            width: 100
+                        },
+                        {
+                            field: 'Status',
+                            width: 75,
+                            template: function(row) {
+                                var status = {
+                                    1: {'title': 'Pending', 'class': ' m-badge--warning'},
+                                    2: {'title': 'Reserved', 'class': ' m-badge--info'},
+                                    3: {'title': 'Paid', 'class': ' m-badge--success'},
+                                    4: {'title': 'Cancelled', 'class': ' m-badge--danger'},
+                                    5: {'title': 'Waiting', 'class': ' m-badge--brand'},
+                                    6: {'title': 'Void', 'class': ' m-badge--metal'}
+                                };
+
+                                return  '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' +
+                                            '<span class="text-white">' + status[row.Status].title + '</span>' + '</span>';
                             },
-                            {
-                                field: 'Checkout',
-                                width: 85
-                            },
-                            {
-                                field: 'Payable',
-                                width: 100
-                            },
-                            {
-                                field: 'Paid',
-                                width: 100
-                            },
-                            {
-                                field: 'Status',
-                                width: 75,
-                                template: function(row) {
-                                    var status = {
-                                        1: {'title': 'Pending', 'class': ' m-badge--warning'},
-                                        2: {'title': 'Reserved', 'class': ' m-badge--info'},
-                                        3: {'title': 'Paid', 'class': ' m-badge--success'},
-                                        4: {'title': 'Cancelled', 'class': ' m-badge--danger'},
-                                        5: {'title': 'Waiting', 'class': ' m-badge--brand'},
-                                        6: {'title': 'Void', 'class': ' m-badge--metal'}
-                                    };
-
-                                    return  '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' +
-                                                '<span class="text-white">' + status[row.Status].title + '</span>' + '</span>';
-                                },
-                            },
-                            {
-                                field: 'Actions',
-                                width: 100,
-                                sortable: false
-                            }
-                        ],
-                    });
-
-                    $('select[id=source]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Source');
-                    });
-
-                    $('select[id=status]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Status');
-                    });
-
-                    $('select[id=date]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Date');
-                    });
-
-                    $('input[id=from]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Checkin');
-                    });
-
-                    $('input[id=to]').on('change', function() {
-                        datatable.search($(this).val().toLowerCase(), 'Checkout');
-                    });
-                };
-
-                // selects
-                var selectsInit = function () {
-                    $('.m-bootstrap-select').selectpicker({});
-                }
-                //. selects
-
-                // dates
-                var datesInit = function () {
-                    $('input[id=from]').datepicker({
-                        format: 'yyyy-mm-dd',
-                        orientation: "bottom left",
-                        todayBtn: "linked",
-                        clearBtn: true,
-                        todayHighlight: true,
-                        templates: {
-                            leftArrow: '<i class="la la-angle-left"></i>',
-                            rightArrow: '<i class="la la-angle-right"></i>'
+                        },
+                        {
+                            field: 'Actions',
+                            width: 100,
+                            sortable: false
                         }
-                    });
+                    ],
+                });
 
-                    $('input[id=to]').datepicker({
-                        format: 'yyyy-mm-dd',
-                        orientation: "bottom left",
-                        todayBtn: "linked",
-                        clearBtn: true,
-                        todayHighlight: true,
-                        templates: {
-                            leftArrow: '<i class="la la-angle-left"></i>',
-                            rightArrow: '<i class="la la-angle-right"></i>'
-                        }
-                    });
-                }
-                //. dates
+                $('select[id=source]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Source');
+                });
 
-                return {
-                    init: function() {
-                        reservationsInit();
-                        selectsInit();
-                        datesInit();
-                    },
-                };
-            }();
+                $('select[id=status]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Status');
+                });
 
+                $('select[id=date]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Date');
+                });
+
+                $('input[id=from]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Checkin');
+                });
+
+                $('input[id=to]').on('change', function() {
+                    datatable.search($(this).val().toLowerCase(), 'Checkout');
+                });
+            };
+
+            // selects
+            var selectsInit = function () {
+                $('.m-bootstrap-select').selectpicker({});
+            }
+            //. selects
+
+            // dates
+            var datesInit = function () {
+                $('input[id=from]').datepicker({
+                    format: 'yyyy-mm-dd',
+                    orientation: "bottom left",
+                    todayBtn: "linked",
+                    clearBtn: true,
+                    todayHighlight: true,
+                    templates: {
+                        leftArrow: '<i class="la la-angle-left"></i>',
+                        rightArrow: '<i class="la la-angle-right"></i>'
+                    }
+                });
+
+                $('input[id=to]').datepicker({
+                    format: 'yyyy-mm-dd',
+                    orientation: "bottom left",
+                    todayBtn: "linked",
+                    clearBtn: true,
+                    todayHighlight: true,
+                    templates: {
+                        leftArrow: '<i class="la la-angle-left"></i>',
+                        rightArrow: '<i class="la la-angle-right"></i>'
+                    }
+                });
+            }
+            //. dates
+
+            return {
+                init: function() {
+                    reservationsInit();
+                    selectsInit();
+                    datesInit();
+                },
+            };
+        }();
+
+        $(document).ready(function() {
             reservations.init();
+
+            // update reservation to reserved.
+            $('.update-reservation-to-reserved').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+                // set modal text.
+                $('.update-reservation-modal-text').text('You are setting ' +
+                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to reserved.
+
+            // update reservation to paid.
+            $('.update-reservation-to-paid').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+                // set modal text.
+                $('.update-reservation-modal-text').text('You are setting ' +
+                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to paid.
+
+            // update reservation to cancelled.
+            $('.update-reservation-to-cancelled').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+                // set modal text.
+                $('.update-reservation-modal-text').text('You are setting ' +
+                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to cancelled.
         });
     </script>
 @endsection
