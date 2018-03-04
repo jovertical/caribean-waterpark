@@ -60,7 +60,7 @@
                                                     <th scope="row" style="width: 5%;">{{ $index + 1 }}</th>
                                                     <td>{{ ucfirst(strtolower($item->name)) }}</td>
                                                     <th>{{ $item->order_quantity }}</th>
-                                                    <th>{{ Helper::moneyFormat($item->order_price) }}</th>
+                                                    <th>{{ Helper::moneyString($item->order_price) }}</th>
                                                     <th>
                                                         <div data-attribute="confirmable">
                                                             <form method="POST" action="{{ route('root.reservation.remove-item',
@@ -88,7 +88,7 @@
                                 <span>VATTABLE:</span>
 
                                 <span class="pull-right m--font-bolder">
-                                    {{ Helper::moneyFormat($item_costs['price_taxable']) }}
+                                    {{ Helper::moneyString($item_costs['price_taxable']) }}
                                 </span>
                             </p>
 
@@ -96,7 +96,7 @@
                                 <span>SUBTOTAL:</span>
 
                                 <span class="pull-right m--font-bolder">
-                                    {{ Helper::moneyFormat($item_costs['price_subpayable']) }}
+                                    {{ Helper::moneyString($item_costs['price_subpayable']) }}
                                 </span>
                             </p>
 
@@ -104,7 +104,7 @@
                                 <span>DISCOUNT:</span>
 
                                 <span class="pull-right m--font-bolder">
-                                    {{ Helper::moneyFormat($item_costs['price_deductable']) }}
+                                    {{ Helper::moneyString($item_costs['price_deductable']) }}
                                 </span>
                             </p>
                         </div>
@@ -113,7 +113,7 @@
                             <p>
                                 <span>TOTAL:</span>
 
-                                <span class="pull-right m--font-boldest">{{ Helper::moneyFormat($item_costs['price_payable']) }}
+                                <span class="pull-right m--font-boldest">{{ Helper::moneyString($item_costs['price_payable']) }}
                                 </span>
                             </p>
                         </div>

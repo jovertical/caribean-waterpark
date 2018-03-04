@@ -106,6 +106,16 @@ class User extends Authenticatable
         return ucfirst($value);
     }
 
+    public function setAddressAttribute($value)
+    {
+        $this->attributes['address'] = strtolower($value);
+    }
+
+    public function getAddressAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';

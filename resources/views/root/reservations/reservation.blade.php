@@ -7,8 +7,8 @@
     </td>
     <td>{{ $reservation->checkin_date }}</td>
     <td>{{ $reservation->checkout_date }}</td>
-    <td>{{ Helper::moneyFormat($reservation->price_payable) }}</td>
-    <td>{{ Helper::moneyFormat($reservation->price_paid) }}</td>
+    <td>{{ Helper::moneyString($reservation->price_payable) }}</td>
+    <td>{{ Helper::moneyString($reservation->price_paid) }}</td>
     <td>{{ $reservation->status_code }}</td>
     <td>
         <span class="d-flex" style="overflow: visible;">

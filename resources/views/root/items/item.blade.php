@@ -6,10 +6,10 @@
                 class="img-fluid rounded-circle">
         </span>
     </td>
-    <td>{{ Str::ucfirst($item->category->name) }}</td>
-    <td>{{ Str::ucfirst($item->name) }}</td>
+    <td>{{ $item->category->name }}</td>
+    <td>{{ $item->name }}</td>
     <td>{!! Str::limit($item->description, 25) !!}</td>
-    <td>{{ Helper::moneyFormat($item->price) }}</td>
+    <td>{{ Helper::moneyString($item->price) }}</td>
     <td>{{ $item->quantity }}</td>
     <td>
         {{ $item->active ? 1 : 2 }}

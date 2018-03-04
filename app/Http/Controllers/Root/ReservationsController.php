@@ -339,6 +339,8 @@ class ReservationsController extends Controller
                 // clear reservation data from the session.
                 session()->pull('reservation');
 
+                Notify::success('Reservation created.', 'Success!');
+
                 return redirect()->route('root.reservations.show', $reservation);
             }
         } catch(Exception $e) {

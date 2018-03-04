@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Carbon;
+
 class Reservation extends Model
 {
     public static function boot()
@@ -66,6 +68,11 @@ class Reservation extends Model
     public function getCheckoutDateAttribute($value)
     {
         return $value;
+    }
+
+    public function getDaysAttribute()
+    {
+        return Carbon::parse($this->checkin_date)->diffIndays(Carbon::parse($this->checkout_date)) + 1;
     }
 
     public function setStatusAttribute($value)

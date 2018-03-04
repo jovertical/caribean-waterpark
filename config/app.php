@@ -229,9 +229,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-
         'Helper' => App\Services\Helper::class,
         'ImageUploader' => App\Services\ImageUploader::class,
+        'Paypal' => App\Services\Paypal::class,
         'Str' => Illuminate\Support\Str::class,
         'Carbon' => Carbon\Carbon::class,
         'Image' => Intervention\Image\Facades\Image::class,
