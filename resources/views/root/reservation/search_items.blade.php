@@ -36,9 +36,10 @@
                 <form method="GET" action="{{ route('root.reservation.search-items') }}">
                     <div class="m-portlet__body">
                         <div class="form-group m-form__group row justify-content-center">
-
+                            
+                            <!-- Checkin date -->
                             <div class="col-lg-3">
-                                <label for="ci">Checkin:</label>
+                                <label for="ci">Checkin date:</label>
                                 <div class="input-group m-input-group m-input-group--square">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="la la-calendar"></i></span>
@@ -47,9 +48,11 @@
                                         value="{{ Request::input('ci') }}" readonly>
                                 </div>
                             </div>
+                            <!--/. Checkin date -->
 
+                            <!-- Checkout date -->
                             <div class="col-lg-3">
-                                <label for="co">Checkout:</label>
+                                <label for="co">Checkout date:</label>
 
                                 <div class="input-group m-input-group m-input-group--square">
                                     <div class="input-group-prepend">
@@ -59,11 +62,49 @@
                                         value="{{ Request::input('co') }}" readonly>
                                 </div>
                             </div>
+                            <!--/. Checkout date -->
+
+                            <!-- Adult quantity -->
+                            <div class="col-lg-2">
+                                <label for="aq">Adult:</label>
+
+                                <select name="aq" id="aq" class="form-control m-bootstrap-select">
+                                    <option value="1" {{ Request::input('aq') == '1' ? 'selected' : '' }}>1</option>
+                                    <option value="2" {{ Request::input('aq') == '2' ? 'selected' : '' }}>2</option>
+                                    <option value="3" {{ Request::input('aq') == '3' ? 'selected' : '' }}>3</option>
+                                    <option value="4" {{ Request::input('aq') == '4' ? 'selected' : '' }}>4</option>
+                                    <option value="5" {{ Request::input('aq') == '5' ? 'selected' : '' }}>5</option>
+                                    <option value="6" {{ Request::input('aq') == '6' ? 'selected' : '' }}>6</option>
+                                    <option value="7" {{ Request::input('aq') == '7' ? 'selected' : '' }}>7</option>
+                                    <option value="8" {{ Request::input('aq') == '8' ? 'selected' : '' }}>8</option>
+                                    <option value="9" {{ Request::input('aq') == '9' ? 'selected' : '' }}>9</option>
+                                </select>
+                            </div>
+                            <!--/. Adult quantity -->
+
+                            <!-- Children quantity -->
+                            <div class="col-lg-2">
+                                <label for="cq">Children:</label>
+
+                                <select name="cq" id="cq" class="form-control m-bootstrap-select">
+                                    <option value="" disabled selected>0</option>
+                                    <option value="1" {{ Request::input('cq') == '1' ? 'selected' : '' }}>1</option>
+                                    <option value="2" {{ Request::input('cq') == '2' ? 'selected' : '' }}>2</option>
+                                    <option value="3" {{ Request::input('cq') == '3' ? 'selected' : '' }}>3</option>
+                                    <option value="4" {{ Request::input('cq') == '4' ? 'selected' : '' }}>4</option>
+                                    <option value="5" {{ Request::input('cq') == '5' ? 'selected' : '' }}>5</option>
+                                    <option value="6" {{ Request::input('cq') == '6' ? 'selected' : '' }}>6</option>
+                                    <option value="7" {{ Request::input('cq') == '7' ? 'selected' : '' }}>7</option>
+                                    <option value="8" {{ Request::input('cq') == '8' ? 'selected' : '' }}>8</option>
+                                    <option value="9" {{ Request::input('cq') == '9' ? 'selected' : '' }}>9</option>
+                                </select>
+                            </div>
+                            <!--/. Children quantity -->
 
                             <div class="col-lg-2 h-100 mt-auto">
                                 <br>
 
-                                <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="submit" class="btn btn-primary w-100">Search</button>
                             </div>
                         </div>
                     </div>
@@ -222,6 +263,13 @@
                 });
             }
 
+            // selects
+            var selectsInit = function () {
+                $('select[id=aq]').selectpicker({});
+                $('select[id=cq]').selectpicker({});
+            }
+            //. selects
+
             var filtersInit = function () {
                 var $max_price = $('input[id=mp]');
 
@@ -235,6 +283,7 @@
             return {
                 init: function() {
                     datesInit();
+                    selectsInit();
                     filtersInit();
                 }
             }

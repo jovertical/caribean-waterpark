@@ -47,9 +47,10 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
+                                                <th>Description</th>
                                                 <th>Quantity</th>
-                                                <th>Price</th>
+                                                <th>Unit Price</th>
+                                                <th>Total Price</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -60,6 +61,7 @@
                                                     <th scope="row" style="width: 5%;">{{ $index + 1 }}</th>
                                                     <td>{{ ucfirst(strtolower($item->name)) }}</td>
                                                     <th>{{ $item->order_quantity }}</th>
+                                                    <th>{{ Helper::moneyString($item->price) }}</th>
                                                     <th>{{ Helper::moneyString($item->order_price) }}</th>
                                                     <th>
                                                         <div data-attribute="confirmable">

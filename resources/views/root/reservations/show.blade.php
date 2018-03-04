@@ -35,21 +35,47 @@
                                                 <div class="m-dropdown__content">
                                                     <ul class="m-nav">
                                                         <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                <span class="m-nav__link-text">Set to
-                                                                    <strong class="m--font-info">Reserved</strong>
-                                                                </span>
+                                                            <a href="javascript:void(0);"
+                                                                class="m-nav__link update-reservation-to-reserved"
+                                                                data-form="#updateReservationToReserved"
+                                                                data-action="{{ route('root.reservations.update', $reservation) }}"
+                                                                data-toggle="modal"
+                                                                data-target="#updateReservationToReservedConfirmation"
+                                                                data-status="reserved"
+                                                                data-reservation-user="{{ $reservation->user->full_name }}"
+                                                                title="Set to reserved">
+                                                                    <span class="m-nav__link-text">Set to
+                                                                        <strong class="m--font-info">Reserved</strong>
+                                                                    </span>
                                                             </a>
                                                         </li>
+
                                                         <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
+                                                            <a href="javascript:void(0);"
+                                                                class="m-nav__link update-reservation-to-paid"
+                                                                data-form="#updateReservationToPaid"
+                                                                data-action="{{ route('root.reservations.update', $reservation) }}"
+                                                                data-toggle="modal"
+                                                                data-target="#updateReservationToPaidConfirmation"
+                                                                data-status="paid"
+                                                                data-reservation-user="{{ $reservation->user->full_name }}"
+                                                                title="Set to paid">
                                                                 <span class="m-nav__link-text">Set to
                                                                     <strong class="m--font-success">Paid</strong>
                                                                 </span>
                                                             </a>
                                                         </li>
+
                                                         <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
+                                                            <a href="javascript:void(0);"
+                                                                class="m-nav__link update-reservation-to-cancelled"
+                                                                data-form="#updateReservationToCancelled"
+                                                                data-action="{{ route('root.reservations.update', $reservation) }}"
+                                                                data-toggle="modal"
+                                                                data-target="#updateReservationToCancelledConfirmation"
+                                                                data-status="cancelled"
+                                                                data-reservation-user="{{ $reservation->user->full_name }}"
+                                                                title="Set to cancelled">
                                                                 <span class="m-nav__link-text">Set to
                                                                     <strong class="m--font-danger">Cancelled</strong>
                                                                 </span>
@@ -149,7 +175,7 @@
                                 </span>
                             </div>
                             <div class="m-invoice__content">
-                                <span>TOTAL AMOUNT</span>
+                                <span>TOTAL</span>
                                 <span class="m-invoice__price">{{ Helper::moneyString($reservation->price_payable) }}</span>
                                 <span>*Taxes Included</span>
                             </div>
@@ -159,4 +185,148 @@
             </div>
         </div>
     </div>
+
+    <!-- Update Reservation to Reserved Form -->
+    <form method="POST" action="" id="updateReservationToReserved" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+        <input type="hidden" name="status" id="status" class="status">
+    </form>
+
+    <!-- Update Reservation to Reserved Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToReservedConfirmation
+        @endslot
+
+        <p class="update-reservation-modal-text"></p>
+    @endcomponent
+
+    <!-- Update Reservation to Paid Form -->
+    <form method="POST" action="" id="updateReservationToPaid" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+        <input type="hidden" name="status" id="status" class="status">
+    </form>
+
+    <!-- Update Reservation to Paid Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToPaidConfirmation
+        @endslot
+
+        <p class="update-reservation-modal-text"></p>
+    @endcomponent
+
+    <!-- Update Reservation to Cancelled Form -->
+    <form method="POST" action="" id="updateReservationToCancelled" style="display: none;">
+        {{ method_field('PATCH') }}
+        {{ csrf_field() }}
+        <input type="hidden" name="status" id="status" class="status">
+    </form>
+
+    <!-- Update Reservation to Cancelled Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToCancelledConfirmation
+        @endslot
+
+        <p class="update-reservation-modal-text"></p>
+    @endcomponent
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            // update reservation to reserved.
+            $('.update-reservation-to-reserved').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+                // set modal text.
+                $('.update-reservation-modal-text').text('You are setting ' +
+                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to reserved.
+
+            // update reservation to paid.
+            $('.update-reservation-to-paid').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+                // set modal text.
+                $('.update-reservation-modal-text').text('You are setting ' +
+                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to paid.
+
+            // update reservation to cancelled.
+            $('.update-reservation-to-cancelled').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+                // set modal text.
+                $('.update-reservation-modal-text').text('You are setting ' +
+                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to cancelled.
+        });
+    </script>
 @endsection
