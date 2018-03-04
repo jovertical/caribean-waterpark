@@ -20,8 +20,6 @@ class CreateReservationsTable extends Migration
             $table->string('reference_number');
             $table->date('checkin_date');
             $table->date('checkout_date');
-            $table->integer('adult_quantity');
-            $table->integer('children_quantity')->default(0);
             $table->enum('status', ['pending', 'reserved', 'paid', 'cancelled', 'waiting', 'void'])->default('pending');
             $table->float('price_taxable')->default(0.00);
             $table->float('price_subpayable')->default(0.00);

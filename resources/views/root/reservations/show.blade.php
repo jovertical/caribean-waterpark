@@ -11,6 +11,38 @@
                 </span>
             </a>
         </li>
+
+        <!-- Enter -->
+        @if($reservation->can_enter)
+            @if(! $reservation->has_entered)
+                <li class="m-menu__item" aria-haspopup="true">
+                    <a href="javascript:void(0);" class="m-menu__link" 
+                        style="cursor: {{ $reservation->has_entered ? 'not-allowed' : '' }}">
+                        <i class="m-menu__link-icon la la-arrow-circle-o-right"></i>
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-text">Enter</span>
+                        </span>
+                    </a>
+                </li>
+            @endif
+        @endif
+        <!--/. Enter -->
+
+        <!-- Exit -->
+        @if($reservation->can_exit)
+            @if(! $reservation->has_exited)
+                <li class="m-menu__item" aria-haspopup="true">
+                    <a href="javascript:void(0);" class="m-menu__link" 
+                        style="cursor: {{ $reservation->has_exited ? 'not-allowed' : '' }}">
+                        <i class="m-menu__link-icon la la-arrow-circle-o-left"></i>
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-text">Exit</span>
+                        </span>
+                    </a>
+                </li>
+            @endif
+        @endif
+        <!--/. Exit -->
     @endcomponent
 @endsection
 
@@ -171,7 +203,7 @@
                                 </span>
                                 <span>
                                     <span>Days:</span>
-                                    <span>{{ $reservation->days }}</span>
+                                    <span>{{ $reservation->day_count }}</span>
                                 </span>
                             </div>
                             <div class="m-invoice__content">

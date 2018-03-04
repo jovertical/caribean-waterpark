@@ -91,9 +91,11 @@ class ReservationsController extends Controller
             $items = $available_items;
         }
 
-        // check if dates are the same, if not clear the items array.
+        // check if reservation data are the same, if not clear the items array.
         if ((session()->get('reservation.checkin_date') != $checkin_date->format('Y-m-d')) OR
-            (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d'))) {
+            (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d')) OR
+            (session()->get('reservation.adult_quantity') != $adult_quantity) OR
+            (session()->get('reservation.children_quantity') != $children_quantity)) {
 
             // set the items array as empty
             session(['reservation.available_items' => $items->all()]);
@@ -329,22 +331,21 @@ class ReservationsController extends Controller
         $checkout_date = session()->get('reservation.checkout_date');
         $adult_quantity = session()->get('reservation.adult_quantity');
         $children_quantity = session()->get('reservation.children_quantity');
+        $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
+        $rates = ['adult' => 200, 'children' => 120];
         $item_costs = session()->get('reservation.item_costs');
         $reference_number = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
 
         try {
             if ($this->selectedItemsValid($items, $checkin_date, $checkout_date)) {
                 // create a new reservation.
-                $reservation =  $user->createReservation(
-                                    $reference_number,
-                                    $checkin_date,
-                                    $checkout_date,
-                                    ['adult_quantity' => $adult_quantity, 'children_quantity' => $children_quantity],
-                                    $item_costs
-                                );
+                $reservation =  $user->createReservation($reference_number, $checkin_date, $checkout_date, $item_costs);
 
-                // store the items.
+                // store reservation items.
                 $this->storeReservationItems($reservation, $items, $item_costs);
+
+                // store reservation days.
+                $this->storeReservationDays($reservation, $guests, $rates);
 
                 // clear reservation data from the session.
                 session()->pull('reservation');
@@ -476,6 +477,23 @@ class ReservationsController extends Controller
     {
         foreach($items as $item) {
             $reservation->createReservationItem($item, $item_costs);
+        }
+    }
+
+    /**
+     * Store reservation days.
+     * @param  Reservation $reservation
+     * @param  array       $guests
+     * @return null
+     */
+    protected function storeReservationDays(Reservation $reservation, array $guests, array $rates)
+    {
+        $date = $reservation->checkin_date;
+
+        while ($date <= $reservation->checkout_date) {
+            $reservation->createReservationDay($date, $guests, $rates);
+
+            $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
         }
     }
 

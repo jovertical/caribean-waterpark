@@ -27,6 +27,11 @@ class Reservation extends Model
         return $this->hasMany(ReservationItem::class);
     }
 
+    public function days()
+    {
+        return $this->hasMany(ReservationDay::class);
+    }
+
     public function createReservationItem($item, $item_costs)
     {
         return $this->items()->create([
@@ -37,6 +42,17 @@ class Reservation extends Model
             'price_subpayable'  => $item->costs['price_subpayable'],
             'price_deductable'  => $item->costs['price_deductable'],
             'price_payable'     => $item->costs['price_payable']
+        ]);
+    }
+
+    public function createReservationDay($date, array $guests, array $rates)
+    {
+        return $this->days()->create([
+            'date'              => $date,
+            'adult_rate'        => $rates['adult'],
+            'children_rate'     => $rates['children'],
+            'adult_quantity'    => $guests['adult'],
+            'children_quantity' => $guests['children']
         ]);
     }
 
@@ -70,7 +86,7 @@ class Reservation extends Model
         return $value;
     }
 
-    public function getDaysAttribute()
+    public function getDayCountAttribute()
     {
         return Carbon::parse($this->checkin_date)->diffIndays(Carbon::parse($this->checkout_date)) + 1;
     }
@@ -85,7 +101,7 @@ class Reservation extends Model
         return ucfirst($value);
     }
 
-    public function getStatusCodeAttribute($value)
+    public function getStatusCodeAttribute()
     {
         switch (strtolower($this->status)) {
             case 'pending':
@@ -111,7 +127,7 @@ class Reservation extends Model
         return $status_code;
     }
 
-    public function getStatusClassAttribute($value)
+    public function getStatusClassAttribute()
     {
         switch (strtolower($this->status)) {
             case 'pending':
@@ -135,5 +151,57 @@ class Reservation extends Model
         }
 
         return $status_class;
+    }
+
+    public function getHasEnteredAttribute()
+    {
+        $date_now = now()->format('Y-m-d');
+
+        if (in_array($date_now, array_column($this->days->all(), 'date'))) {
+            if ($this->days->where('date', $date_now)->where('entered', true)->count() == 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getCanEnterAttribute()
+    {
+        $date_now = now()->format('Y-m-d');
+
+        if (in_array($date_now, array_column($this->days->all(), 'date'))) {
+            if ($this->days->where('date', $date_now)->where('exited', null)->count() == 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getHasExitedAttribute()
+    {
+        $date_now = now()->format('Y-m-d');
+
+        if (in_array($date_now, array_column($this->days->all(), 'date'))) {
+            if ($this->days->where('date', $date_now)->where('exited', true)->count() == 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getCanExitAttribute()
+    {
+        $date_now = now()->format('Y-m-d');
+
+        if (in_array($date_now, array_column($this->days->all(), 'date'))) {
+            if ($this->days->where('date', $date_now)->where('entered', true)->count() == 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
