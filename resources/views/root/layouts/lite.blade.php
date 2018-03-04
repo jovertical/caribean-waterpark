@@ -32,35 +32,17 @@
         <!-- Demo 2 bundle -->
         <link href="/root/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css" />
 
-        <!-- Main -->
-        <link href="/root/assets/app/css/main.css" rel="stylesheet" type="text/css" />
-
         <!-- Page specific stylesheets -->
         @yield('styles')
     </head>
 
-    <body class="m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+    <body class="m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 
         <!-- begin:: Page -->
         <div class="m-grid m-grid--hor m-grid--root m-page">
-            @include('root.partials.header')
-
-            <!-- begin::Body -->
-            <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
-                    @yield('sidebar')
-
-                <div class="m-grid__item m-grid__item--fluid m-wrapper" style="overflow: auto;">
-                    @include('root.partials.sub_header')
-
-                    <div class="m-content">
-                        @yield('content')
-                    </div>
-                </div>
+            <div class="m-content">
+                @yield('content')
             </div>
-            <!-- end::Body -->
-
-            <!-- Footer -->
-            @include('root.partials.footer')
         </div>
         <!-- end:: Page -->
 
@@ -69,11 +51,6 @@
 
         <!-- Demo 2 bundle -->
         <script src="/root/assets/demo/demo2/base/scripts.bundle.js" type="text/javascript"></script>
-
-        <!-- Main -->
-        <script src="/root/assets/app/js/main.js" type="text/javascript"></script>
-
-        {!! Toastr::message() !!}
 
         <!-- Page specific scripts -->
         @yield('scripts')

@@ -155,23 +155,10 @@ class Reservation extends Model
 
     public function getHasEnteredAttribute()
     {
-        $date_now = now()->format('Y-m-d');
+        $date_now = date('Y-m-d');
 
         if (in_array($date_now, array_column($this->days->all(), 'date'))) {
             if ($this->days->where('date', $date_now)->where('entered', true)->count() == 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getCanEnterAttribute()
-    {
-        $date_now = now()->format('Y-m-d');
-
-        if (in_array($date_now, array_column($this->days->all(), 'date'))) {
-            if ($this->days->where('date', $date_now)->where('exited', null)->count() == 1) {
                 return true;
             }
         }
@@ -181,23 +168,10 @@ class Reservation extends Model
 
     public function getHasExitedAttribute()
     {
-        $date_now = now()->format('Y-m-d');
+        $date_now = date('Y-m-d');
 
         if (in_array($date_now, array_column($this->days->all(), 'date'))) {
             if ($this->days->where('date', $date_now)->where('exited', true)->count() == 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getCanExitAttribute()
-    {
-        $date_now = now()->format('Y-m-d');
-
-        if (in_array($date_now, array_column($this->days->all(), 'date'))) {
-            if ($this->days->where('date', $date_now)->where('entered', true)->count() == 1) {
                 return true;
             }
         }

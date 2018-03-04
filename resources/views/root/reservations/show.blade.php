@@ -13,42 +13,58 @@
         </li>
 
         <!-- Enter -->
-        @if($reservation->can_enter)
-            @if(! $reservation->has_entered)
-                <li class="m-menu__item" aria-haspopup="true">
-                    <a href="javascript:void(0);" class="m-menu__link reservation-day-to-entered"
-                        data-form="#reservationDayToEntered"
-                        data-action="{{ route('root.reservation-days.update', $reservation_day) }}"
-                        data-toggle="modal"
-                        data-target="#reservationDayToEnteredConfirmation"
-                        data-reservation-user="{{ $reservation->user->full_name }}"
-                        data-reservation-day-adult_quantity="{{ $reservation_day->adult_quantity }}"
-                        data-reservation-day-children_quantity="{{ $reservation_day->children_quantity }}"
-                        title="Set reservation day to entered"
-                        style="cursor: {{ $reservation->has_entered ? 'not-allowed' : '' }}">
-                        <i class="m-menu__link-icon la la-arrow-circle-o-right"></i>
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-text">Enter</span>
-                        </span>
-                    </a>
-                </li>
-            @endif
+        @if(! $reservation->has_entered)
+            <li class="m-menu__item" aria-haspopup="true">
+                <a href="javascript:void(0);"
+                    class="m-menu__link reservation-day-to-entered"
+                    title="Set reservation day to entered"
+                    @if ($reservation->day != null)
+                        @if (! $reservation->has_exited)
+                            data-form="#reservationDayToEntered"
+                            data-action="{{ route('root.reservation-days.update', $reservation->day) }}"
+                            data-toggle="modal"
+                            data-target="#reservationDayToEnteredConfirmation"
+                            data-reservation-user="{{ $reservation->user->full_name }}"
+                            data-reservation-day-adult_quantity="{{ $reservation->day->adult_quantity }}"
+                            data-reservation-day-children_quantity="{{ $reservation->day->children_quantity }}"
+                        @else
+                            style="cursor: not-allowed;"
+                        @endif
+                    @endif
+                >
+                    <i class="m-menu__link-icon la la-arrow-circle-o-right"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-text">Enter</span>
+                    </span>
+                </a>
+            </li>
         @endif
         <!--/. Enter -->
 
         <!-- Exit -->
-        @if($reservation->can_exit)
-            @if(! $reservation->has_exited)
-                <li class="m-menu__item" aria-haspopup="true">
-                    <a href="javascript:void(0);" class="m-menu__link"
-                        style="cursor: {{ $reservation->has_exited ? 'not-allowed' : '' }}">
-                        <i class="m-menu__link-icon la la-arrow-circle-o-left"></i>
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-text">Exit</span>
-                        </span>
-                    </a>
-                </li>
-            @endif
+        @if($reservation->has_entered)
+            <li class="m-menu__item" aria-haspopup="true">
+                <a href="javascript:void(0);"
+                    class="m-menu__link reservation-day-to-exited"
+                    title="Set reservation day to exited"
+                    @if ($reservation->day != null)
+                        @if (! $reservation->has_exited)
+                            data-form="#reservationDayToExited"
+                            data-action="{{ route('root.reservation-days.update', $reservation->day) }}"
+                            data-toggle="modal"
+                            data-target="#reservationDayToExitedConfirmation"
+                            data-reservation-user="{{ $reservation->user->full_name }}"
+                        @else
+                            style="cursor: not-allowed;"
+                        @endif
+                    @endif
+                >
+                    <i class="m-menu__link-icon la la-arrow-circle-o-left"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-text">Exit</span>
+                    </span>
+                </a>
+            </li>
         @endif
         <!--/. Exit -->
     @endcomponent
@@ -286,6 +302,7 @@
         <form method="POST" action="" id="reservationDayToEntered">
             {{ method_field('PATCH') }}
             {{ csrf_field() }}
+            <input type="hidden" name="status" id="status" value="enter">
 
             <div class="form-group row">
                 <div class="col-lg text-left">
@@ -300,6 +317,22 @@
                     <input type="number" name="children_quantity" id="children_quantity" class="form-control m-input">
                 </div>
             </div>
+        </form>
+    @endcomponent
+
+    <!-- Reservation Day to Exited Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            reservationDayToExitedConfirmation
+        @endslot
+
+        <p class="reservation-day-to-exited-text"></p>
+
+        <!-- Reservation Day to Exited Form -->
+        <form method="POST" action="" id="reservationDayToExited">
+            {{ method_field('PATCH') }}
+            {{ csrf_field() }}
+            <input type="hidden" name="status" id="status" value="exit">
         </form>
     @endcomponent
 @endsection
@@ -435,6 +468,32 @@
                 });
             });
             //. reservation day to entered.
+            //
+            // reservation day to exited.
+            $('.reservation-day-to-exited').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var reservation = {
+                    'user' : link.data('reservation-user'),
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set modal text.
+                $('.reservation-day-to-exited-text').text(
+                    'You are setting ' + reservation.user + "'s " + 'reservation day to exited.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. reservation day to exited.
         });
     </script>
 @endsection

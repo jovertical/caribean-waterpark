@@ -437,17 +437,57 @@ class ReservationsController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        $reservation_day = $reservation->days->where('date', Carbon::now()->format('Y-m-d'))->first();
+        // assign reservation day for the active date
+        $reservation->day = $reservation->days->where('date', Carbon::now()->format('Y-m-d'))->first();
 
         return view('root.reservations.show', [
-            'reservation' => $reservation,
-            'reservation_day' => $reservation_day
+            'reservation' => $reservation
         ]);
     }
 
+    /**
+     * Update reservation day.
+     * @param  Request        $request
+     * @param  ReservationDay $reservation_day
+     * @return redirect
+     */
     public function updateDay(Request $request, ReservationDay $reservation_day)
     {
-        return $reservation_day;
+        $status = $request->input('status');
+
+        try {
+            if ($status == 'enter') {
+                if ((! $reservation_day->reservation->has_entered) AND (! $reservation_day->reservation->has_exited)) {
+                    $reservation_day->entered = true;
+                    $reservation_day->entered_at = date('Y-m-d H:i:s');
+
+                    if ($reservation_day->save()) {
+                        Notify::success('Reservation day updated.', 'Success');
+
+                        return back();
+                    }
+                }
+            }
+
+            if ($status == 'exit') {
+                if ((! $reservation_day->reservation->has_exited) AND ($reservation_day->reservation->has_entered)) {
+                    $reservation_day->exited = true;
+                    $reservation_day->exited_at = date('Y-m-d H:i:s');
+
+                    if ($reservation_day->save()) {
+                        Notify::success('Reservation day updated.', 'Success');
+
+                        return back();
+                    }
+                }
+            }
+
+            Notify::warning('Cannot updated reservation day.', 'Ooops?');
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+
+        return back();
     }
 
     /**
