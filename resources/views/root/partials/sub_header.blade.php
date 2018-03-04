@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title m-subheader__title--separator">
-                {{ Str::ucfirst(Request::segment(count(Request::segments()))) }}
+                {{ Str::ucfirst(Request::segment(2)) }}
             </h3>
 
             <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
