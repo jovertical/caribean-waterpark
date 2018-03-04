@@ -41,32 +41,36 @@
 
     <body class="m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 
+        <!-- begin:: Page -->
         <div class="m-grid m-grid--hor m-grid--root m-page">
             @auth
-                <!-- Header -->
                 @include('root.partials.header')
+            @endauth
 
-                <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
-                    <!-- Sidebar -->
-                    @yield('sidebar')
+                <!-- begin::Body -->
+                <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
+                    @auth
+                        @yield('sidebar')
+                    @endauth
 
-                    <div class="m-grid__item m-grid__item--fluid m-wrapper">
-                        <!-- Sub-header -->
-                        @include('root.partials.sub_header')
-
-                        @endauth
-                            <div class="m-content">
-                                <!-- Content -->
-                                @yield('content')
-                            </div>
+                    <div class="m-grid__item m-grid__item--fluid m-wrapper" style="overflow: auto;">
                         @auth
+                            @include('root.partials.sub_header')
+                        @endauth
+
+                        <div class="m-content">
+                            @yield('content')
+                        </div>
                     </div>
                 </div>
+                <!-- end::Body -->
 
+            @auth
                 <!-- Footer -->
                 @include('root.partials.footer')
             @endauth
         </div>
+        <!-- end:: Page -->
 
         <!-- Vendor bundle -->
         <script src="/root/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>

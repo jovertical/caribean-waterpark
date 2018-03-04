@@ -15,6 +15,7 @@ class CreateReservationDaysTable extends Migration
     {
         Schema::create('reservation_days', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->integer('reservation_id');
             $table->date('date');
             $table->boolean('entered')->default(false);

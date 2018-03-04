@@ -58,6 +58,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
         Route::patch('reservations/{reservation}/update', 'ReservationsController@update')->name('reservations.update');
         Route::get('reservations/{reservation}', 'ReservationsController@show')->name('reservations.show');
 
+        Route::patch('reservation-days/{reservationday}/update', 'ReservationsController@updateDay')->name('reservation-days.update');
+
         Route::get('reservation/search', 'ReservationsController@searchItems')->name('reservation.search-items');
         Route::post('reservation/cart/{index}/add', 'ReservationsController@addItem')->name('reservation.add-item');
         Route::post('reservation/cart/{index}/remove', 'ReservationsController@removeItem')->name('reservation.remove-item');

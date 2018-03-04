@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use App\Notifications\LoginCredential;
 use App\Traits\{ComputesCosts};
-use App\{User, Reservation, Category, Item, ItemCalendar};
+use App\{User, Reservation, ReservationDay, Category, Item, ItemCalendar};
 use Helper;
 use Str, Carbon, Notify;
 use Illuminate\Http\Request;
@@ -437,7 +437,17 @@ class ReservationsController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        return view('root.reservations.show', ['reservation' => $reservation]);
+        $reservation_day = $reservation->days->where('date', Carbon::now()->format('Y-m-d'))->first();
+
+        return view('root.reservations.show', [
+            'reservation' => $reservation,
+            'reservation_day' => $reservation_day
+        ]);
+    }
+
+    public function updateDay(Request $request, ReservationDay $reservation_day)
+    {
+        return $reservation_day;
     }
 
     /**

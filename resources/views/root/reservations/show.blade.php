@@ -16,7 +16,15 @@
         @if($reservation->can_enter)
             @if(! $reservation->has_entered)
                 <li class="m-menu__item" aria-haspopup="true">
-                    <a href="javascript:void(0);" class="m-menu__link" 
+                    <a href="javascript:void(0);" class="m-menu__link reservation-day-to-entered"
+                        data-form="#reservationDayToEntered"
+                        data-action="{{ route('root.reservation-days.update', $reservation_day) }}"
+                        data-toggle="modal"
+                        data-target="#reservationDayToEnteredConfirmation"
+                        data-reservation-user="{{ $reservation->user->full_name }}"
+                        data-reservation-day-adult_quantity="{{ $reservation_day->adult_quantity }}"
+                        data-reservation-day-children_quantity="{{ $reservation_day->children_quantity }}"
+                        title="Set reservation day to entered"
                         style="cursor: {{ $reservation->has_entered ? 'not-allowed' : '' }}">
                         <i class="m-menu__link-icon la la-arrow-circle-o-right"></i>
                         <span class="m-menu__link-title">
@@ -32,7 +40,7 @@
         @if($reservation->can_exit)
             @if(! $reservation->has_exited)
                 <li class="m-menu__item" aria-haspopup="true">
-                    <a href="javascript:void(0);" class="m-menu__link" 
+                    <a href="javascript:void(0);" class="m-menu__link"
                         style="cursor: {{ $reservation->has_exited ? 'not-allowed' : '' }}">
                         <i class="m-menu__link-icon la la-arrow-circle-o-left"></i>
                         <span class="m-menu__link-title">
@@ -265,6 +273,35 @@
 
         <p class="update-reservation-modal-text"></p>
     @endcomponent
+
+    <!-- Reservation Day to Entered Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            reservationDayToEnteredConfirmation
+        @endslot
+
+        <p class="reservation-day-to-entered-text"></p>
+
+        <!-- Reservation Day to Entered Form -->
+        <form method="POST" action="" id="reservationDayToEntered">
+            {{ method_field('PATCH') }}
+            {{ csrf_field() }}
+
+            <div class="form-group row">
+                <div class="col-lg text-left">
+                    <label class="form-control-label">Adult:</label>
+
+                    <input type="number" name="adult_quantity" id="adult_quantity" class="form-control m-input">
+                </div>
+
+                <div class="col-lg text-left">
+                    <label class="form-control-label">Children:</label>
+
+                    <input type="number" name="children_quantity" id="children_quantity" class="form-control m-input">
+                </div>
+            </div>
+        </form>
+    @endcomponent
 @endsection
 
 @section('scripts')
@@ -359,6 +396,45 @@
                 });
             });
             //. update reservation to cancelled.
+
+            // reservation day to entered.
+            $('.reservation-day-to-entered').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var reservation = {
+                    'user' : link.data('reservation-user'),
+                    'day' : {
+                        'adult_quantity' : link.data('reservation-day-adult_quantity'),
+                        'children_quantity' : link.data('reservation-day-children_quantity')
+                    }
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set adult_quantity input value.
+                $('input[id=adult_quantity]').val(reservation.day.adult_quantity);
+
+                // set children_quantity input value.
+                $('input[id=children_quantity]').val(reservation.day.children_quantity);
+
+                // set modal text.
+                $('.reservation-day-to-entered-text').text(
+                    'You are setting ' +
+                    reservation.user + "'s " + 'reservation day to entered. \
+                    Below are the set number of guests for today, \
+                    Be sure to check if these numbers are correct. Thank you.'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. reservation day to entered.
         });
     </script>
 @endsection

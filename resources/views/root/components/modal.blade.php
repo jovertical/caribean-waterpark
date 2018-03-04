@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body text-{{ $content_position ?? 'center' }}">
-               <div class="m-scrollable" data-scrollbar-shown="true" data-scrollable="true" data-max-height="100">
+               <div class="m-scrollable" data-scrollbar-shown="true" data-scrollable="true" data-max-height="200">
                     <p>{{ $slot ?? "You can't undo this action. Are you sure?" }}</p>
                 </div>
             </div>
