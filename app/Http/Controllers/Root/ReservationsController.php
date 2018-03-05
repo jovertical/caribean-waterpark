@@ -119,6 +119,7 @@ class ReservationsController extends Controller
             (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d')) OR
             (session()->get('reservation.adult_quantity') != $adult_quantity) OR
             (session()->get('reservation.children_quantity') != $children_quantity) OR
+            (session()->get('reservation.filters.minimum_price') != $filters['minimum_price']) OR 
             (session()->get('reservation.filters.maximum_price') != $filters['maximum_price'])) {
 
             // set the items array as empty
@@ -132,6 +133,7 @@ class ReservationsController extends Controller
         session(['reservation.days' => $days]);
         session(['reservation.adult_quantity' => $adult_quantity]);
         session(['reservation.children_quantity' => $children_quantity]);
+        session(['reservation.filters.minimum_price' => $filters['minimum_price']]);
         session(['reservation.filters.maximum_price' => $filters['maximum_price']]);
 
         return view('root.reservation.search_items', [
