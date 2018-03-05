@@ -2,6 +2,17 @@
 
 @section('sidebar')
     @component('root.components.sidebar')
+        <!-- Transactions -->
+        <li class="m-menu__item" aria-haspopup="true">
+            <a href="javascript:void(0);" class="m-menu__link">
+                <i class="m-menu__link-icon la la-exchange"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-text">Transactions</span>
+                </span>
+            </a>
+        </li>
+        <!--/. Transactions -->
+
         <!-- Add payment -->
         <li class="m-menu__item" aria-haspopup="true">
             <a href="javascript:void(0);" class="m-menu__link">
@@ -11,6 +22,18 @@
                 </span>
             </a>
         </li>
+        <!--/. Add payment -->
+
+        <!-- Print -->
+        <li class="m-menu__item" aria-haspopup="true">
+            <a href="javascript:void(0);" class="m-menu__link">
+                <i class="m-menu__link-icon la la-print"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-text">Print</span>
+                </span>
+            </a>
+        </li>
+        <!--/. Print -->
 
         <!-- Enter -->
         @if(! $reservation->has_entered)
@@ -32,7 +55,7 @@
                         style="cursor: not-allowed;"
                     @endif
                 >
-                    <i class="m-menu__link-icon la la-arrow-circle-o-right"></i>
+                    <i class="m-menu__link-icon la la-sign-out"></i>
                     <span class="m-menu__link-title">
                         <span class="m-menu__link-text">Enter</span>
                     </span>
@@ -59,7 +82,7 @@
                         @endif
                     @endif
                 >
-                    <i class="m-menu__link-icon la la-arrow-circle-o-left"></i>
+                    <i class="m-menu__link-icon la la-sign-in"></i>
                     <span class="m-menu__link-title">
                         <span class="m-menu__link-text">Exit</span>
                     </span>

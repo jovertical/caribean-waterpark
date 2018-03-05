@@ -47,9 +47,9 @@
 
             <!-- begin::Body -->
             <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-container m-container--responsive m-container--xxl m-page__container m-body">
-                    @yield('sidebar')
+                @yield('sidebar')
 
-                <div class="m-grid__item m-grid__item--fluid m-wrapper" style="overflow: auto;">
+                <div class="m-grid__item m-grid__item--fluid m-wrapper" style="overflow: auto; padding-right: 2%;">
                     @include('root.partials.sub_header')
 
                     <div class="m-content">

@@ -32,7 +32,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
         Route::get('superusers/{superuser}/image/uploaded', 'SuperusersController@uploadedImage')->name('superusers.image.uploaded');
         Route::delete('superusers/{superuser}/image/destroy', 'SuperusersController@destroyImage')->name('superusers.image.destroy');
 
-        Route::get('settings', 'SettingsController@index')->name('settings');
+        Route::get('settings', 'SettingsController@index')->name('settings.index');
+        Route::patch('settings/update', 'SettingsController@update')->name('settings.update');
 
         Route::resource('categories', 'CategoriesController');
         Route::patch('categories/{category}/toggle', 'CategoriesController@toggle')->name('categories.toggle');

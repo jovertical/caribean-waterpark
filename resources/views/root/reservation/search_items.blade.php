@@ -270,7 +270,7 @@
             }
             //. selects
 
-            var filtersInit = function () {
+            var slidersInit = function () {
                 var $max_price = $('input[id=mp]');
 
                 $max_price.ionRangeSlider({
@@ -284,7 +284,7 @@
                 init: function() {
                     datesInit();
                     selectsInit();
-                    filtersInit();
+                    slidersInit();
                 }
             }
         }();
