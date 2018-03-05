@@ -27,9 +27,9 @@
                             data-reservation-user="{{ $reservation->user->full_name }}"
                             data-reservation-day-adult_quantity="{{ $reservation->day->adult_quantity }}"
                             data-reservation-day-children_quantity="{{ $reservation->day->children_quantity }}"
-                        @else
-                            style="cursor: not-allowed;"
                         @endif
+                    @else
+                        style="cursor: not-allowed;"
                     @endif
                 >
                     <i class="m-menu__link-icon la la-arrow-circle-o-right"></i>

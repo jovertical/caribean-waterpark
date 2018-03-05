@@ -9,6 +9,6 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        return 'settings';
+        return view('root.settings.index');
     }
 }
