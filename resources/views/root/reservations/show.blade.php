@@ -58,7 +58,7 @@
                             data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
                             data-toggle="modal"
                             data-target="#reservationDayToEnteredConfirmation"
-                            data-reservation-user="{{ $reservation->user->full_name }}"
+                            data-reservation-user="{{ $reservation->user->titled_full_name }}"
                             data-reservation-day-adult_quantity="{{ $reservation->day->adult_quantity }}"
                             data-reservation-day-children_quantity="{{ $reservation->day->children_quantity }}"
                         @endif
@@ -87,7 +87,7 @@
                             data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
                             data-toggle="modal"
                             data-target="#reservationDayToExitedConfirmation"
-                            data-reservation-user="{{ $reservation->user->full_name }}"
+                            data-reservation-user="{{ $reservation->user->titled_full_name }}"
                         @else
                             style="cursor: not-allowed;"
                         @endif

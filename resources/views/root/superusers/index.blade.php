@@ -152,7 +152,7 @@
                         },
                         {
                             field: 'Name',
-                            width: 100
+                            width: 150
                         },
                         {
                             field: 'Birthdate',

@@ -140,11 +140,11 @@
                         },
                         {
                             field: 'Adults',
-                            width: 50
+                            width: 75
                         },
                         {
                             field: 'Childrens',
-                            width: 50
+                            width: 75
                         },
                     ]
                 });

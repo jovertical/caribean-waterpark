@@ -49,11 +49,15 @@ class ReservationsController extends Controller
     {
         $checkin_date = Carbon::parse($request->input('ci'));
         $checkout_date = Carbon::parse($request->input('co'));
+        $days = $checkin_date->diffInDays($checkout_date) + 1;
         $adult_quantity = $request->input('aq');
         $children_quantity = $request->input('cq');
-        $days = $checkin_date->diffInDays($checkout_date) + 1;
         $days_prior = $this->reservation_settings['days_prior'] ?? 1;
         $earliest = Carbon::parse(now()->addDays($days_prior)->format('Y-m-d'));
+        $filters = [
+            'minimum_price' => $request->input('mnp'),
+            'maximum_price' => $request->input('mxp')
+        ];
 
         $items = collect([]);
 
@@ -76,7 +80,7 @@ class ReservationsController extends Controller
 
             $available_items = collect([]);
 
-            $items->each(function($item) use ($available_items, $checkin_date, $checkout_date, $days) {
+            $items->each(function($item) use ($available_items, $checkin_date, $checkout_date, $days, $filters) {
                 $item_calendars =    ItemCalendar::where('item_id', $item->id)
                                         ->whereBetween('date', [
                                             $checkin_date->format('Y-m-d'),
@@ -100,7 +104,10 @@ class ReservationsController extends Controller
                     $item->order_quantity = 0;
                     $item->order_price = 0.00;
 
-                    $available_items->push($item);
+                    // check if item has passed the filters. push if true
+                    if ($this->itemFiltered($item, $filters)) {
+                        $available_items->push($item);
+                    }
                 }
             });
 
@@ -111,7 +118,8 @@ class ReservationsController extends Controller
         if ((session()->get('reservation.checkin_date') != $checkin_date->format('Y-m-d')) OR
             (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d')) OR
             (session()->get('reservation.adult_quantity') != $adult_quantity) OR
-            (session()->get('reservation.children_quantity') != $children_quantity)) {
+            (session()->get('reservation.children_quantity') != $children_quantity) OR
+            (session()->get('reservation.filters.maximum_price') != $filters['maximum_price'])) {
 
             // set the items array as empty
             session(['reservation.available_items' => $items->all()]);
@@ -124,11 +132,28 @@ class ReservationsController extends Controller
         session(['reservation.days' => $days]);
         session(['reservation.adult_quantity' => $adult_quantity]);
         session(['reservation.children_quantity' => $children_quantity]);
+        session(['reservation.filters.maximum_price' => $filters['maximum_price']]);
 
         return view('root.reservation.search_items', [
             'available_items' => Helper::paginate(session()->get('reservation.available_items')),
             'selected_items' => session()->get('reservation.selected_items')
         ]);
+    }
+
+    /**
+     * Check if item has passed the filters.
+     * @param  Item   $item    Instance of Item.
+     * @param  array  $filters
+     * @return boolean
+     */
+    protected function itemFiltered(Item $item, array $filters)
+    {
+        if (($item->calendar_price >= $filters['minimum_price']) AND
+            ($item->calendar_price <= $filters['maximum_price'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -490,6 +515,8 @@ class ReservationsController extends Controller
                 if ((! $reservation_day->reservation->has_entered) AND (! $reservation_day->reservation->has_exited)) {
                     $reservation_day->entered = true;
                     $reservation_day->entered_at = date('Y-m-d H:i:s');
+                    $reservation_day->adult_quantity = $request->input('adult_quantity');
+                    $reservation_day->children_quantity = $request->input('children_quantity');
 
                     if ($reservation_day->save()) {
                         Notify::success('Reservation day updated.', 'Success');

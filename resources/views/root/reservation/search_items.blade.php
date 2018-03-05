@@ -24,134 +24,143 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-lg">
-            @if(Session::has('message'))
-                @component('root.components.alert')
-                    {{ Session::get('message') }}
-                @endcomponent
-            @endif
+    <form method="GET" action="{{ route('root.reservation.search-items') }}">
+        <div class="row">
+            <div class="col-lg">
+                @if(Session::has('message'))
+                    @component('root.components.alert')
+                        {{ Session::get('message') }}
+                    @endcomponent
+                @endif
 
-            <div class="m-portlet">
-                <form method="GET" action="{{ route('root.reservation.search-items') }}">
-                    <div class="m-portlet__body">
-                        <div class="form-group m-form__group row justify-content-center">
-                            
-                            <!-- Checkin date -->
-                            <div class="col-lg-3">
-                                <label for="ci">Checkin date:</label>
-                                <div class="input-group m-input-group m-input-group--square">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="la la-calendar"></i></span>
+                <div class="m-portlet">
+                        <div class="m-portlet__body">
+                            <div class="form-group m-form__group row justify-content-center">
+
+                                <!-- Checkin date -->
+                                <div class="col-lg-3">
+                                    <label for="ci">Checkin date:</label>
+                                    <div class="input-group m-input-group m-input-group--square">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                        </div>
+                                        <input type="text" name="ci" id="ci" class="form-control m-input"
+                                            value="{{ Request::input('ci') }}" readonly>
                                     </div>
-                                    <input type="text" name="ci" id="ci" class="form-control m-input"
-                                        value="{{ Request::input('ci') }}" readonly>
+                                </div>
+                                <!--/. Checkin date -->
+
+                                <!-- Checkout date -->
+                                <div class="col-lg-3">
+                                    <label for="co">Checkout date:</label>
+
+                                    <div class="input-group m-input-group m-input-group--square">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                        </div>
+                                        <input type="text" name="co" id="co" class="form-control m-input"
+                                            value="{{ Request::input('co') }}" readonly>
+                                    </div>
+                                </div>
+                                <!--/. Checkout date -->
+
+                                <!-- Adult quantity -->
+                                <div class="col-lg-2">
+                                    <label for="aq">Adult:</label>
+
+                                    <select name="aq" id="aq" class="form-control m-bootstrap-select">
+                                        <option value="1" {{ Request::input('aq') == '1' ? 'selected' : '' }}>1</option>
+                                        <option value="2" {{ Request::input('aq') == '2' ? 'selected' : '' }}>2</option>
+                                        <option value="3" {{ Request::input('aq') == '3' ? 'selected' : '' }}>3</option>
+                                        <option value="4" {{ Request::input('aq') == '4' ? 'selected' : '' }}>4</option>
+                                        <option value="5" {{ Request::input('aq') == '5' ? 'selected' : '' }}>5</option>
+                                        <option value="6" {{ Request::input('aq') == '6' ? 'selected' : '' }}>6</option>
+                                        <option value="7" {{ Request::input('aq') == '7' ? 'selected' : '' }}>7</option>
+                                        <option value="8" {{ Request::input('aq') == '8' ? 'selected' : '' }}>8</option>
+                                        <option value="9" {{ Request::input('aq') == '9' ? 'selected' : '' }}>9</option>
+                                    </select>
+                                </div>
+                                <!--/. Adult quantity -->
+
+                                <!-- Children quantity -->
+                                <div class="col-lg-2">
+                                    <label for="cq">Children:</label>
+
+                                    <select name="cq" id="cq" class="form-control m-bootstrap-select">
+                                        <option value="" disabled selected>0</option>
+                                        <option value="1" {{ Request::input('cq') == '1' ? 'selected' : '' }}>1</option>
+                                        <option value="2" {{ Request::input('cq') == '2' ? 'selected' : '' }}>2</option>
+                                        <option value="3" {{ Request::input('cq') == '3' ? 'selected' : '' }}>3</option>
+                                        <option value="4" {{ Request::input('cq') == '4' ? 'selected' : '' }}>4</option>
+                                        <option value="5" {{ Request::input('cq') == '5' ? 'selected' : '' }}>5</option>
+                                        <option value="6" {{ Request::input('cq') == '6' ? 'selected' : '' }}>6</option>
+                                        <option value="7" {{ Request::input('cq') == '7' ? 'selected' : '' }}>7</option>
+                                        <option value="8" {{ Request::input('cq') == '8' ? 'selected' : '' }}>8</option>
+                                        <option value="9" {{ Request::input('cq') == '9' ? 'selected' : '' }}>9</option>
+                                    </select>
+                                </div>
+                                <!--/. Children quantity -->
+
+                                <div class="col-lg-2 h-100 mt-auto">
+                                    <br>
+
+                                    <button type="submit" class="btn btn-primary w-100">Search</button>
                                 </div>
                             </div>
-                            <!--/. Checkin date -->
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <!-- Filters -->
+                <div class="m-portlet m-portlet--head-sm" data-portlet="true" id="filters">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <span class="m-portlet__head-icon">
+                                    <i class="flaticon-interface-3"></i>
+                                </span>
 
-                            <!-- Checkout date -->
-                            <div class="col-lg-3">
-                                <label for="co">Checkout date:</label>
-
-                                <div class="input-group m-input-group m-input-group--square">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="la la-calendar"></i></span>
-                                    </div>
-                                    <input type="text" name="co" id="co" class="form-control m-input"
-                                        value="{{ Request::input('co') }}" readonly>
-                                </div>
-                            </div>
-                            <!--/. Checkout date -->
-
-                            <!-- Adult quantity -->
-                            <div class="col-lg-2">
-                                <label for="aq">Adult:</label>
-
-                                <select name="aq" id="aq" class="form-control m-bootstrap-select">
-                                    <option value="1" {{ Request::input('aq') == '1' ? 'selected' : '' }}>1</option>
-                                    <option value="2" {{ Request::input('aq') == '2' ? 'selected' : '' }}>2</option>
-                                    <option value="3" {{ Request::input('aq') == '3' ? 'selected' : '' }}>3</option>
-                                    <option value="4" {{ Request::input('aq') == '4' ? 'selected' : '' }}>4</option>
-                                    <option value="5" {{ Request::input('aq') == '5' ? 'selected' : '' }}>5</option>
-                                    <option value="6" {{ Request::input('aq') == '6' ? 'selected' : '' }}>6</option>
-                                    <option value="7" {{ Request::input('aq') == '7' ? 'selected' : '' }}>7</option>
-                                    <option value="8" {{ Request::input('aq') == '8' ? 'selected' : '' }}>8</option>
-                                    <option value="9" {{ Request::input('aq') == '9' ? 'selected' : '' }}>9</option>
-                                </select>
-                            </div>
-                            <!--/. Adult quantity -->
-
-                            <!-- Children quantity -->
-                            <div class="col-lg-2">
-                                <label for="cq">Children:</label>
-
-                                <select name="cq" id="cq" class="form-control m-bootstrap-select">
-                                    <option value="" disabled selected>0</option>
-                                    <option value="1" {{ Request::input('cq') == '1' ? 'selected' : '' }}>1</option>
-                                    <option value="2" {{ Request::input('cq') == '2' ? 'selected' : '' }}>2</option>
-                                    <option value="3" {{ Request::input('cq') == '3' ? 'selected' : '' }}>3</option>
-                                    <option value="4" {{ Request::input('cq') == '4' ? 'selected' : '' }}>4</option>
-                                    <option value="5" {{ Request::input('cq') == '5' ? 'selected' : '' }}>5</option>
-                                    <option value="6" {{ Request::input('cq') == '6' ? 'selected' : '' }}>6</option>
-                                    <option value="7" {{ Request::input('cq') == '7' ? 'selected' : '' }}>7</option>
-                                    <option value="8" {{ Request::input('cq') == '8' ? 'selected' : '' }}>8</option>
-                                    <option value="9" {{ Request::input('cq') == '9' ? 'selected' : '' }}>9</option>
-                                </select>
-                            </div>
-                            <!--/. Children quantity -->
-
-                            <div class="col-lg-2 h-100 mt-auto">
-                                <br>
-
-                                <button type="submit" class="btn btn-primary w-100">Search</button>
+                                <h3 class="m-portlet__head-text">Filters</h3>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4">
-            <!-- Filters -->
-            <div class="m-portlet m-portlet--head-sm" data-portlet="true" id="filters">
-                <div class="m-portlet__head">
-                    <div class="m-portlet__head-caption">
-                        <div class="m-portlet__head-title">
-                            <span class="m-portlet__head-icon">
-                                <i class="flaticon-interface-3"></i>
-                            </span>
 
-                            <h3 class="m-portlet__head-text">Filters</h3>
+                    <div class="m-form m-form--fit m-form--label-align-right">
+                        <div class="m-portlet__body">
+                            <!-- Minimum price -->
+                            <div class="form-group m-form__group">
+                                <label for="mnp">Minimum price: </label>
+
+                                <div class="m-ion-range-slider">
+                                    <input type="hidden" name="mnp" id="mnp" data-max-value="1" value="{{ Request::input('mnp') }}">
+                                </div>
+                            </div>
+                            <!--/. Minimum price -->
+
+                            <!-- Maximum price -->
+                            <div class="form-group m-form__group">
+                                <label for="mxp">Maximum price: </label>
+
+                                <div class="m-ion-range-slider">
+                                    <input type="hidden" name="mxp" id="mxp" data-max-value="99999" value="{{ Request::input('mxp') }}">
+                                </div>
+                            </div>
+                            <!--/. Maximum price -->
+                        </div>
+
+                        <div class="m-portlet__foot m-portlet__foot--fit">
+                            <div class="m-form__actions">
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                                <a href="#" class="btn btn-secondary">Clear</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!--/. Form -->
-                <div class="m-form m-form--fit m-form--label-align-right">
-                    <div class="m-portlet__body">
-                        <div class="form-group m-form__group">
-                            <label for="mp">Maximum price: </label>
-
-                            <div class="m-ion-range-slider">
-                                <input type="hidden" name="mp" id="mp" data-max-value="49999"
-                                    value="{{ Request::input('mp') }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="m-portlet__foot m-portlet__foot--fit">
-                        <div class="m-form__actions">
-                            <button type="submit" class="btn btn-primary">Apply</button>
-                            <button type="reset" class="btn btn-secondary">Reset</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Form -->
+                <!--/. Filters -->
             </div>
-            <!--/. Filters -->
-        </div>
+        </form>
 
         <div class="col-lg">
             @foreach($available_items as $index => $available_item)
@@ -165,7 +174,7 @@
                                     </div>
 
                                     <div class="m-widget5__content">
-                                        <h4 class="m-widget5__title">{{ ucfirst(strtolower($available_item->name)) }}</h4>
+                                        <h4 class="m-widget5__title">{{ $available_item->name }}</h4>
 
                                         <p class="m-widget5__desc">
                                             {!! Str::limit($available_item->description, 50) !!}
@@ -271,12 +280,21 @@
             //. selects
 
             var slidersInit = function () {
-                var $max_price = $('input[id=mp]');
+                var minimum_price = $('input[id=mnp]');
+                var maximum_price = $('input[id=mxp]');
 
-                $max_price.ionRangeSlider({
-                    min: 0,
-                    max: $max_price.data('max-value'),
-                    from: $max_price.val()
+                minimum_price.ionRangeSlider({
+                    min: 1,
+                    max: maximum_price.val(),
+                    from: minimum_price.val(),
+                    prefix: "₱"
+                });
+
+                maximum_price.ionRangeSlider({
+                    min: minimum_price.val(),
+                    max: maximum_price.data('max-value'),
+                    from: maximum_price.val(),
+                    prefix: "₱"
                 });
             };
 

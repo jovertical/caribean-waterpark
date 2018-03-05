@@ -96,6 +96,11 @@ class User extends Authenticatable
         return "{$this->first_name} {$this->last_name}";
     }
 
+    public function getTitledFullNameAttribute()
+    {
+        return "{$this->title} {$this->first_name} {$this->last_name}";
+    }
+
     public function setGenderAttribute($value)
     {
         $this->attributes['gender'] = strtolower($value);
@@ -104,6 +109,11 @@ class User extends Authenticatable
     public function getGenderAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function getTitleAttribute($value)
+    {
+        return $this->attributes['gender'] == 'male' ? 'Sir' : "Ma'am";
     }
 
     public function setAddressAttribute($value)
