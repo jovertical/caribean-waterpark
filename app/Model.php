@@ -46,8 +46,8 @@ class Model extends Eloquent
 
         self::deleting(function($model) use ($user) {
             if ($user != null) {
-                if (Schema::hasColumn($model->getTable(), 'updated_by')) {
-                    $model->updated_by = $user->id;
+                if (Schema::hasColumn($model->getTable(), 'deleted_by')) {
+                    $model->deleted_by = $user->id;
                 }
             }
         });
