@@ -43,6 +43,32 @@
                 </div>
                 <!--/. Days prior -->
 
+                <!-- Minimum reservation length -->
+                <div class="form-group m-form__group row">
+                    <label class="col-form-label col-lg-3 col-sm-12">Minimum length: </label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                        <div class="m-ion-range-slider">
+                            <input type="number" name="minimum_reservation_length" id="minimum_reservation_length"
+                                class="form-control m-input" value="{{ $settings['minimum_reservation_length'] }}">
+                        </div>
+                        <span class="m-form__help">Minimum number of days for a reservation.</span>
+                    </div>
+                </div>
+                <!--/. Minimum reservation length -->
+
+                <!-- Maximum reservation length -->
+                <div class="form-group m-form__group row">
+                    <label class="col-form-label col-lg-3 col-sm-12">Maximum length: </label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                        <div class="m-ion-range-slider">
+                            <input type="number" name="maximum_reservation_length" id="maximum_reservation_length" 
+                                class="form-control m-input" value="{{ $settings['maximum_reservation_length'] }}">
+                        </div>
+                        <span class="m-form__help">Maximum number of days for a reservation.</span>
+                    </div>
+                </div>
+                <!--/. Maximum reservation length -->
+
                 <!-- Initial payment rate -->
                 <div class="form-group m-form__group row">
                     <label class="col-form-label col-lg-3 col-sm-12">Initial payment rate: </label>

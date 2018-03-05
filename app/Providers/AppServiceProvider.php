@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\Settings;
+use App\Services\Setting;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(Settings::class, function ($app) {
-            return new Settings();
+        $this->app->bind(Setting::class, function ($app) {
+            return new Setting();
         });
     }
 }

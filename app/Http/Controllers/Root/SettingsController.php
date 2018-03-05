@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
-use Settings;
+use Setting;
 use Carbon, Notify;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -19,9 +19,9 @@ class SettingsController extends Controller
     /**
      * @param Settings $settings Injected instance of the settings service.
      */
-    public function __construct(Settings $settings)
+    public function __construct(Setting $setting)
     {
-        $this->reservation_settings = $settings->reservation();
+        $this->reservation_settings = $setting->reservation();
     }
 
     public function index()
@@ -33,6 +33,8 @@ class SettingsController extends Controller
     {
         $this->validate($request, [
             'days_prior' => 'required|integer',
+            'minimum_reservation_length' => 'required|integer',
+            'maximum_reservation_length' => 'required|integer',
             'days_refundable' => 'required|integer',
             'initial_payment_rate' => 'required|integer',
             'pre_reservation_refund_rate' => 'required|integer',
@@ -45,6 +47,18 @@ class SettingsController extends Controller
                 'updated_by' => auth()->user()->id,
                 'updated_at' => Carbon::now()
             ]);
+
+            DB::table('settings')->where('name', 'minimum_reservation_length')->update([
+                'value' => $request->input('minimum_reservation_length'),
+                'updated_by' => auth()->user()->id,
+                'updated_at' => Carbon::now()
+            ]);
+
+            DB::table('settings')->where('name', 'maximum_reservation_length')->update([
+                'value' => $request->input('maximum_reservation_length'),
+                'updated_by' => auth()->user()->id,
+                'updated_at' => Carbon::now()
+            ]);         
 
             DB::table('settings')->where('name', 'initial_payment_rate')->update([
                 'value' => $request->input('initial_payment_rate'),

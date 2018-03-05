@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Root;
 use App\Notifications\LoginCredential;
 use App\Traits\{ComputesCosts};
 use App\{User, Reservation, ReservationDay, Category, Item, ItemCalendar};
-use Settings, Helper;
+use Setting, Helper;
 use Str, Carbon, Notify;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -22,11 +22,17 @@ class ReservationsController extends Controller
     protected $reservation_settings;
 
     /**
+     * Reservation error messages.
+     * @var array
+     */
+    protected $reservation_errors = [];
+
+    /**
      * @param Settings $settings Injected instance of the settings service.
      */
-    public function __construct(Settings $settings)
+    public function __construct(Setting $setting)
     {
-        $this->reservation_settings = $settings->reservation();
+        $this->reservation_settings = $setting->reservation();
     }
 
     /**
@@ -47,13 +53,13 @@ class ReservationsController extends Controller
      */
     public function searchItems(Request $request)
     {
-        $checkin_date = Carbon::parse($request->input('ci'));
-        $checkout_date = Carbon::parse($request->input('co'));
-        $days = $checkin_date->diffInDays($checkout_date) + 1;
-        $adult_quantity = $request->input('aq');
-        $children_quantity = $request->input('cq');
-        $days_prior = $this->reservation_settings['days_prior'] ?? 1;
-        $earliest = Carbon::parse(now()->addDays($days_prior)->format('Y-m-d'));
+        $search_parameters = [
+            'checkin_date' => $request->input('ci'),
+            'checkout_date' => $request->input('co'),
+            'adult_quantity' => $request->input('aq'),
+            'children_quantity' => $request->input('cq')
+        ];
+
         $filters = [
             'minimum_price' => $request->input('mnp'),
             'maximum_price' => $request->input('mxp')
@@ -61,68 +67,75 @@ class ReservationsController extends Controller
 
         $items = collect([]);
 
-        if (($request->input('ci') != null) AND ($request->input('co') != null)) {
-             // check for invalid date
-            if (($checkin_date < $earliest) OR ($checkout_date < $earliest) OR ($checkin_date > $checkout_date)) {
+        if (($search_parameters['checkin_date'] != null) AND ($search_parameters['checkout_date'] != null)) {
+            // Validate search.
+            if (! $this->validateSearch($search_parameters, $this->reservation_settings)) {
                 // set reservation data to empty array
                 session(['reservation' => []]);
 
-                Notify::warning('Please select a valid date.', 'Whooops?');
+                if (count($this->reservation_errors)) {
+                    Notify::warning($this->reservation_errors[0].'. Please try again.', 'Whooops?');
+                } else {
+                    Notify::warning('There are errors in your search, Please try again.', 'Whooops?');
+                }
 
                 return redirect()->route('root.reservation.search-items');
             }
-
-            $items =    Item::with('category')->whereHas('category', function($category) {
-                            $category->where('active', true);
-                        })
-                        ->where('active', true)
-                        ->orderBy('price');
-
-            $available_items = collect([]);
-
-            $items->each(function($item) use ($available_items, $checkin_date, $checkout_date, $days, $filters) {
-                $item_calendars =    ItemCalendar::where('item_id', $item->id)
-                                        ->whereBetween('date', [
-                                            $checkin_date->format('Y-m-d'),
-                                            $checkout_date->format('Y-m-d')
-                                        ])
-                                        ->get();
-
-                $count = $item_calendars->filter(function($item_calendar) use ($item) {
-                    return $item_calendar->quantity >= $item->quantity;
-                })->count();
-
-                if ($count == 0) {
-                    $calendar_occupied = $item_calendars->sum('quantity');
-                    $calendar_occupied_days = $item_calendars->count();
-
-                    $item->calendar_occupied = $calendar_occupied;
-                    $item->calendar_unoccupied =    $calendar_occupied_days > 0 ? $item->quantity - $calendar_occupied /=
-                                                        $calendar_occupied_days : $item->quantity;
-
-                    $item->calendar_price = $item->price * $days;
-                    $item->order_quantity = 0;
-                    $item->order_price = 0.00;
-
-                    // check if item has passed the filters. push if true
-                    if ($this->itemFiltered($item, $filters)) {
-                        $available_items->push($item);
-                    }
-                }
-            });
-
-            $items = $available_items;
         }
+
+        $checkin_date = Carbon::parse($search_parameters['checkin_date']);
+        $checkout_date = Carbon::parse($search_parameters['checkout_date']);
+        $days = $checkin_date->diffInDays($checkout_date) + 1;
+
+        $items =    Item::with('category')->whereHas('category', function($category) {
+                        $category->where('active', true);
+                    })
+                    ->where('active', true)
+                    ->orderBy('price');
+
+        $available_items = collect([]);
+
+        $items->each(function($item) use ($available_items, $checkin_date, $checkout_date, $days, $filters) {
+            $item_calendars =    ItemCalendar::where('item_id', $item->id)
+                                    ->whereBetween('date', [
+                                        $checkin_date->format('Y-m-d'),
+                                        $checkout_date->format('Y-m-d')
+                                    ])
+                                    ->get();
+
+            $count = $item_calendars->filter(function($item_calendar) use ($item) {
+                return $item_calendar->quantity >= $item->quantity;
+            })->count();
+
+            if ($count == 0) {
+                $calendar_occupied = $item_calendars->sum('quantity');
+                $calendar_occupied_days = $item_calendars->count();
+
+                $item->calendar_occupied = $calendar_occupied;
+                $item->calendar_unoccupied =    $calendar_occupied_days > 0 ? $item->quantity - $calendar_occupied /=
+                                                    $calendar_occupied_days : $item->quantity;
+
+                $item->calendar_price = $item->price * $days;
+                $item->order_quantity = 0;
+                $item->order_price = 0.00;
+
+                // check if item has passed the filters. push if true
+                if ($this->itemFiltered($item, $filters)) {
+                    $available_items->push($item);
+                }
+            }
+        });
+
+        $items = $available_items;
 
         // check if reservation data are the same, if not clear the items array.
         if ((session()->get('reservation.checkin_date') != $checkin_date->format('Y-m-d')) OR
             (session()->get('reservation.checkout_date') != $checkout_date->format('Y-m-d')) OR
-            (session()->get('reservation.adult_quantity') != $adult_quantity) OR
-            (session()->get('reservation.children_quantity') != $children_quantity) OR
-            (session()->get('reservation.filters.minimum_price') != $filters['minimum_price']) OR 
+            (session()->get('reservation.adult_quantity') != $search_parameters['adult_quantity']) OR
+            (session()->get('reservation.children_quantity') != $search_parameters['children_quantity']) OR
+            (session()->get('reservation.filters.minimum_price') != $filters['minimum_price']) OR
             (session()->get('reservation.filters.maximum_price') != $filters['maximum_price'])) {
 
-            // set the items array as empty
             session(['reservation.available_items' => $items->all()]);
             session(['reservation.selected_items' => []]);
         }
@@ -131,8 +144,8 @@ class ReservationsController extends Controller
         session(['reservation.checkin_date' => $checkin_date->format('Y-m-d')]);
         session(['reservation.checkout_date' => $checkout_date->format('Y-m-d')]);
         session(['reservation.days' => $days]);
-        session(['reservation.adult_quantity' => $adult_quantity]);
-        session(['reservation.children_quantity' => $children_quantity]);
+        session(['reservation.adult_quantity' => $search_parameters['adult_quantity']]);
+        session(['reservation.children_quantity' => $search_parameters['children_quantity']]);
         session(['reservation.filters.minimum_price' => $filters['minimum_price']]);
         session(['reservation.filters.maximum_price' => $filters['maximum_price']]);
 
@@ -140,6 +153,62 @@ class ReservationsController extends Controller
             'available_items' => Helper::paginate(session()->get('reservation.available_items')),
             'selected_items' => session()->get('reservation.selected_items')
         ]);
+    }
+
+    /**
+     * Validate search.
+     * @param  array  $search_parameters
+     * @return null
+     */
+    protected function validateSearch(array $search_parameters, array $reservation_settings)
+    {
+        $checkin_date = $search_parameters['checkin_date'];
+        $checkout_date = $search_parameters['checkout_date'];
+        $adult_quantity = $search_parameters['adult_quantity'];
+        $children_quantity = $search_parameters['children_quantity'];
+
+        $days_prior = $reservation_settings['days_prior'];
+        $minimum_reservation_length = $reservation_settings['minimum_reservation_length'];
+        $maximum_reservation_length = $reservation_settings['maximum_reservation_length'];
+           
+        if (($checkin_date == null) OR ($checkout_date == null)) {
+            array_push($this->reservation_errors, 'You must set a checkin and checkout date');
+        }
+
+        if (($adult_quantity == null) OR (! is_numeric($adult_quantity))) {
+            array_push($this->reservation_errors, 'Adult quantity is not valid');
+        }
+
+        if ($children_quantity != null) {
+            if (! is_numeric($children_quantity)) {
+                array_push($this->reservation_errors, 'Children quantity is not valid');
+            }
+        }
+
+        $checkin_date = Carbon::parse($checkin_date);
+        $checkout_date = Carbon::parse($checkout_date);
+        $days = $checkin_date->diffInDays($checkout_date) + 1;
+        $earliest = Carbon::parse(now()->addDays($days_prior)->format('Y-m-d'));
+
+        if ($checkin_date > $checkout_date) {
+            array_push($this->reservation_errors, 'Invalid date');
+        }
+
+        if ($checkin_date < $earliest) {
+            array_push($this->reservation_errors, 'Check-in date must be '.$days_prior.' day(s) prior today');
+        }
+
+        if ($days > $maximum_reservation_length) {
+            array_push($this->reservation_errors, 
+                'Reservation length must not be greater than '.$maximum_reservation_length.' day(s)');
+        }
+
+        if ($days < $minimum_reservation_length) {
+            array_push($this->reservation_errors, 
+                'Reservation length must not be lesser than '.$minimum_reservation_length.' day(s)');
+        }
+
+        return count($this->reservation_errors) > 0 ? false : true;
     }
 
     /**

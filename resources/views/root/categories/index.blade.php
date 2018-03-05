@@ -75,7 +75,6 @@
                     <tr>
                         <th>#</th>
                         <th>Image</th>
-                        <th>Type</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Items</th>

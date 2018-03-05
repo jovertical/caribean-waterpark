@@ -14,6 +14,8 @@ class SettingsTableSeeder extends Seeder
     {
         $settings = [
             ['name' => 'days_prior', 'value' => 1],
+            ['name' => 'minimum_reservation_length', 'value' => 1],
+            ['name' => 'maximum_reservation_length', 'value' => 15],
             ['name' => 'initial_payment_rate', 'value' => 10],
             ['name' => 'allow_refund', 'value' => 0],
             ['name' => 'days_refundable', 'value' => 1],

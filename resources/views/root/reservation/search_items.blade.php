@@ -134,7 +134,8 @@
                                 <label for="mnp">Minimum price: </label>
 
                                 <div class="m-ion-range-slider">
-                                    <input type="hidden" name="mnp" id="mnp" data-max-value="1" value="{{ Request::input('mnp') }}">
+                                    <input type="hidden" name="mnp" id="mnp" data-max-value="1" 
+                                        value="{{ Request::input('mnp') ?? 1 }}">
                                 </div>
                             </div>
                             <!--/. Minimum price -->
@@ -144,7 +145,8 @@
                                 <label for="mxp">Maximum price: </label>
 
                                 <div class="m-ion-range-slider">
-                                    <input type="hidden" name="mxp" id="mxp" data-max-value="99999" value="{{ Request::input('mxp') }}">
+                                    <input type="hidden" name="mxp" id="mxp" data-max-value="99999" 
+                                        value="{{ Request::input('mxp') ?? 99999 }}">
                                 </div>
                             </div>
                             <!--/. Maximum price -->
