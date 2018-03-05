@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
+use Settings;
 use Carbon, Notify;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -9,23 +10,30 @@ use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller
 {
+        /**
+     * Array of reservation settings.
+     * @var array
+     */
+    protected $reservation_settings;
+
+    /**
+     * @param Settings $settings Injected instance of the settings service.
+     */
+    public function __construct(Settings $settings)
+    {
+        $this->reservation_settings = $settings->reservation();
+    }
+
     public function index()
     {
-        $settings = [
-            'days_prior' => DB::table('settings')->where('name', 'days_prior')->first()->value,
-            'initial_payment_rate' => DB::table('settings')->where('name', 'initial_payment_rate')->first()->value,
-            'allow_refund' => DB::table('settings')->where('name', 'allow_refund')->first()->value,
-            'pre_reservation_refund_rate' => DB::table('settings')->where('name', 'pre_reservation_refund_rate')->first()->value,
-            'post_reservation_refund_rate' => DB::table('settings')->where('name', 'post_reservation_refund_rate')->first()->value
-        ];
-
-        return view('root.settings.index', ['settings' => $settings]);
+        return view('root.settings.index', ['settings' => $this->reservation_settings]);
     }
 
     public function update(Request $request)
     {
         $this->validate($request, [
             'days_prior' => 'required|integer',
+            'days_refundable' => 'required|integer',
             'initial_payment_rate' => 'required|integer',
             'pre_reservation_refund_rate' => 'required|integer',
             'post_reservation_refund_rate' => 'required|integer'
@@ -51,6 +59,12 @@ class SettingsController extends Controller
             ]);
 
             if ($request->has('allow_refund')) {
+                DB::table('settings')->where('name', 'days_refundable')->update([
+                    'value' => $request->input('days_refundable'),
+                    'updated_by' => auth()->user()->id,
+                    'updated_at' => Carbon::now()
+                ]);
+
                 DB::table('settings')->where('name', 'pre_reservation_refund_rate')->update([
                     'value' => $request->input('pre_reservation_refund_rate'),
                     'updated_by' => auth()->user()->id,

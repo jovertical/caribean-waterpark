@@ -320,11 +320,11 @@
                         },
                         {
                             field: 'Checkin',
-                            width: 85
+                            width: 100
                         },
                         {
                             field: 'Checkout',
-                            width: 85
+                            width: 100
                         },
                         {
                             field: 'Payable',

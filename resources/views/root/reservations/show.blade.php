@@ -35,6 +35,17 @@
         </li>
         <!--/. Print -->
 
+        <!-- Days -->
+        <li class="m-menu__item" aria-haspopup="true">
+            <a href="{{ route('root.reservations.days.show', $reservation) }}" class="m-menu__link">
+                <i class="m-menu__link-icon la la-calendar-o"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-text">Days</span>
+                </span>
+            </a>
+        </li>
+        <!--/. Days -->
+
         <!-- Enter -->
         @if(! $reservation->has_entered)
             <li class="m-menu__item" aria-haspopup="true">
@@ -44,7 +55,7 @@
                     @if ($reservation->day != null)
                         @if (! $reservation->has_exited)
                             data-form="#reservationDayToEntered"
-                            data-action="{{ route('root.reservation-days.update', $reservation->day) }}"
+                            data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
                             data-toggle="modal"
                             data-target="#reservationDayToEnteredConfirmation"
                             data-reservation-user="{{ $reservation->user->full_name }}"
@@ -73,7 +84,7 @@
                     @if ($reservation->day != null)
                         @if (! $reservation->has_exited)
                             data-form="#reservationDayToExited"
-                            data-action="{{ route('root.reservation-days.update', $reservation->day) }}"
+                            data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
                             data-toggle="modal"
                             data-target="#reservationDayToExitedConfirmation"
                             data-reservation-user="{{ $reservation->user->full_name }}"

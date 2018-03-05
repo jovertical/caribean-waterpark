@@ -5,14 +5,29 @@ namespace App\Http\Controllers\Root;
 use App\Notifications\LoginCredential;
 use App\Traits\{ComputesCosts};
 use App\{User, Reservation, ReservationDay, Category, Item, ItemCalendar};
-use Helper;
+use Settings, Helper;
 use Str, Carbon, Notify;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ReservationsController extends Controller
 {
     use ComputesCosts;
+
+    /**
+     * Array of reservation settings.
+     * @var array
+     */
+    protected $reservation_settings;
+
+    /**
+     * @param Settings $settings Injected instance of the settings service.
+     */
+    public function __construct(Settings $settings)
+    {
+        $this->reservation_settings = $settings->reservation();
+    }
 
     /**
      * list of all reservations
@@ -37,7 +52,8 @@ class ReservationsController extends Controller
         $adult_quantity = $request->input('aq');
         $children_quantity = $request->input('cq');
         $days = $checkin_date->diffInDays($checkout_date) + 1;
-        $earliest = Carbon::parse(now()->addDays(1)->format('Y-m-d'));
+        $days_prior = $this->reservation_settings['days_prior'] ?? 1;
+        $earliest = Carbon::parse(now()->addDays($days_prior)->format('Y-m-d'));
 
         $items = collect([]);
 
@@ -442,6 +458,20 @@ class ReservationsController extends Controller
 
         return view('root.reservations.show', [
             'reservation' => $reservation
+        ]);
+    }
+
+    /**
+     * Reservation days.
+     * @param  Reservation $reservation
+     * @return view
+     */
+    public function days(Reservation $reservation)
+    {
+        $days = $reservation->days;
+
+        return view('root.reservations.days.index', [
+            'days' => $days
         ]);
     }
 

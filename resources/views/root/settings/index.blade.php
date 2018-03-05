@@ -66,9 +66,34 @@
                     </div>
                 </div>
                 <!--/. Refunds -->
-
-                <!-- Pre-reservation refund rate -->
+                
+                <!-- Allow refund block -->
                 <div id="allow_refund_block" style="display: {{ $settings['allow_refund'] ? '' : 'none' }};">
+                    <!-- Days refundable -->
+                    <div class="form-group m-form__group row">
+                        <label class="col-form-label col-lg-3 col-sm-12">Days refundable: </label>
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <select name="days_refundable" id="days_refundable" class="form-control m-bootstrap-select">
+                                <option value="0" selected>0</option>
+                                <option value="1" {{ $settings['days_refundable'] == '1' ? 'selected' : '' }}>1</option>
+                                <option value="2" {{ $settings['days_refundable'] == '2' ? 'selected' : '' }}>2</option>
+                                <option value="3" {{ $settings['days_refundable'] == '3' ? 'selected' : '' }}>3</option>
+                                <option value="4" {{ $settings['days_refundable'] == '4' ? 'selected' : '' }}>4</option>
+                                <option value="5" {{ $settings['days_refundable'] == '5' ? 'selected' : '' }}>5</option>
+                                <option value="6" {{ $settings['days_refundable'] == '6' ? 'selected' : '' }}>6</option>
+                                <option value="7" {{ $settings['days_refundable'] == '7' ? 'selected' : '' }}>7</option>
+                                <option value="8" {{ $settings['days_refundable'] == '8' ? 'selected' : '' }}>8</option>
+                                <option value="9" {{ $settings['days_refundable'] == '9' ? 'selected' : '' }}>9</option>
+                            </select>
+
+                            <span class="m-form__help">
+                                Allowed number of days prior to the reservation checkin date for requested refunds.
+                            </span>
+                        </div>
+                    </div>
+                    <!--/. Days refundable -->
+
+                    <!-- Pre-reservation refund rate -->
                     <div class="form-group m-form__group row">
                         <label class="col-form-label col-lg-3 col-sm-12">Pre-reservation refund rate: </label>
                         <div class="col-lg-4 col-md-9 col-sm-12">
@@ -96,6 +121,7 @@
                     </div>
                     <!--/.Post-reservation refund rate -->
                 </div>
+                <!--/. Allow refund block -->
 
                 <!-- Bottom -->
                 <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
@@ -123,6 +149,7 @@
             // selects initializer
             var selectsInit = function () {
                 $('select[id=days_prior]').selectpicker({});
+                $('select[id=days_refundable]').selectpicker({});
             }
             //. selects
 

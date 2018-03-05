@@ -16,6 +16,7 @@ class SettingsTableSeeder extends Seeder
             ['name' => 'days_prior', 'value' => 1],
             ['name' => 'initial_payment_rate', 'value' => 10],
             ['name' => 'allow_refund', 'value' => 0],
+            ['name' => 'days_refundable', 'value' => 1],
             ['name' => 'pre_reservation_refund_rate', 'value' => 50],
             ['name' => 'post_reservation_refund_rate', 'value' => 25]
         ];
