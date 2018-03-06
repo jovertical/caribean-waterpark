@@ -18,57 +18,73 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
     Route::middleware('root.auth')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
 
-        Route::resource('users', 'UsersController');
-        Route::patch('users/{user}/toggle', 'UsersController@toggle')->name('users.toggle');
-        Route::get('users/{user}/image', 'UsersController@selectImage')->name('users.image');
-        Route::post('users/{user}/image/upload', 'UsersController@uploadImage')->name('users.image.upload');
-        Route::get('users/{user}/image/uploaded', 'UsersController@uploadedImage')->name('users.image.uploaded');
-        Route::delete('users/{user}/image/destroy', 'UsersController@destroyImage')->name('users.image.destroy');
+        Route::prefix('users')->name('users.')->group(function() {
+            Route::resource('/', 'UsersController');
+            Route::patch('/{user}/toggle', 'UsersController@toggle')->name('toggle');
+            Route::get('/{user}/image', 'UsersController@selectImage')->name('image');
+            Route::post('/{user}/image/upload', 'UsersController@uploadImage')->name('image.upload');
+            Route::get('/{user}/image/uploaded', 'UsersController@uploadedImage')->name('image.uploaded');
+            Route::delete('/{user}/image/destroy', 'UsersController@destroyImage')->name('image.destroy');
+        });
 
-        Route::resource('superusers', 'SuperusersController');
-        Route::patch('superusers/{superuser}/toggle', 'SuperusersController@toggle')->name('superusers.toggle');
-        Route::get('superusers/{superuser}/image', 'SuperusersController@selectImage')->name('superusers.image');
-        Route::post('superusers/{superuser}/image/upload', 'SuperusersController@uploadImage')->name('superusers.image.upload');
-        Route::get('superusers/{superuser}/image/uploaded', 'SuperusersController@uploadedImage')->name('superusers.image.uploaded');
-        Route::delete('superusers/{superuser}/image/destroy', 'SuperusersController@destroyImage')->name('superusers.image.destroy');
+        Route::prefix('superusers')->name('superusers.')->group(function() {
+            Route::resource('/', 'SuperusersController');
+            Route::patch('/{superuser}/toggle', 'SuperusersController@toggle')->name('toggle');
+            Route::get('/{superuser}/image', 'SuperusersController@selectImage')->name('image');
+            Route::post('/{superuser}/image/upload', 'SuperusersController@uploadImage')->name('image.upload');
+            Route::get('/{superuser}/image/uploaded', 'SuperusersController@uploadedImage')->name('image.uploaded');
+            Route::delete('/{superuser}/image/destroy', 'SuperusersController@destroyImage')->name('image.destroy');
+        });
 
-        Route::get('settings', 'SettingsController@index')->name('settings.index');
-        Route::patch('settings/update', 'SettingsController@update')->name('settings.update');
+        Route::prefix('settings')->name('settings.')->group(function() {
+            Route::get('/', 'SettingsController@index')->name('index');
+            Route::patch('/update', 'SettingsController@update')->name('update');
+        });
 
-        Route::resource('categories', 'CategoriesController');
-        Route::patch('categories/{category}/toggle', 'CategoriesController@toggle')->name('categories.toggle');
-        Route::get('categories/{category}/image', 'CategoriesController@selectImage')->name('categories.image');
-        Route::post('categories/{category}/image/upload', 'CategoriesController@uploadImage')->name('categories.image.upload');
-        Route::get('categories/{category}/image/uploaded', 'CategoriesController@uploadedImage')->name('categories.image.uploaded');
-        Route::delete('categories/{category}/image/destroy', 'CategoriesController@destroyImage')->name('categories.image.destroy');
+        Route::prefix('categories')->name('categories.')->group(function() {
+            Route::resource('/', 'CategoriesController');
+            Route::patch('/{category}/toggle', 'CategoriesController@toggle')->name('toggle');
+            Route::get('/{category}/image', 'CategoriesController@selectImage')->name('image');
+            Route::post('/{category}/image/upload', 'CategoriesController@uploadImage')->name('image.upload');
+            Route::get('/{category}/image/uploaded', 'CategoriesController@uploadedImage')->name('image.uploaded');
+            Route::delete('/{category}/image/destroy', 'CategoriesController@destroyImage')->name('image.destroy');
+        });
 
-        Route::resource('items', 'ItemsController');
-        Route::patch('items/{item}/toggle', 'ItemsController@toggle')->name('items.toggle');
-        Route::get('items/{item}/image', 'ItemsController@selectImage')->name('items.image');
-        Route::post('items/{item}/image/upload', 'ItemsController@uploadImage')->name('items.image.upload');
-        Route::get('items/{item}/image/uploaded', 'ItemsController@uploadedImage')->name('items.image.uploaded');
-        Route::delete('items/{item}/image/destroy', 'ItemsController@destroyImage')->name('items.image.destroy');
+        Route::prefix('items')->name('items.')->group(function() {
+            Route::resource('/', 'ItemsController');
+            Route::patch('/{item}/toggle', 'ItemsController@toggle')->name('toggle');
+            Route::get('/{item}/image', 'ItemsController@selectImage')->name('image');
+            Route::post('/{item}/image/upload', 'ItemsController@uploadImage')->name('image.upload');
+            Route::get('/{item}/image/uploaded', 'ItemsController@uploadedImage')->name('image.uploaded');
+            Route::delete('/{item}/image/destroy', 'ItemsController@destroyImage')->name('image.destroy');
+        });
+        Route::prefix('coupons')->name('coupons.')->group(function() {
+            Route::resource('/', 'CouponsController');
+            Route::get('/{coupon}/image', 'CouponsController@selectImage')->name('image');
+            Route::post('/{coupon}/image/upload', 'CouponsController@uploadImage')->name('image.upload');
+            Route::get('/{coupon}/image/uploaded', 'CouponsController@uploadedImage')->name('image.uploaded');
+            Route::delete('/{coupon}/image/destroy', 'CouponsController@destroyImage')->name('image.destroy');
+        });
 
-        Route::resource('coupons', 'CouponsController');
-        Route::get('coupons/{coupon}/image', 'CouponsController@selectImage')->name('coupons.image');
-        Route::post('coupons/{coupon}/image/upload', 'CouponsController@uploadImage')->name('coupons.image.upload');
-        Route::get('coupons/{coupon}/image/uploaded', 'CouponsController@uploadedImage')->name('coupons.image.uploaded');
-        Route::delete('coupons/{coupon}/image/destroy', 'CouponsController@destroyImage')->name('coupons.image.destroy');
+        Route::prefix('reservations')->name('reservations.')->group(function() {
+            Route::get('/', 'ReservationsController@index')->name('index');
+            Route::patch('/{reservation}/update', 'ReservationsController@update')->name('update');
+            Route::get('/{reservation}', 'ReservationsController@show')->name('show');
+            Route::get('/{reservation}/transactions', 'ReservationsController@transactions')->name('transactions.index');
+            Route::post('/{reservation}/transactions', 'ReservationsController@storeTransaction')->name('transactions.store');
+            Route::get('/{reservation}/days', 'ReservationsController@days')->name('days.index');
+            Route::patch('/days/{reservation_day}/update', 'ReservationsController@updateDay')->name('days.update');
+        });
 
-        Route::get('reservations', 'ReservationsController@index')->name('reservations.index');
-        Route::patch('reservations/{reservation}/update', 'ReservationsController@update')->name('reservations.update');
-        Route::get('reservations/{reservation}', 'ReservationsController@show')->name('reservations.show');
-        Route::get('reservations/{reservation}/days', 'ReservationsController@days')->name('reservations.days.show');
-
-        Route::patch('reservations/days/{reservation_day}/update', 'ReservationsController@updateDay')->name('reservations.days.update');
-
-        Route::get('reservation/search', 'ReservationsController@searchItems')->name('reservation.search-items');
-        Route::post('reservation/cart/{index}/add', 'ReservationsController@addItem')->name('reservation.add-item');
-        Route::post('reservation/cart/{index}/remove', 'ReservationsController@removeItem')->name('reservation.remove-item');
-        Route::post('reservation/cart/clear', 'ReservationsController@clearItems')->name('reservation.clear-items');
-        Route::get('reservation/cart', 'ReservationsController@showItems')->name('reservation.show-items');
-        Route::get('reservation/user', 'ReservationsController@user')->name('reservation.user');
-        Route::post('reservation/user/store', 'ReservationsController@storeUser')->name('reservation.store-user');
-        Route::post('reservation/{user}/store', 'ReservationsController@store')->name('reservation.store');
+        Route::prefix('reservation')->name('reservation.')->group(function() {
+            Route::get('/search', 'ReservationsController@searchItems')->name('search-items');
+            Route::post('/cart/{index}/add', 'ReservationsController@addItem')->name('add-item');
+            Route::post('/cart/{index}/remove', 'ReservationsController@removeItem')->name('remove-item');
+            Route::post('/cart/clear', 'ReservationsController@clearItems')->name('clear-items');
+            Route::get('/cart', 'ReservationsController@showItems')->name('show-items');
+            Route::get('/user', 'ReservationsController@user')->name('user');
+            Route::post('/user/store', 'ReservationsController@storeUser')->name('store-user');
+            Route::post('/{user}/store', 'ReservationsController@store')->name('store');
+        });
     });
 });

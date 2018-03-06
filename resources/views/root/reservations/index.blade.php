@@ -200,7 +200,7 @@
             updateReservationToReservedConfirmation
         @endslot
 
-        <p class="update-reservation-modal-text"></p>
+        <div id="reservation-to-reserved-modal-text"></div>
     @endcomponent
 
     <!-- Update Reservation to Paid Form -->
@@ -216,7 +216,7 @@
             updateReservationToPaidConfirmation
         @endslot
 
-        <p class="update-reservation-modal-text"></p>
+        <div id="reservation-to-paid-modal-text"></div>
     @endcomponent
 
     <!-- Update Reservation to Cancelled Form -->
@@ -232,7 +232,7 @@
             updateReservationToCancelledConfirmation
         @endslot
 
-        <p class="update-reservation-modal-text"></p>
+        <div id="reservation-to-cancelled-modal-text"></div>
     @endcomponent
 @endsection
 
@@ -446,8 +446,11 @@
                 $('.status').val(status);
 
                 // set modal text.
-                $('.update-reservation-modal-text').text('You are setting ' +
-                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                $('#reservation-to-reserved-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" + 
+                        'reservation to <span class="m--font-info">' + status + '</span>.' + 
+                    '</p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
@@ -476,8 +479,11 @@
                 $('.status').val(status);
 
                 // set modal text.
-                $('.update-reservation-modal-text').text('You are setting ' +
-                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                $('#reservation-to-paid-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" + 
+                        'reservation to <span class="m--font-success">' + status + '</span>.' + 
+                    '</p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
@@ -506,8 +512,11 @@
                 $('.status').val(status);
 
                 // set modal text.
-                $('.update-reservation-modal-text').text('You are setting ' +
-                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                $('#reservation-to-cancelled-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" + 
+                        'reservation to <span class="m--font-danger">' + status + '</span>.' + 
+                    '</p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {

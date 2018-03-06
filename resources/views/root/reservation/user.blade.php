@@ -30,7 +30,7 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('root.reservation.store-user') }}" id="form-reservation-store" 
+                    <form method="POST" action="{{ route('root.reservation.store-user') }}" id="form-reservation-store"
                         class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
                         {{ csrf_field() }}
 
@@ -302,10 +302,13 @@
                                         <td>
                                             <span class="d-flex" style="overflow: visible;">
                                                 <a href="javascript:void(0);" data-form="#checkoutUser"
-                                                    data-action="{{ route('root.reservation.store', $user) }}" data-toggle="modal"
-                                                        data-target="#checkoutUserConfirmation" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill checkout-user"
-                                                            title="Checkout user">
-                                                                <i class="la la-check-circle"></i>
+                                                    data-action="{{ route('root.reservation.store', $user) }}"
+                                                    data-toggle="modal"
+                                                    data-target="#checkoutUserConfirmation"
+                                                    data-user-name="{{ $user->titled_full_name }}"
+                                                    class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill checkout-user"
+                                                    title="Checkout user">
+                                                    <i class="la la-check-circle"></i>
                                                 </a>
                                             </span>
                                         </td>
@@ -335,7 +338,7 @@
             checkoutUserConfirmation
         @endslot
 
-        You are checking out this reservation. Are you sure?
+        <div id="checkout-user-modal-text"></div>
     @endcomponent
 
 @endsection
@@ -545,9 +548,17 @@
                 var form = $(link.data('form'));
                 var action = link.data('action');
                 var modal = $(link.data('target'));
+                var user_name = link.data('user-name');
 
                 // assign action to hidden form action attribute.
                 form.attr({action: action});
+
+                // set modal text.
+                $('#checkout-user-modal-text').html(
+                    "<p>You are checking this reservation out for \
+                        <span class='m--font-bolder'>" + user_name + ".</span>\
+                    </p>"
+                );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
                     form.submit();

@@ -64,7 +64,7 @@
 
                 <tbody>
                     @foreach($days as $index => $day)
-                        @include('root.reservations.days.day')
+                        @include('root.reservation_days.day')
                     @endforeach
                 </tbody>
             </table>

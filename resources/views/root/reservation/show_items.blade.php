@@ -40,7 +40,7 @@
             <div class="m-portlet__body">
                 <div class="m-section">
                     <div class="m-section__content">
-                        <table class="table m-table table-striped">
+                        <table class="table table-responsive table-striped m-table">
                             <thead>
                                 <tr>
                                     <th>#</th>

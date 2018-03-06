@@ -22,8 +22,8 @@ class CreateReservationDaysTable extends Migration
             $table->boolean('exited')->default(false);
             $table->timestamp('entered_at')->nullable();
             $table->timestamp('exited_at')->nullable();
-            $table->float('adult_rate');
-            $table->float('children_rate')->nullable();
+            $table->float('adult_rate')->default(0.00);
+            $table->float('children_rate')->default(0.00);
             $table->integer('adult_quantity');
             $table->integer('children_quantity')->nullable();
             $table->integer('created_by')->nullable();

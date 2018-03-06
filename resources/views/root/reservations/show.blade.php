@@ -4,10 +4,16 @@
     @component('root.components.sidebar')
         <!-- Transactions -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="javascript:void(0);" class="m-menu__link">
+            <a href="{{ route('root.reservations.transactions.index', $reservation) }}" class="m-menu__link">
                 <i class="m-menu__link-icon la la-exchange"></i>
                 <span class="m-menu__link-title">
-                    <span class="m-menu__link-text">Transactions</span>
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">Transactions</span>
+
+                        <span class="m-menu__link-badge">
+                            <span class="m-badge m-badge--success">{{ count($reservation->transactions) }}</span>
+                        </span>
+                    </span>
                 </span>
             </a>
         </li>
@@ -15,7 +21,12 @@
 
         <!-- Add payment -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="javascript:void(0);" class="m-menu__link">
+            <a href="javascript:void(0);" class="m-menu__link"
+                data-form="#addPayment"
+                data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
+                data-toggle="modal"
+                data-target="#addPaymentConfirmation"
+            >
                 <i class="m-menu__link-icon la la-money"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-text">Add payment</span>
@@ -37,7 +48,7 @@
 
         <!-- Days -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="{{ route('root.reservations.days.show', $reservation) }}" class="m-menu__link">
+            <a href="{{ route('root.reservations.days.index', $reservation) }}" class="m-menu__link">
                 <i class="m-menu__link-icon la la-calendar-o"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-text">Days</span>
@@ -276,6 +287,26 @@
         </div>
     </div>
 
+    <!-- Add Payment Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            addPaymentConfirmation
+        @endslot
+
+        @slot('height')
+            200
+        @endslot
+
+        <!-- Add Payment Form -->
+        <form method="POST" action="" id="addPayment">
+            {{ method_field('PATCH') }}
+            {{ csrf_field() }}
+
+            <div class="form-group row"></div>
+        </form>
+    @endcomponent
+    <!--/. Add Payment Modal -->
+
     <!-- Update Reservation to Reserved Form -->
     <form method="POST" action="" id="updateReservationToReserved" style="display: none;">
         {{ method_field('PATCH') }}
@@ -289,7 +320,7 @@
             updateReservationToReservedConfirmation
         @endslot
 
-        <p class="update-reservation-modal-text"></p>
+        <div id="reservation-to-reserved-modal-text"></div>
     @endcomponent
 
     <!-- Update Reservation to Paid Form -->
@@ -305,7 +336,7 @@
             updateReservationToPaidConfirmation
         @endslot
 
-        <p class="update-reservation-modal-text"></p>
+        <div id="reservation-to-paid-modal-text"></div>
     @endcomponent
 
     <!-- Update Reservation to Cancelled Form -->
@@ -321,7 +352,7 @@
             updateReservationToCancelledConfirmation
         @endslot
 
-        <p class="update-reservation-modal-text"></p>
+        <div id="reservation-to-cancelled-modal-text"></div>
     @endcomponent
 
     <!-- Reservation Day to Entered Modal -->
@@ -330,7 +361,11 @@
             reservationDayToEnteredConfirmation
         @endslot
 
-        <p class="reservation-day-to-entered-text"></p>
+        @slot('height')
+            200
+        @endslot
+
+        <div id="reservation-day-to-entered-modal-text"></div>
 
         <!-- Reservation Day to Entered Form -->
         <form method="POST" action="" id="reservationDayToEntered">
@@ -353,6 +388,7 @@
             </div>
         </form>
     @endcomponent
+    <!--/. Reservation Day to Entered Modal -->
 
     <!-- Reservation Day to Exited Modal -->
     @component('root.components.modal')
@@ -360,7 +396,7 @@
             reservationDayToExitedConfirmation
         @endslot
 
-        <p class="reservation-day-to-exited-text"></p>
+        <div id="reservation-day-to-exited-modal-text"></div>
 
         <!-- Reservation Day to Exited Form -->
         <form method="POST" action="" id="reservationDayToExited">
@@ -369,6 +405,8 @@
             <input type="hidden" name="status" id="status" value="exit">
         </form>
     @endcomponent
+    <!--/. Reservation Day to Entered Modal -->
+
 @endsection
 
 @section('scripts')
@@ -394,8 +432,11 @@
                 $('.status').val(status);
 
                 // set modal text.
-                $('.update-reservation-modal-text').text('You are setting ' +
-                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                $('#reservation-to-reserved-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" +
+                        'reservation to <span class="m--font-info">' + status + '</span>.' +
+                    '</p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
@@ -424,8 +465,11 @@
                 $('.status').val(status);
 
                 // set modal text.
-                $('.update-reservation-modal-text').text('You are setting ' +
-                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                $('#reservation-to-paid-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" +
+                        'reservation to <span class="m--font-success">' + status + '</span>.' +
+                    '</p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
@@ -454,8 +498,11 @@
                 $('.status').val(status);
 
                 // set modal text.
-                $('.update-reservation-modal-text').text('You are setting ' +
-                    reservation.user + "'s " + 'reservation to ' + status + '.'
+                $('#reservation-to-cancelled-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" +
+                        'reservation to <span class="m--font-danger">' + status + '</span>.' +
+                    '</p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
@@ -490,11 +537,12 @@
                 $('input[id=children_quantity]').val(reservation.day.children_quantity);
 
                 // set modal text.
-                $('.reservation-day-to-entered-text').text(
-                    'You are setting ' +
-                    reservation.user + "'s " + 'reservation day to entered. \
-                    Below are the set number of guests for today, \
-                    Be sure to check if these numbers are correct. Thank you.'
+                $('#reservation-day-to-entered-modal-text').html(
+                    '<p>' +
+                        'You are setting <span class="m--font-bolder">' + reservation.user + "'s </span>" +
+                        'reservation day to entered. Below are the set number of guests for today,\
+                        Be sure to check if these numbers are correct. Thank you.\
+                    </p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
@@ -519,8 +567,11 @@
                 form.attr({action: action});
 
                 // set modal text.
-                $('.reservation-day-to-exited-text').text(
-                    'You are setting ' + reservation.user + "'s " + 'reservation day to exited.'
+                $('#reservation-day-to-exited-modal-text').html(
+                    '<p>' +
+                        'You are setting <span class="m--font-bolder">' + reservation.user + "'s </span>" +
+                        'reservation day to exited. \
+                    </p>'
                 );
 
                 modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {

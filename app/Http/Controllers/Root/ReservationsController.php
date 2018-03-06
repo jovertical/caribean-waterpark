@@ -567,7 +567,7 @@ class ReservationsController extends Controller
     {
         $days = $reservation->days;
 
-        return view('root.reservations.days.index', [
+        return view('root.reservation_days.index', [
             'days' => $days
         ]);
     }

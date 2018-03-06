@@ -9,11 +9,9 @@
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
                         <span class="m-menu__link-text">Cart</span>
-                            @if(count($selected_items))
-                                <span class="m-menu__link-badge">
-                                    <span class="m-badge m-badge--success">{{ count($selected_items) }}</span>
-                                </span>
-                            @endif
+                            <span class="m-menu__link-badge">
+                                <span class="m-badge m-badge--success">{{ count($selected_items) }}</span>
+                            </span>
                         </span>
                     </span>
                 </span>

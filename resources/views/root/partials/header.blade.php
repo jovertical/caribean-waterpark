@@ -262,6 +262,29 @@
                                 </div>
                             </li>
                             <!--/. Manage -->
+    
+                            <!-- More -->
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--icon-only" data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a href="javascript:void(0);" class="m-menu__link m-menu__toggle">
+                                    <span class="m-menu__item-here"></span>
+                                    <i class="m-menu__link-icon flaticon-more-v3"></i>
+                                    <span class="m-menu__link-text"></span>
+                                </a>
+
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--pull">
+                                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="#" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-clock-1"></i>
+                                                <span class="m-menu__link-text">Activity Log</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <!-- More -->
 
                         </ul>
                     </div>

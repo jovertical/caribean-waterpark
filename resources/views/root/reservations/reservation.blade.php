@@ -27,7 +27,7 @@
                         data-toggle="modal" 
                         data-target="#updateReservationToReservedConfirmation" 
                         data-status="reserved"
-                        data-reservation-user="{{ $reservation->user->full_name }}" 
+                        data-reservation-user="{{ $reservation->user->titled_full_name }}" 
                         title="Set to reserved">Set to reserved
                     </a>
 
@@ -37,7 +37,7 @@
                         data-toggle="modal" 
                         data-target="#updateReservationToPaidConfirmation" 
                         data-status="paid"
-                        data-reservation-user="{{ $reservation->user->full_name }}" 
+                        data-reservation-user="{{ $reservation->user->titled_full_name }}" 
                         title="Set to paid">Set to paid
                     </a>
 
@@ -47,7 +47,7 @@
                         data-toggle="modal" 
                         data-target="#updateReservationToCancelledConfirmation" 
                         data-status="cancelled"
-                        data-reservation-user="{{ $reservation->user->full_name }}" 
+                        data-reservation-user="{{ $reservation->user->titled_full_name }}" 
                         title="Set to cancelled">Set to cancelled
                     </a>
                 </div>

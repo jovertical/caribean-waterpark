@@ -32,6 +32,11 @@ class Reservation extends Model
         return $this->hasMany(ReservationDay::class);
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(ReservationTransaction::class);
+    }
+
     public function createReservationItem($item, $item_costs)
     {
         return $this->items()->create([
