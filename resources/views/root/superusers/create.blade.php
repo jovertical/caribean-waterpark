@@ -24,17 +24,19 @@
                 <!-- Firstname -->
                 <div class="form-group m-form__group row {{ $errors->has('first_name') ? 'has-danger' : '' }}">
                     <label for="first_name" class="col-lg-2 col-form-label">
-                        Firstname
+                        Firstname <span class="m--font-danger">*</span>
                     </label>
 
                     <div class="col-lg-6">
                         <input type="text" name="first_name" id="first_name" class="form-control m-input
                             {{ $errors->has('first_name') ? 'form-control-danger' :'' }}" placeholder="Please enter a firstname"
-                                value="{{ old('first_name') }}" maxlength="255">
+                                value="{{ old('first_name') }}">
 
-                        <div id="first_name-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('first_name') }}</span>
-                        </div>
+                        @if ($errors->has('first_name'))
+                            <div id="first_name-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('first_name') }}</span>
+                            </div>
+                        @endif
 
                         <span class="m-form__help"></span>
                     </div>
@@ -50,11 +52,13 @@
                     <div class="col-lg-6">
                         <input type="text" name="middle_name" id="middle_name" class="form-control m-input
                             {{ $errors->has('middle_name') ? 'form-control-danger' :'' }}"
-                                placeholder="Please enter a middlename" value="{{ old('middle_name') }}" maxlength="255">
+                                placeholder="Please enter a middlename" value="{{ old('middle_name') }}">
 
-                        <div id="middle_name-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('middle_name') }}</span>
-                        </div>
+                        @if ($errors->has('middle_name'))
+                            <div id="middle_name-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('middle_name') }}</span>
+                            </div>
+                        @endif
 
                         <span class="m-form__help"></span>
                     </div>
@@ -64,17 +68,19 @@
                 <!-- Lastname -->
                 <div class="form-group m-form__group row {{ $errors->has('last_name') ? 'has-danger' : '' }}">
                     <label for="last_name" class="col-lg-2 col-form-label">
-                        Lastname
+                        Lastname <span class="m--font-danger">*</span>
                     </label>
 
                     <div class="col-lg-6">
                         <input type="text" name="last_name" id="last_name" class="form-control m-input
                             {{ $errors->has('last_name') ? 'form-control-danger' :'' }}" placeholder="Please enter a lastname"
-                                value="{{ old('last_name') }}" maxlength="255">
+                                value="{{ old('last_name') }}">
 
-                        <div id="last_name-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('last_name') }}</span>
-                        </div>
+                        @if ($errors->has('last_name'))
+                            <div id="last_name-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('last_name') }}</span>
+                            </div>
+                        @endif
 
                         <span class="m-form__help"></span>
                     </div>
@@ -82,19 +88,21 @@
                 <!--/. Lastname -->
 
                 <!-- Email -->
-                <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}">
+                <div class="form-group m-form__group row {{ $errors->has('email') ? 'has-danger' : '' }}">
                     <label for="email" class="col-lg-2 col-form-label">
                         Email <span class="m--font-danger">*</span>
                     </label>
 
                     <div class="col-lg-6">
-                        <input type="email" name="email" id="email" class="form-control m-input
+                        <input type="text" name="email" id="email" class="form-control m-input
                             {{ $errors->has('email') ? 'form-control-danger' :'' }}" placeholder="Please enter an email"
-                                value="{{ old('email') }}" required maxlength="255">
+                                value="{{ old('email') }}">
 
-                        <div id="email-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('email') }}</span>
-                        </div>
+                        @if ($errors->has('email'))
+                            <div id="email-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('email') }}</span>
+                            </div>
+                        @endif
 
                         <span class="m-form__help"></span>
                     </div>
@@ -118,9 +126,11 @@
                                     value="{{ old('birthdate') }}" readonly>
                         </div>
 
-                        <div id="birthdate-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('birthdate') }}</span>
-                        </div>
+                        @if ($errors->has('birthdate'))
+                            <div id="birthdate-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('birthdate') }}</span>
+                            </div>
+                        @endif
 
                         <span class="m-form__help"></span>
                     </div>
@@ -140,9 +150,11 @@
                             <option value="female" {{ strtolower(old('gender')) == 'female' ? 'selected' : '' }}>Female</option>
                         </select>
 
-                        <div id="gender-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('gender') }}</span>
-                        </div>
+                        @if ($errors->has('gender'))
+                            <div id="gender-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('gender') }}</span>
+                            </div>
+                        @endif
 
                         <span class="m-form__help"></span>
                     </div>
@@ -159,16 +171,18 @@
                         <textarea name="address" id="address" class="form-control m-input" {{ $errors->has('address') ?
                             'form-control-danger' :'' }} rows="3">{{ old('address') }}</textarea>
 
-                        <div id="address-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('address') }}</span>
-                        </div>
+                        @if ($errors->has('address'))
+                            <div id="address-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('address') }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <!--/. Address -->
 
                 <!-- Phone number -->
-                <div class="form-group m-form__group row {{ $errors->has('last_name') ? 'has-danger' : '' }}">
-                    <label for="last_name" class="col-lg-2 col-form-label">
+                <div class="form-group m-form__group row {{ $errors->has('phone_number') ? 'has-danger' : '' }}">
+                    <label for="phone_number" class="col-lg-2 col-form-label">
                         Phone number
                     </label>
 
@@ -178,16 +192,18 @@
                                 <span class="input-group-text"><i class="la la-phone"></i></span>
                             </div>
 
-                            <input type="number" name="phone_number" id="phone_number" class="form-control m-input
+                            <input type="text" name="phone_number" id="phone_number" class="form-control m-input
                                 {{ $errors->has('phone_number') ? 'form-control-danger' :'' }}"
-                                    placeholder="Please enter phone number" value="{{ old('phone_number') }}" maxlength="255">
+                                    placeholder="Please enter phone number" value="{{ old('phone_number') }}">
                         </div>
 
-                        <div id="phone_number-error" class="form-control-feedback">
-                            <span class="m--font-danger">{{ $errors->first('phone_number') }}</span>
-                        </div>
+                        @if ($errors->has('phone_number'))
+                            <div id="phone_number-error" class="form-control-feedback">
+                                <span class="m--font-danger">{{ $errors->first('phone_number') }}</span>
+                            </div>
+                        @endif
 
-                        <span class="m-form__help"></span>
+                        <span class="m-form__help"><code>(+63) 999-9999999</code></span>
                     </div>
                 </div>
                 <!--/. Phone number -->
@@ -217,8 +233,26 @@
             var formValidationInit = function () {
                 $("form[id=form-superuser-store]").validate({
                     rules: {
-                        email: {
+                        first_name: {
                             required: true,
+                            maxlength: 255
+                        },
+                        middle_name: {
+                            maxlength: 255
+                        },
+                        last_name: {
+                            required: true,
+                            maxlength: 255
+                        },
+                        email: {
+                            email: true,
+                            required: true,
+                            maxlength: 255
+                        },
+                        address: {
+                            maxlength: 510
+                        },
+                        phone_number: {
                             maxlength: 255
                         }
                     },
@@ -231,6 +265,34 @@
                 });
             }
             //. form validate
+
+            // input masks
+            var inputMasksInit = function () {
+                // email
+                $('input[id=email]').inputmask({
+                    mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
+                    greedy: false,
+                    onBeforePaste: function (pastedValue, opts) {
+                        pastedValue = pastedValue.toLowerCase();
+                        return pastedValue.replace("mailto:", "");
+                    },
+                    definitions: {
+                        '*': {
+                            validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
+                            cardinality: 1,
+                            casing: "lower"
+                        }
+                    }
+                });  
+                //. email
+
+                // phone number
+                $('input[id=phone_number]').inputmask("mask", {
+                    "mask": "(+63) 999-9999999"
+                }); 
+                //. phone number
+            }
+            // input masks
 
             // dates
             var datesInit = function () {
@@ -259,6 +321,7 @@
             return {
                 init: function() {
                     formValidationInit();
+                    inputMasksInit();
                     datesInit();
                     selectInit();
                 }

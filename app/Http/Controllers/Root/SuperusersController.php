@@ -28,10 +28,10 @@ class SuperusersController extends Controller
     {
         $this->validate($request, [
             'email'         => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
-            'first_name'    => 'max:255',
+            'first_name'    => 'required|max:255',
             'middle_name'   => 'max:255',
-            'last_name'     => 'max:255',
-            'birthdate'     => 'date|max:255',
+            'last_name'     => 'required|max:255',
+            'birthdate'     => 'max:255',
             'gender'        => 'max:255',
             'address'       => 'max:510',
             'phone_number'  => 'max:255'
@@ -79,10 +79,10 @@ class SuperusersController extends Controller
     {
         $this->validate($request, [
             'email'         => "required|string|email|max:255|unique:users,email,{$superuser->id},id,deleted_at,NULL",
-            'first_name'    => 'max:255',
+            'first_name'    => 'required|string|max:255',
             'middle_name'   => 'max:255',
-            'last_name'     => 'max:255',
-            'birthdate'     => 'date|max:255',
+            'last_name'     => 'required|string|max:255',
+            'birthdate'     => 'max:255',
             'gender'        => 'max:255',
             'address'       => 'max:510',
             'phone_number'  => 'max:255'
