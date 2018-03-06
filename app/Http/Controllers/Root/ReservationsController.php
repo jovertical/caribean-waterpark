@@ -244,6 +244,7 @@ class ReservationsController extends Controller
 
         if ($quantity <= $item_added->calendar_unoccupied) {
             if(! in_array($item_added->id, array_column($selected_items, 'id'))) {
+                $item_added->index = $index;
                 $item_added->calendar_occupied += $quantity;
                 $item_added->calendar_unoccupied -= $quantity;
                 $item_added->order_quantity = $quantity;

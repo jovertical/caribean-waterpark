@@ -359,12 +359,15 @@
                             maxlength: 255
                         },
                         email: {
-                            type: 'email',
+                            email: true,
                             required: true,
                             maxlength: 255
                         },
                         address: {
                             maxlength: 510
+                        },
+                        phone_number: {
+                            maxlength: 255
                         }
                     },
 

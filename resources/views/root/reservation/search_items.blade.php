@@ -134,7 +134,7 @@
                                 <label for="mnp">Minimum price: </label>
 
                                 <div class="m-ion-range-slider">
-                                    <input type="hidden" name="mnp" id="mnp" data-max-value="1" 
+                                    <input type="hidden" name="mnp" id="mnp" data-max-value="1"
                                         value="{{ Request::input('mnp') ?? 1 }}">
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                 <label for="mxp">Maximum price: </label>
 
                                 <div class="m-ion-range-slider">
-                                    <input type="hidden" name="mxp" id="mxp" data-max-value="99999" 
+                                    <input type="hidden" name="mxp" id="mxp" data-max-value="99999"
                                         value="{{ Request::input('mxp') ?? 99999 }}">
                                 </div>
                             </div>
@@ -164,7 +164,15 @@
             </div>
         </form>
 
-        <div class="col-lg">
+        <div class="col-lg-8">
+            <!-- Search result count -->
+            @if(count($available_items))
+                <p class="text-right">
+                    Your search found <span class="m--font-boldest">{{ count($available_items) }}</span> items.
+                </p>
+            @endif
+            <!--/. Search result count -->
+
             @foreach($available_items as $index => $available_item)
                 @if($available_item->calendar_unoccupied > 0)
                     <div class="m-portlet">
@@ -172,7 +180,7 @@
                             <div class="m-widget5">
                                 <div class="m-widget5__item">
                                     <div class="m-widget5__pic">
-                                        <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}" 
+                                        <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}"
                                             class="m-widget7__img"  alt="Image">
                                     </div>
 
@@ -194,17 +202,36 @@
                                     </div>
                                 </div>
 
-                                <div data-attribute="confirmable">
-                                    <form method="POST" action="{{ route('root.reservation.add-item', $index) }}" class="confirm" data-target="#addItem" data-item-index="{{ $index }}" data-item-name="{{ $available_item->name }}">
-                                        {{ csrf_field() }}
+                                <form method="POST" action="{{ route('root.reservation.add-item', $index) }}">
+                                    {{ csrf_field() }}
 
-                                        <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-9 col-xs-12">
+                                            <div class="input-group m-input-group">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary decrement_item_count"
+                                                        data-item-index="{{ $index }}">
+                                                        <i class="la la-minus"></i>
+                                                    </button>
+                                                </div>
 
-                                        <div class="m-widget19__action">
-                                            <button type="submit" class="btn m-btn--pill btn-primary m-btn m-btn--hover-brand m-btn--custom" data-toggle="modal" data-target="#addItem">Add</button>
+                                                <input type="number" name="quantity" class="form-control m-input" value="1" readonly
+                                                    data-item-index="{{ $index }}"
+                                                    data-item-unoccupied={{ $available_item->calendar_unoccupied }}
+                                                    >
+
+                                                <div class="input-group-prepend">
+                                                    <button type="button" class="btn btn-secondary increment_item_count"
+                                                        data-item-index="{{ $index }}">
+                                                        <i class="la la-plus"></i>
+                                                    </button>
+                                                </div>
+
+                                                <button type="submit" class="ml-2 btn btn-primary">Add</button>
+                                            </div>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -218,32 +245,6 @@
             </div>
         </div>
     </div>
-
-    @component('root.components.modal')
-        @slot('name')
-            addItem
-        @endslot
-
-        @slot('title')
-            Confirm action
-        @endslot
-
-        @slot('content_position')
-            left
-        @endslot
-
-        <div class="form-group">
-            <label class="form-control-label">Quantity:</label>
-
-            <div class="input-group m-input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="la la-calculator"></i></span>
-                </div>
-
-                <input type="number" id="quantity" class="form-control" value="1">
-            </div>
-        </div>
-    @endcomponent
 @endsection
 
 @section('scripts')
@@ -313,23 +314,36 @@
         $(document).ready(function() {
             search.init();
 
-            // modal confirmation
-            $('div[data-attribute=confirmable]').on('click', '.confirm', function(e) {
-                e.preventDefault();
+            // increment item count.
+            $('.increment_item_count').on('click', function(e) {
+                var increment_button = $(this);
+                var decrement_button = $(".decrement_item_count, button[data-item-index="+ $(this).data('item-index') +"]");
+                var item_index = increment_button.data('item-index');
+                var input = $('input[data-item-index='+ item_index +']');
+                var item_counter = parseInt(input.val())
 
-                var $form = $(this);
-                var $modal = $($form.data('target'));
-                var $quantity = $('input[id=quantity]');
+                if (item_counter < input.data('item-unoccupied')) {
+                    decrement_button.attr('disabled', false);
+                    input.val(item_counter + 1);
+                } else {
+                    increment_button.attr('disabled', true);
+                }
+            });
 
-                $('#modalTitle').text('Add/increase in cart: ' + $form.data('item-name'));
+            // decrement item count.
+            $('.decrement_item_count').on('click', function(e) {
+                var decrement_button = $(this);
+                var increment_button = $(".increment_item_count, button[data-item-index="+ $(this).data('item-index') +"]");
+                var item_index = decrement_button.data('item-index');
+                var input = $('input[data-item-index='+ item_index +']');
+                var item_counter = parseInt(input.val())
 
-                $quantity.on('keyup change', function() {
-                    $('input[id=quantity_' + $form.data('item-index') + ']').val($quantity.val());
-                });
-
-                $modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
-                    $form.submit();
-                });
+                if (item_counter > 1) {
+                    increment_button.attr('disabled', false);
+                    input.val(item_counter - 1);
+                } else {
+                    decrement_button.attr('disabled', true);
+                }
             });
         });
     </script>

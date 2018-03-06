@@ -40,45 +40,67 @@
             <div class="m-portlet__body">
                 <div class="m-section">
                     <div class="m-section__content">
-                        <div class="table-responsive">
-                            <table class="table table-striped m-table w-100">
-                                <thead>
+                        <table class="table m-table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach($items as $index => $item)
                                     <tr>
-                                        <th>#</th>
-                                        <th>Description</th>
-                                        <th>Quantity</th>
-                                        <th>Unit Price</th>
-                                        <th>Total Price</th>
-                                        <th></th>
+                                        <th scope="row" width="5%">{{ $index + 1 }}</th>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->order_quantity }}</td>
+                                        <td>{{ Helper::moneyString($item->price) }}</td>
+                                        <td>{{ Helper::moneyString($item->order_price) }}</td>
+                                        <td width="25%">
+                                            <div class="input-group m-input-group">
+                                                <form method="POST" action="{{ route('root.reservation.remove-item', $index) }}"
+                                                    class="input-group-append">
+                                                    {{ csrf_field() }}
+
+                                                    <input type="hidden" name="quantity" value="1">
+
+                                                    <button type="submit" class="btn btn-secondary">
+                                                        <i class="la la-minus"></i>
+                                                    </button>
+                                                </form>
+
+                                                <input type="number" name="quantity" class="form-control m-input"
+                                                    value="{{ $item->order_quantity }}" readonly>
+
+                                                <form method="POST" action="{{ route('root.reservation.add-item', $item->index) }}"
+                                                    class="input-group-append">
+                                                    {{ csrf_field() }}
+
+                                                    <input type="hidden" name="quantity" value="1">
+
+                                                    <button type="submit" class="btn btn-secondary">
+                                                        <i class="la la-plus"></i>
+                                                    </button>
+                                                </form>
+
+                                                <form method="POST" action="{{ route('root.reservation.remove-item', $index) }}"
+                                                    class="input-group-append">
+                                                    {{ csrf_field() }}
+
+                                                    <input type="hidden" name="quantity" value="{{ $item->order_quantity }}">
+
+                                                    <button type="submit" class="ml-2 btn btn-danger">X</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($items as $index => $item)
-                                        <tr>
-                                            <th scope="row" style="width: 5%;">{{ $index + 1 }}</th>
-                                            <td>{{ ucfirst(strtolower($item->name)) }}</td>
-                                            <th>{{ $item->order_quantity }}</th>
-                                            <th>{{ Helper::moneyString($item->price) }}</th>
-                                            <th>{{ Helper::moneyString($item->order_price) }}</th>
-                                            <th>
-                                                <div data-attribute="confirmable">
-                                                    <form method="POST" action="{{ route('root.reservation.remove-item',
-                                                        $index) }}" class="confirm" data-target="#removeItem"
-                                                            data-item-index="{{ $index }}" data-item-name="{{ $item->name }}">
-                                                        {{ csrf_field() }}
-
-                                                        <input type="hidden" name="quantity" id="quantity_{{ $index }}" value="1">
-
-                                                        <button type="submit" class="btn btn-secondary" data-toggle="modal" data-target="#removeItem" title="Remove item">Remove</button>
-                                                    </form>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <!--end::Section-->
@@ -123,14 +145,15 @@
             <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit box box-solid">
                 <div class="m-section" style="padding: 2.2rem 2.2rem;">
                     <div class="m-section__content">
-                        <div class="d-flex justify-content-end" data-attribute="confirmable">
+                        <div class="d-flex justify-content-end">
                             <div>
-                                <form method="POST" action="{{ route('root.reservation.clear-items') }}" class="confirm"
-                                    data-target="#clearItems" style="display: inline-block;">
-                                    {{ csrf_field() }}
-
-                                    <button type="submit" data-toggle="modal" data-target="#clearItems" class="btn btn-secondary">Clear cart</button>
-                                </form>
+                                <button type="button" class="btn btn-secondary clear-items"
+                                    data-form="#clearItems"
+                                    data-action="{{ route('root.reservation.clear-items') }}"
+                                    data-toggle="modal"
+                                    data-target="#clearItemsConfirmation"
+                                    title="Clear items">Clear cart
+                                </button>
 
                                 <a href="{{ route('root.reservation.user') }}" class="btn btn-brand">Continue</a>
                             </div>
@@ -143,35 +166,16 @@
         <!--end::Portlet-->
     @endif
 
+    <!-- Clear items Form -->
+    <form method="POST" action="" id="clearItems" style="display: none;">
+        {{ csrf_field() }}
+    </form>
+    <!--/. Clear items Form -->
+
+    <!-- Clear items Modal -->
     @component('root.components.modal')
         @slot('name')
-            removeItem
-        @endslot
-
-        @slot('title')
-            Confirm action
-        @endslot
-
-        @slot('content_position')
-            left
-        @endslot
-
-        <div class="form-group">
-            <label class="form-control-label">Quantity:</label>
-
-            <div class="input-group m-input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="la la-calculator"></i></span>
-                </div>
-
-                <input type="number" id="quantity" class="form-control m-input" value="1">
-            </div>
-        </div>
-    @endcomponent
-
-    @component('root.components.modal')
-        @slot('name')
-            clearItems
+            clearItemsConfirmation
         @endslot
 
         @slot('title')
@@ -180,26 +184,26 @@
 
         You are removing all the items in the cart. You can't undo this action.
     @endcomponent
+    <!--/. Clear items Modal -->
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function() {
-            // modal confirmation
-            $('div[data-attribute=confirmable]').on('click', '.confirm', function(e) {
+            // clear items
+            $('.clear-items').on('click', function(e) {
                 e.preventDefault();
 
-                var $form = $(this);
-                var $modal = $($form.data('target'));
-                var $quantity = $('input[id=quantity]');
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
 
-                $('#modalTitle').text('Remove/decrease in cart: ' + $form.data('item-name'));
-                $quantity.on('keyup change', function() {
-                    $('input[id=quantity_' + $form.data('item-index') + ']').val($quantity.val());
-                });
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
 
-                $modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
-                    $form.submit();
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
                 });
             });
         });

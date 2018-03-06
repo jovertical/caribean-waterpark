@@ -86,8 +86,14 @@
                 <div class="form-group m-form__group row">
                     <label class="col-form-label col-lg-3 col-sm-12">Refunds: </label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
-                        <input type="checkbox" name="allow_refund" id="allow_refund" value="1" 
-                            data-switch="true" data-on-color="success" data-off-color="danger" data-on-text="ON" data-off-text="OFF">
+                        <span id="allow_refund_icon" class="m-switch m-switch--lg m-switch--icon
+                            {{ $settings['allow_refund'] ? ' m-switch--success' : ' m-switch--danger' }}  ">
+                            <label>
+                                <input type="checkbox" name="allow_refund" id="allow_refund" 
+                                    {{ $settings['allow_refund'] ? 'checked="checked"' : '' }}">
+                                <span></span>
+                            </label>
+                        </span>
                         <span class="m-form__help"></span>
                     </div>
                 </div>
@@ -181,13 +187,18 @@
 
             // switches initializer
             var switchesInit = function() {
-                var allow_refund = $('input[id=allow_refund]').bootstrapSwitch();
+                var allow_refund = $('input[id=allow_refund]');
                 var allow_refund_block = $('#allow_refund_block');
+                var allow_refund_icon = $('#allow_refund_icon');
 
-                allow_refund.on('switchChange.bootstrapSwitch', function() {
+                allow_refund.on('change', function() {
                     if ($(this).prop('checked')) {
+                        allow_refund_icon.addClass('m-switch--success');
+                        allow_refund_icon.removeClass('m-switch--danger');
                         allow_refund_block.css({display: 'block'});
                     } else {
+                        allow_refund_icon.addClass('m-switch--danger');
+                        allow_refund_icon.removeClass('m-switch--success');
                         allow_refund_block.css({display: 'none'});
                     }
                 });
