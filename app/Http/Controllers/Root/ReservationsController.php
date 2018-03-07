@@ -560,6 +560,10 @@ class ReservationsController extends Controller
         // assign reservation day for the active date
         $reservation->day = $reservation->days->where('date', Carbon::now()->format('Y-m-d'))->first();
 
+        // assign partial payable.
+        $reservation->price_partial_payable =   $reservation->price_payable /
+                                                    $this->reservation_settings['partial_payment_rate'];
+
         return view('root.reservations.show', [
             'reservation' => $reservation
         ]);
@@ -577,9 +581,9 @@ class ReservationsController extends Controller
             if ($response['paypal_link'] == null) {
                 if ($response['L_ERRORCODE0'] == 10412) {
                     Notify::warning('Payment has already made for this invoice.', 'Whooops!?');
-                }       
+                }
 
-                return redirect()->route('root.reservations.show', $reservation);   
+                return redirect()->route('root.reservations.show', $reservation);
             }
 
             Notify::success('Payment processed.', 'Success!');
@@ -609,6 +613,77 @@ class ReservationsController extends Controller
         }
 
         return redirect()->route('root.reservations.show', $reservation);
+    }
+
+    public function transactions(Reservation $reservation)
+    {
+        $reservation_transactions = $reservation->transactions;
+
+        return view('root.reservation_transactions.index', [
+            'reservation_transactions' => $reservation_transactions
+        ]);
+    }
+
+    public function storeTransaction(Request $request, Reservation $reservation)
+    {
+        $this->validate($request, [
+            'transaction_type' => 'required|string',
+            'transaction_mode' => 'required|string',
+            'payment_mode' => 'required|string',
+            'transaction_amount' => 'required'
+        ]);
+
+        $transaction_mode = strtolower($request->input('transaction_mode'));
+
+        switch ($transaction_mode) {
+            case 'cash' :
+                try {
+                    // create reservation transaction.
+                    $transaction =  $reservation->createReservationTransaction(
+                                        $request->input('transaction_type'),
+                                        $request->input('transaction_mode'),
+                                        $request->input('transaction_amount')
+                                    );
+
+                    if ($transaction) {
+                        // Update reservation status.
+                        if ($request->has('transaction_status_update')) {
+                            // store items in calendar.
+                            $this->storeItemsInCalendar(
+                                $reservation->items->all(),
+                                $reservation->checkin_date,
+                                $reservation->checkout_date
+                            );
+
+                            $reservation->status = $request->input('payment_mode') == 'full' ? 'paid' : 'reserved';
+
+                            // notify customer.
+                            if ($request->has('notify_user')) {
+                                
+                            }
+                        }
+
+                        $reservation->price_paid = $request->input('transaction_amount');
+
+                        if ($reservation->save()) {
+                            Notify::success('Transaction completed.', 'Success!');
+
+                            return back();
+                        }
+                    }
+
+                    Notify::warning('Something is wrong with this transaction.', 'Whooops!?');
+                } catch(Exeption $e) {
+                    Notify::error($e->getMessage(), 'Whooops!');
+                }
+
+                return back();
+            break;
+
+            case 'paypal_express' :
+
+            break;
+        }
     }
 
     /**

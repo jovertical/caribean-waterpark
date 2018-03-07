@@ -17,8 +17,8 @@ class CreateReservationTransactionsTable extends Migration
             $table->increments('id');
             $table->integer('reservation_id');
             $table->enum('type', ['payment', 'refund']);
-            $table->enum('transfer_type', ['paypal', 'cash']);
-            $table->float('price_transferred')->default(0.00);
+            $table->enum('mode', ['paypal_express', 'cash']);
+            $table->float('amount')->default(0.00);
             $table->boolean('active')->default(true);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

@@ -61,6 +61,15 @@ class Reservation extends Model
         ]);
     }
 
+    public function createReservationTransaction($type, $mode, float $amount)
+    {
+        return $this->transactions()->create([
+            'type'      => $type,
+            'mode'      => $mode,
+            'amount'    => $amount
+        ]);
+    }
+
     public function setSourceAttribute($value)
     {
         $this->attributes['source'] = strtolower($value);

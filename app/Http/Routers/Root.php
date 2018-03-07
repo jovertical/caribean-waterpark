@@ -15,8 +15,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
     Route::middleware('root.auth')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
 
+        Route::resource('users', 'UsersController');
         Route::prefix('users')->name('users.')->group(function() {
-            Route::resource('/', 'UsersController');
             Route::patch('/{user}/toggle', 'UsersController@toggle')->name('toggle');
             Route::get('/{user}/image', 'UsersController@selectImage')->name('image');
             Route::post('/{user}/image/upload', 'UsersController@uploadImage')->name('image.upload');
@@ -24,8 +24,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::delete('/{user}/image/destroy', 'UsersController@destroyImage')->name('image.destroy');
         });
 
+        Route::resource('superusers', 'SuperusersController');
         Route::prefix('superusers')->name('superusers.')->group(function() {
-            Route::resource('/', 'SuperusersController');
             Route::patch('/{superuser}/toggle', 'SuperusersController@toggle')->name('toggle');
             Route::get('/{superuser}/image', 'SuperusersController@selectImage')->name('image');
             Route::post('/{superuser}/image/upload', 'SuperusersController@uploadImage')->name('image.upload');
@@ -38,8 +38,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::patch('/update', 'SettingsController@update')->name('update');
         });
 
+        Route::resource('categories', 'CategoriesController');
         Route::prefix('categories')->name('categories.')->group(function() {
-            Route::resource('/', 'CategoriesController');
             Route::patch('/{category}/toggle', 'CategoriesController@toggle')->name('toggle');
             Route::get('/{category}/image', 'CategoriesController@selectImage')->name('image');
             Route::post('/{category}/image/upload', 'CategoriesController@uploadImage')->name('image.upload');
@@ -47,16 +47,17 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::delete('/{category}/image/destroy', 'CategoriesController@destroyImage')->name('image.destroy');
         });
 
+        Route::resource('items', 'ItemsController');
         Route::prefix('items')->name('items.')->group(function() {
-            Route::resource('/', 'ItemsController');
             Route::patch('/{item}/toggle', 'ItemsController@toggle')->name('toggle');
             Route::get('/{item}/image', 'ItemsController@selectImage')->name('image');
             Route::post('/{item}/image/upload', 'ItemsController@uploadImage')->name('image.upload');
             Route::get('/{item}/image/uploaded', 'ItemsController@uploadedImage')->name('image.uploaded');
             Route::delete('/{item}/image/destroy', 'ItemsController@destroyImage')->name('image.destroy');
         });
+
+        Route::resource('coupons', 'CouponsController');
         Route::prefix('coupons')->name('coupons.')->group(function() {
-            Route::resource('/', 'CouponsController');
             Route::get('/{coupon}/image', 'CouponsController@selectImage')->name('image');
             Route::post('/{coupon}/image/upload', 'CouponsController@uploadImage')->name('image.upload');
             Route::get('/{coupon}/image/uploaded', 'CouponsController@uploadedImage')->name('image.uploaded');

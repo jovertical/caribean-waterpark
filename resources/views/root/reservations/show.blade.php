@@ -23,7 +23,7 @@
         <li class="m-menu__item" aria-haspopup="true">
             <a href="javascript:void(0);" class="m-menu__link add-payment"
                 data-form="#addPayment"
-                data-action="{{ route('root.reservations.paypal.redirect', $reservation) }}"
+                data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
                 data-toggle="modal"
                 data-target="#addPaymentConfirmation"
             >
@@ -292,17 +292,90 @@
         @slot('name')
             addPaymentConfirmation
         @endslot
-
+        @slot('title')
+            Add payment
+        @endslot
         @slot('height')
             200
         @endslot
+        @slot('content_position')
+            left
+        @endslot
+        @slot('scrollable')
+            false
+        @endslot
 
-        Temporary! <br />
-        - You will be redirected to paypal checkout express page -
+        <form method="POST" action="" class="m-form m-form--fit" id="addPayment">
+            {{ csrf_field() }}
 
-        <!-- Add Payment Form -->
-        <form method="GET" action="" id="addPayment">
-            <div class="form-group row"></div>
+            <!-- Transaction type -->
+            <input type="hidden" name="transaction_type" id="transaction_type" value="payment">
+
+            <!-- Transaction mode -->
+            <div class="form-group m-form__group">
+                <label class="form-control-label">Payment option</label>
+
+                <select name="transaction_mode" id="transaction_mode" class="form-control m-bootstrap-select">
+                    <option value="cash">Cash</option>
+                    <option value="paypal_express">Paypal Express</option>
+                </select>
+            </div>
+            <!--/. Transaction mode -->
+
+            <!-- Cash Block -->
+            <div id="transaction-type-cash-block">
+                <!-- Payment mode -->
+                <div class="m-form__group form-group">
+                    <label for="">Payment mode</label>
+                    <div class="m-radio-list">
+                        <label class="m-radio">
+                            <input type="radio" name="payment_mode" id="payment_mode_full" value="full" 
+                                data-value="{{ $reservation->price_payable }}" checked>Full
+                            <span></span>
+                        </label>
+                        <label class="m-radio">
+                            <input type="radio" name="payment_mode" id="payment_mode_partial" value="partial" 
+                                data-value="{{ $reservation->price_partial_payable }}">Partial
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+                <!--/. Payment mode -->
+
+                <!-- Transaction amount -->
+                <div class="m-form__group form-group">
+                    <label class="form-control-label">Amount: </label>
+
+                    <input type="text" name="transaction_amount" id="transaction_amount" class="form-control m-input"
+                        value="{{ $reservation->price_payable }}"  readonly>
+                </div>
+                <!--/. Transaction amount -->
+
+                <!-- Status update -->
+                <div class="m-form__group form-group">
+                    <div class="m-checkbox-list">
+                        <label class="m-checkbox">
+                            <input type="checkbox" name="transaction_status_update" id="transaction_status_update" checked>
+                            Also update the status of this reservation.
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+                <!--/. Status update -->
+
+                <!-- Notify user -->
+                <div class="m-form__group form-group">
+                    <div class="m-checkbox-list">
+                        <label class="m-checkbox">
+                            <input type="checkbox" name="notify_user" id="notify_user" checked>
+                                Notify customer
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+                <!--/. Notify user -->
+            </div>
+            <!--/. Cash Block -->
         </form>
     @endcomponent
     <!--/. Add Payment Modal -->
@@ -368,12 +441,12 @@
         <div id="reservation-day-to-entered-modal-text"></div>
 
         <!-- Reservation Day to Entered Form -->
-        <form method="POST" action="" id="reservationDayToEntered">
+        <form method="POST" action="" id="reservationDayToEntered" class="m-form m-form--fit">
             {{ method_field('PATCH') }}
             {{ csrf_field() }}
             <input type="hidden" name="status" id="status" value="enter">
 
-            <div class="form-group row">
+            <div class="form-group m-form__group row">
                 <div class="col-lg text-left">
                     <label class="form-control-label">Adult:</label>
 
@@ -411,7 +484,46 @@
 
 @section('scripts')
     <script>
+        var show_reservation = function () {
+            // selects
+            var selectsInit = function () {
+                $('select[id=transaction_mode]').selectpicker();
+            }
+            //. selects
+
+            return {
+                init: function() {
+                    selectsInit();
+                }
+            };
+        }();
+
         $(document).ready(function() {
+            show_reservation.init();
+
+            // transaction mode
+            $('select[id=transaction_mode]').on('change', function(e) {
+                var transaction_mode = $(this);
+                var selected_transaction_mode = transaction_mode.find('option:selected').val();
+                var cash_block = $('#transaction-mode-cash-block');
+
+                if (selected_transaction_mode == 'cash') {
+                    cash_block.css({display: 'block'});
+                } else {
+                    cash_block.css({display: 'none'});
+                }
+            });
+            //. transaction mode
+
+            // payment mode
+            $('input[name=payment_mode]').on('change', function(e) {
+                var status_to_paid_block = $('#status-to-paid-block');
+                var status_to_reserved_block = $('#status-to-reserved-block');
+
+                $('input[id=transaction_amount]').val($(this).data('value'));
+            });
+            //. payment mode
+
             // update reservation to reserved.
             $('.update-reservation-to-reserved').on('click', function(e) {
                 e.preventDefault();

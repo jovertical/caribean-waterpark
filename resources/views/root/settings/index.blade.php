@@ -69,18 +69,18 @@
                 </div>
                 <!--/. Maximum reservation length -->
 
-                <!-- Initial payment rate -->
+                <!-- Partial payment rate -->
                 <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Initial payment rate: </label>
+                    <label class="col-form-label col-lg-3 col-sm-12">Partial payment rate: </label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <div class="m-ion-range-slider">
-                            <input type="hidden" name="initial_payment_rate" id="initial_payment_rate" data-min-value="1" 
-                                data-max-value="100"  disabled="disabled" value="{{ $settings['initial_payment_rate'] }}">
+                            <input type="hidden" name="partial_payment_rate" id="partial_payment_rate" data-min-value="1" 
+                                data-max-value="100" disabled="disabled" value="{{ $settings['partial_payment_rate'] }}">
                         </div>
-                        <span class="m-form__help">Initial payment rate required to reserve items of a reservation.</span>
+                        <span class="m-form__help">Partial payment rate required for a reservation to be reserved.</span>
                     </div>
                 </div>
-                <!--/. Initial payment rate -->
+                <!--/. Partial payment rate -->
 
                 <!-- Refunds -->
                 <div class="form-group m-form__group row">
@@ -206,14 +206,14 @@
 
             // sliders initializer
             var slidersInit = function () {
-                var initial_payment_rate = $('input[id=initial_payment_rate]');
+                var partial_payment_rate = $('input[id=partial_payment_rate]');
                 var pre_reservation_refund_rate = $('input[id=pre_reservation_refund_rate]');
                 var post_reservation_refund_rate = $('input[id=post_reservation_refund_rate]');
 
-                initial_payment_rate.ionRangeSlider({
+                partial_payment_rate.ionRangeSlider({
                     min: 1,
                     max: 100,
-                    from: initial_payment_rate.val(),
+                    from: partial_payment_rate.val(),
                     postfix: "%"
                 });
 

@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->app->bind(Setting::class, function ($app) {
-        //     return new Setting();
-        // });
+        $this->app->bind(Setting::class, function ($app) {
+            return new Setting();
+        });
     }
 }
