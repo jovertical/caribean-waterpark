@@ -197,7 +197,7 @@
                                     <h1>INVOICE</h1>
                                 </a>
                                 <a href="javascript:void(0);">
-                                    <img  src="/root/assets/app/media/img/logos/logo_client_white.png">
+                                    <img  src="/root/assets/app/media/img/misc/invoice_logo.png" style="width: 200px;">
                                 </a>
                             </div>
                             <span class="m-invoice__desc">
