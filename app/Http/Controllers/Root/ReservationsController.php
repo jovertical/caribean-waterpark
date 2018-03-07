@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Root;
 use App\Notifications\LoginCredential;
 use App\Traits\{ComputesCosts};
 use App\{User, Reservation, ReservationDay, Category, Item, ItemCalendar};
-use Setting, Helper;
+use Setting, Helper, PaypalExpress;
 use Str, Carbon, Notify;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -28,11 +27,19 @@ class ReservationsController extends Controller
     protected $reservation_errors = [];
 
     /**
-     * @param Settings $settings Injected instance of the settings service.
+     *  PaypalExpress
+     * @var object
      */
-    public function __construct(Setting $setting)
+    protected $paypal_express;
+
+    /**
+     * @param Setting $setting Injected instance of the Setting Service.
+     * @param PaypalExpress $paypal_express Injected instance of the PaypalExpress Service.
+     */
+    public function __construct(Setting $setting, PaypalExpress $paypal_express)
     {
         $this->reservation_settings = $setting->reservation();
+        $this->paypal_express = $paypal_express;
     }
 
     /**
@@ -170,7 +177,7 @@ class ReservationsController extends Controller
         $days_prior = $reservation_settings['days_prior'];
         $minimum_reservation_length = $reservation_settings['minimum_reservation_length'];
         $maximum_reservation_length = $reservation_settings['maximum_reservation_length'];
-           
+
         if (($checkin_date == null) OR ($checkout_date == null)) {
             array_push($this->reservation_errors, 'You must set a checkin and checkout date');
         }
@@ -199,12 +206,12 @@ class ReservationsController extends Controller
         }
 
         if ($days > $maximum_reservation_length) {
-            array_push($this->reservation_errors, 
+            array_push($this->reservation_errors,
                 'Reservation length must not be greater than '.$maximum_reservation_length.' day(s)');
         }
 
         if ($days < $minimum_reservation_length) {
-            array_push($this->reservation_errors, 
+            array_push($this->reservation_errors,
                 'Reservation length must not be lesser than '.$minimum_reservation_length.' day(s)');
         }
 
@@ -556,6 +563,52 @@ class ReservationsController extends Controller
         return view('root.reservations.show', [
             'reservation' => $reservation
         ]);
+    }
+
+    /**
+     * @param  Reservation $reservation
+     * @return redirect
+     */
+    public function paypalRedirect(Reservation $reservation)
+    {
+        try {
+            $response = $this->paypal_express->redirect($reservation);
+
+            if ($response['paypal_link'] == null) {
+                if ($response['L_ERRORCODE0'] == 10412) {
+                    Notify::warning('Payment has already made for this invoice.', 'Whooops!?');
+                }       
+
+                return redirect()->route('root.reservations.show', $reservation);   
+            }
+
+            Notify::success('Payment processed.', 'Success!');
+
+            return redirect($response['paypal_link']);
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Whooops!');
+        };
+
+        return redirect()->route('root.reservations.show', $reservation);
+    }
+
+    /**
+     * @param  Request     $request
+     * @param  Reservation $reservation
+     * @return redirect
+     */
+    public function paypalCallback(Request $request, Reservation $reservation)
+    {
+        $token = $request->get('token');
+        $payer_id = $request->get('PayerID');
+
+        $status = $this->paypal_express->callback($reservation, $token, $payer_id);
+
+        if (! strcasecmp($status, 'Completed') || ! strcasecmp($status, 'Processed')) {
+            Notify::success('Payment processed.', 'Success!');
+        }
+
+        return redirect()->route('root.reservations.show', $reservation);
     }
 
     /**

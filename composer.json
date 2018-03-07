@@ -12,9 +12,7 @@
         "intervention/image": "^2.4",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "omnipay/paypal": "^2.6",
-        "sudiptpa/paypal-ipn": "^2.0",
-        "symfony/event-dispatcher": "^2.8"
+        "srmklive/paypal": "~1.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

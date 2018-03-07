@@ -232,7 +232,7 @@ return [
         'Setting' => App\Services\Setting::class,
         'Helper' => App\Services\Helper::class,
         'ImageUploader' => App\Services\ImageUploader::class,
-        'Paypal' => App\Services\Paypal::class,
+        'PaypalExpress' => App\Services\PaypalExpress::class,
         'Str' => Illuminate\Support\Str::class,
         'Carbon' => Carbon\Carbon::class,
         'Image' => Intervention\Image\Facades\Image::class,

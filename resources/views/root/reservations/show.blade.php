@@ -21,9 +21,9 @@
 
         <!-- Add payment -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="javascript:void(0);" class="m-menu__link"
+            <a href="javascript:void(0);" class="m-menu__link add-payment"
                 data-form="#addPayment"
-                data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
+                data-action="{{ route('root.reservations.paypal.redirect', $reservation) }}"
                 data-toggle="modal"
                 data-target="#addPaymentConfirmation"
             >
@@ -297,11 +297,11 @@
             200
         @endslot
 
-        <!-- Add Payment Form -->
-        <form method="POST" action="" id="addPayment">
-            {{ method_field('PATCH') }}
-            {{ csrf_field() }}
+        Temporary! <br />
+        - You will be redirected to paypal checkout express page -
 
+        <!-- Add Payment Form -->
+        <form method="GET" action="" id="addPayment">
             <div class="form-group row"></div>
         </form>
     @endcomponent
@@ -550,7 +550,7 @@
                 });
             });
             //. reservation day to entered.
-            //
+
             // reservation day to exited.
             $('.reservation-day-to-exited').on('click', function(e) {
                 e.preventDefault();
@@ -579,6 +579,24 @@
                 });
             });
             //. reservation day to exited.
+
+            // add payment modal.
+            $('.add-payment').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. add payment modal.
         });
     </script>
 @endsection

@@ -10,9 +10,6 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
         Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
         Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
         Route::post('password/reset/{token}', 'ResetPasswordController@reset');
-
-        Route::get('credentials/set/{token}', 'SetCredentialsController@showSetForm')->name('credentials.set');
-        Route::post('credentials/set/{token}', 'SetCredentialsController@set');
     });
 
     Route::middleware('root.auth')->group(function() {
@@ -72,6 +69,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::get('/{reservation}', 'ReservationsController@show')->name('show');
             Route::get('/{reservation}/transactions', 'ReservationsController@transactions')->name('transactions.index');
             Route::post('/{reservation}/transactions', 'ReservationsController@storeTransaction')->name('transactions.store');
+            Route::get('/{reservation}/paypal-express-redirect', 'ReservationsController@paypalRedirect')->name('paypal.redirect');
+            Route::get('/{reservation}/paypal-express-callback', 'ReservationsController@paypalCallback')->name('paypal.callback');
             Route::get('/{reservation}/days', 'ReservationsController@days')->name('days.index');
             Route::patch('/days/{reservation_day}/update', 'ReservationsController@updateDay')->name('days.update');
         });
@@ -85,6 +84,11 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::get('/user', 'ReservationsController@user')->name('user');
             Route::post('/user/store', 'ReservationsController@storeUser')->name('store-user');
             Route::post('/{user}/store', 'ReservationsController@store')->name('store');
+        });
+
+        Route::prefix('paypal-express')->name('paypal-express.')->group(function() {
+            Route::get('/checkout', 'PaypalController@checkout')->name('checkout');
+            Route::get('/checkout', 'PaypalController@checkout')->name('checkout');
         });
     });
 });
