@@ -63,11 +63,7 @@ class Reservation extends Model
 
     public function createReservationTransaction($type, $mode, float $amount)
     {
-        return $this->transactions()->create([
-            'type'      => $type,
-            'mode'      => $mode,
-            'amount'    => $amount
-        ]);
+        return $this->transactions()->create(['type' => $type, 'mode' => $mode, 'amount' => $amount]);
     }
 
     public function setSourceAttribute($value)
@@ -103,6 +99,20 @@ class Reservation extends Model
     public function getDayCountAttribute()
     {
         return Carbon::parse($this->checkin_date)->diffIndays(Carbon::parse($this->checkout_date)) + 1;
+    }
+
+    public function getPriceLeftPayableAttribute()
+    {
+        return $this->price_payable - $this->price_paid;
+    }
+
+    /**
+     * Check if price left payable property == 0.
+     * @return boolean
+     */
+    public function getFullyPaidAttribute()
+    {
+        return $this->price_left_payable == 0 ? true : false;
     }
 
     public function setStatusAttribute($value)

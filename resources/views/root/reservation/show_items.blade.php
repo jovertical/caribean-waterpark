@@ -55,7 +55,7 @@
                             <tbody>
                                 @foreach($items as $index => $item)
                                     <tr>
-                                        <th scope="row" width="5%">{{ $index + 1 }}</th>
+                                        <th scope="row" width="5%">{{ $loop->iteration }}</th>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->order_quantity }}</td>
                                         <td>{{ Helper::moneyString($item->price) }}</td>

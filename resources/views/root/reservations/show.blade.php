@@ -20,19 +20,21 @@
         <!--/. Transactions -->
 
         <!-- Add payment -->
-        <li class="m-menu__item" aria-haspopup="true">
-            <a href="javascript:void(0);" class="m-menu__link add-payment"
-                data-form="#addPayment"
-                data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
-                data-toggle="modal"
-                data-target="#addPaymentConfirmation"
-            >
-                <i class="m-menu__link-icon la la-money"></i>
-                <span class="m-menu__link-title">
-                    <span class="m-menu__link-text">Add payment</span>
-                </span>
-            </a>
-        </li>
+        @if(! $reservation->fully_paid)
+            <li class="m-menu__item" aria-haspopup="true">
+                <a href="javascript:void(0);" class="m-menu__link add-payment"
+                    data-form="#addPayment"
+                    data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
+                    data-toggle="modal"
+                    data-target="#addPaymentConfirmation"
+                >
+                    <i class="m-menu__link-icon la la-money"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-text">Add payment</span>
+                    </span>
+                </a>
+            </li>
+        @endif
         <!--/. Add payment -->
 
         <!-- Print -->
@@ -336,14 +338,16 @@
                     <div class="m-radio-list">
                         <label class="m-radio">
                             <input type="radio" name="payment_mode" id="payment_mode_full" value="full"
-                                data-value="{{ $reservation->price_payable }}" checked>Full
+                                data-value="{{ $reservation->price_left_payable }}" checked>Full
                             <span></span>
                         </label>
-                        <label class="m-radio">
-                            <input type="radio" name="payment_mode" id="payment_mode_partial" value="partial"
-                                data-value="{{ $reservation->price_partial_payable }}">Partial
-                            <span></span>
-                        </label>
+                        @if (count($reservation->transactions) == 0)
+                            <label class="m-radio">
+                                <input type="radio" name="payment_mode" id="payment_mode_partial" value="partial"
+                                    data-value="{{ $reservation->price_partial_payable }}">Partial
+                                <span></span>
+                            </label>
+                        @endif
                     </div>
                 </div>
                 <!--/. Payment mode -->
@@ -352,8 +356,8 @@
                 <div class="m-form__group form-group">
                     <label class="form-control-label">Amount: </label>
 
-                    <input type="text" name="transaction_amount" id="transaction_amount" class="form-control m-input"
-                        value="{{ $reservation->price_payable }}"  readonly>
+                    <input type="text" id="transaction_amount" class="form-control m-input" 
+                        value="{{ Helper::moneyString($reservation->price_left_payable) }}" readonly>
                 </div>
                 <!--/. Transaction amount -->
 
@@ -699,6 +703,8 @@
             $('.input_confirmation').on('change keyup', function() {
                 if ($(this).val() == $(this).data('value')) {
                     $('.btn-confirm').attr('disabled', false);
+                } else {
+                    $('.btn-confirm').attr('disabled', true);
                 }
             });
 
