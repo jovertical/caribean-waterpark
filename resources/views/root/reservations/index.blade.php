@@ -336,7 +336,7 @@
                         },
                         {
                             field: 'Status',
-                            width: 75,
+                            width: 100,
                             template: function(row) {
                                 var status = {
                                     1: {'title': 'Pending', 'class': ' m-badge--warning'},

@@ -19,7 +19,7 @@
                 active: function() {
                     sessionStorage.fonts = true;
                 }
-          });
+            });
         </script>
         <!--/. Web font -->
 
@@ -39,7 +39,9 @@
         @yield('styles')
     </head>
 
-    <body class="m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+    <body id="body" class="m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+
+        <script>document.body.style.display = "none";</script>
 
         <!-- begin:: Page -->
         <div class="m-grid m-grid--hor m-grid--root m-page">
@@ -74,6 +76,12 @@
         <script src="/root/assets/app/js/main.js" type="text/javascript"></script>
 
         {!! Toastr::message() !!}
+
+        <script>
+            $(document).ready(function() {
+                $('body').fadeIn('slow');
+            });
+        </script>
 
         <!-- Page specific scripts -->
         @yield('scripts')

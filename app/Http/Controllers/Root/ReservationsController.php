@@ -235,6 +235,32 @@ class ReservationsController extends Controller
     }
 
     /**
+     * Check if items is valid in the calendar.
+     * @param  array  $items
+     * @param  string $checkin_date
+     * @param  string $checkout_date
+     * @return boolean
+     */
+    protected function selectedItemsValid(array $items, $checkin_date, $checkout_date)
+    {
+        foreach($items as $index => $item) {
+            $count =    ItemCalendar::where('item_id', $item->id)
+                            ->whereBetween('date', [
+                                $checkin_date,
+                                $checkout_date
+                            ])
+                            ->where('quantity', '>=', $item->order_quantity)
+                            ->count();
+
+            if ($count > 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Add specific item to the cart.
      * @param  Request $request
      * @param  int  $index
@@ -477,6 +503,8 @@ class ReservationsController extends Controller
         } catch(Exception $e) {
             Notify::error($e->getMessage(), 'Ooops!');
         }
+
+        return back();
     }
 
     /**
@@ -487,62 +515,80 @@ class ReservationsController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
-        $status = $request->input('status');
+        $status = strtolower($request->input('status'));
 
         try {
-            if (strtolower($reservation->status) == strtolower($status)) {
-                Notify::warning('Status is already '.$status, 'Ooops?!');
-
-                return back();
-            }
-
             $items = $reservation->items->all();
             $checkin_date = $reservation->checkin_date;
             $checkout_date = $reservation->checkout_date;
 
-            // check if selected items are valid.
-            if ($this->selectedItemsValid($items, $checkin_date, $checkout_date)) {
-                switch ($status) {
-                    case 'reserved' :
-                        // update reservation status.
-                        $reservation->status = 'reserved';
+            // check if the status request is not the same as the reservation status.
+            if (strtolower($reservation->status) == $status) {
+                array_push($this->reservation_errors, 'Status is already '.$status);
+            }
 
-                        if ($reservation->save()) {
-                            // store the items in the calendar.
-                            $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
-                        }
-                    break;
-
-                    case 'paid' :
-                        // update reservation status.
-                        $reservation->status = 'paid';
-
-                        if ($reservation->save()) {
-                            if (strtolower($reservation->status) != 'reserved') {
-                                // store the items in the calendar.
-                                $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
-                            }
-                        }
-                    break;
-
-                    case 'cancelled' :
-                        if ((strtolower($reservation->status) == 'reserved') OR (strtolower($reservation->status) == 'paid')) {
-                            // update item calendar and subtract the quantity of each items.
-                            $this->removeItemsInCalendar($items, $checkin_date, $checkout_date);
-                        }
-
-                        // update reservation status.
-                        $reservation->status = 'cancelled';
-                        $reservation->save();
-                    break;
+            // for paid or reserved status update requests
+            if (($status == 'paid') OR ($status == 'reserved')) {
+                // check if reservation items are not valid.
+                if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
+                    array_push($this->reservation_errors, 'The available items in the calendar is not enough');
                 }
 
-                Notify::success('Reservation updated.', 'Success!');
+                // check if the reservation has at least 1 transaction in it.
+                if (count($reservation->transactions) < 1) {
+                    array_push($this->reservation_errors, 'You must add a payment now');
+                }
+
+                // check if the reservation has passed the partial payment requirements.
+                $partial_payment_price = $reservation->price_payable / $this->reservation_settings['partial_payment_rate'];
+
+                if ($reservation->price_paid < $partial_payment_price) {
+                    array_push($this->reservation_errors, 'The required partial payment is not satisfied');
+                }
+            }
+
+            if (count($this->reservation_errors)) {
+                Notify::warning($this->reservation_errors[0].'. Please try again.', 'Whooops?');
 
                 return back();
             }
 
-            Notify::warning('Cannot updated reservation.', 'Ooops?');
+            switch ($status) {
+                case 'reserved' :
+                    // update reservation status.
+                    $reservation->status = 'reserved';
+
+                    if ($reservation->save()) {
+                        // store the items in the calendar.
+                        $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+                    }
+                break;
+
+                case 'paid' :
+                    // update reservation status.
+                    $reservation->status = 'paid';
+
+                    if ($reservation->save()) {
+                        if (strtolower($reservation->status) != 'reserved') {
+                            // store the items in the calendar.
+                            $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+                        }
+                    }
+                break;
+
+                case 'cancelled' :
+                    if ((strtolower($reservation->status) == 'reserved') OR (strtolower($reservation->status) == 'paid')) {
+                        // update item calendar and subtract the quantity of each items.
+                        $this->removeItemsInCalendar($items, $checkin_date, $checkout_date);
+                    }
+
+                    // update reservation status.
+                    $reservation->status = 'cancelled';
+                    $reservation->save();
+                break;
+            }
+
+            Notify::success('Reservation updated.', 'Success!');
         } catch (Exception $e) {
             Notify::error($e->getMessage(), 'Ooops!');
         }
@@ -659,7 +705,7 @@ class ReservationsController extends Controller
 
                             // notify customer.
                             if ($request->has('notify_user')) {
-                                
+
                             }
                         }
 
@@ -748,24 +794,24 @@ class ReservationsController extends Controller
     }
 
     /**
-     * Check if items is valid in the calendar.
+     * Check if reservation_items are valid in the calendar.
      * @param  array  $items
      * @param  string $checkin_date
      * @param  string $checkout_date
      * @return boolean
      */
-    protected function selectedItemsValid(array $items, $checkin_date, $checkout_date)
+    protected function reservationItemsValid(array $reservation_items, $checkin_date, $checkout_date)
     {
-        foreach($items as $index => $item) {
-            $count =    ItemCalendar::where('item_id', $item->id)
+        foreach($reservation_items as $index => $reservation_item) {
+            $count =    ItemCalendar::where('item_id', $reservation_item->item->id)
                             ->whereBetween('date', [
                                 $checkin_date,
                                 $checkout_date
                             ])
-                            ->where('quantity', '>=', $item->order_quantity ?? $item->quantity)
+                            ->where('quantity', '>=', $reservation_item->quantity)
                             ->count();
 
-            if ($count == 1) {
+            if ($count > 0) {
                 return false;
             }
         }
@@ -813,24 +859,23 @@ class ReservationsController extends Controller
      */
     protected function storeItemsInCalendar(array $items, $checkin_date, $checkout_date)
     {
-        foreach($items as $item) {
+        for($i = 0; $i < count($items); $i++) {
             $date = $checkin_date;
 
             while ($date <= $checkout_date) {
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $item->id)->first();
+                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $items[$i]->id)->first();
 
-                if ($item_calendar == null) {
-                    // store item calendar.
-                    $item_calendar = new ItemCalendar;
-                    $item_calendar->item_id = $item->id;
-                    $item_calendar->date = $date;
-                    $item_calendar->quantity = $item->order_quantity ?? $item->quantity;
-                    $item_calendar->save();
-                } else {
-                    // Update item calendar.
-                    $item_calendar->quantity += $item->order_quantity ?? $item->quantity;
-                    $item_calendar->save();
-                }
+                ItemCalendar::UpdateOrCreate([
+                    'item_id' => $items[$i]->item->id,
+                    'date' =>  $date
+                ], [
+                    'item_id' => $items[$i]->item->id,
+                    'date' =>  $date
+                ])->save();
+
+                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $items[$i]->item->id)->first();
+                $item_calendar->quantity += $items[$i]->quantity;
+                $item_calendar->save();
 
                 $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
             }
@@ -850,7 +895,7 @@ class ReservationsController extends Controller
             $date = $checkin_date;
 
             while ($date <= $checkout_date) {
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $item->id)->first();
+                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $item->item->id)->first();
 
                 // Update item calendar.
                 $item_calendar->quantity -= $item->quantity;

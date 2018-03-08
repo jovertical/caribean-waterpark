@@ -18,7 +18,7 @@ class CreateItemCalendarsTable extends Migration
             $table->string('slug')->unique();
             $table->integer('item_id');
             $table->date('date');
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0);
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
