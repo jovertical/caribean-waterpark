@@ -61,7 +61,7 @@ class PaypalExpress
         return [
             'return_url' => route('root.reservations.paypal.callback', $reservation),
             'cancel_url' => route('root.reservations.show', $reservation),
-            'invoice_id' => $reservation->reference_number,
+            'invoice_id' => uniqid(),
             'invoice_description' => 'Transaction #'.$reservation->id,
             'items' => $items->toArray(),
             'total' => $item_totals
