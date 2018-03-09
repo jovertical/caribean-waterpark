@@ -56,10 +56,10 @@
                                 @foreach($items as $index => $item)
                                     <tr>
                                         <th scope="row" width="5%">{{ $loop->iteration }}</th>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->order_quantity }}</td>
+                                        <td>{{ $item->item->name }}</td>
+                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ Helper::moneyString($item->item->price) }}</td>
                                         <td>{{ Helper::moneyString($item->price) }}</td>
-                                        <td>{{ Helper::moneyString($item->order_price) }}</td>
                                         <td width="25%">
                                             <div class="input-group m-input-group">
                                                 <form method="POST" action="{{ route('root.reservation.remove-item', $index) }}"
@@ -74,7 +74,7 @@
                                                 </form>
 
                                                 <input type="number" name="quantity" class="form-control m-input"
-                                                    value="{{ $item->order_quantity }}" readonly>
+                                                    value="{{ $item->quantity }}" readonly>
 
                                                 <form method="POST" action="{{ route('root.reservation.add-item', $item->index) }}"
                                                     class="input-group-append">
@@ -91,7 +91,7 @@
                                                     class="input-group-append">
                                                     {{ csrf_field() }}
 
-                                                    <input type="hidden" name="quantity" value="{{ $item->order_quantity }}">
+                                                    <input type="hidden" name="quantity" value="{{ $item->quantity }}">
 
                                                     <button type="submit" class="ml-2 btn btn-danger">X</button>
                                                 </form>

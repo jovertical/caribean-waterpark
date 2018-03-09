@@ -253,7 +253,7 @@
                                             <th scope="row" style="width: 5%;">{{ $index + 1 }}</th>
                                             <td>{{ $item->item->name }}</td>
                                             <td>{{ $item->quantity }}</td>
-                                            <td>{{ Helper::moneyString($item->price) }}</td>
+                                            <td>{{ Helper::moneyString($item->price_original) }}</td>
                                             <td>{{ Helper::moneyString($item->price_payable) }}</td>
                                         </tr>
                                     @endforeach
@@ -338,13 +338,13 @@
                     <div class="m-radio-list">
                         <label class="m-radio">
                             <input type="radio" name="payment_mode" id="payment_mode_full" value="full"
-                                data-value="{{ $reservation->price_left_payable }}" checked>Full
+                                data-value="{{ Helper::moneyString($reservation->price_left_payable) }}" checked>Full
                             <span></span>
                         </label>
                         @if (count($reservation->transactions) == 0)
                             <label class="m-radio">
                                 <input type="radio" name="payment_mode" id="payment_mode_partial" value="partial"
-                                    data-value="{{ $reservation->price_partial_payable }}">Partial
+                                    data-value="{{ Helper::moneyString($reservation->price_partial_payable) }}">Partial
                                 <span></span>
                             </label>
                         @endif
@@ -356,22 +356,10 @@
                 <div class="m-form__group form-group">
                     <label class="form-control-label">Amount: </label>
 
-                    <input type="text" id="transaction_amount" class="form-control m-input" 
+                    <input type="text" id="transaction_amount" class="form-control m-input"
                         value="{{ Helper::moneyString($reservation->price_left_payable) }}" readonly>
                 </div>
                 <!--/. Transaction amount -->
-
-                <!-- Status update -->
-                <div class="m-form__group form-group">
-                    <div class="m-checkbox-list">
-                        <label class="m-checkbox">
-                            <input type="checkbox" name="transaction_status_update" id="transaction_status_update" checked>
-                            Also update the status of this reservation.
-                            <span></span>
-                        </label>
-                    </div>
-                </div>
-                <!--/. Status update -->
 
                 <!-- Notify user -->
                 <div class="m-form__group form-group">
@@ -634,6 +622,9 @@
                 // assign data value
                 input_confirmation.data('value', reservation.user);
 
+                // set the confirm button to disabled.
+                $('.btn-confirm').attr('disabled', true);
+
                 // check for existing input confirmation value.
                 if (input_confirmation.val() == reservation.user) {
                     $('.btn-confirm').attr('disabled', false);
@@ -677,6 +668,9 @@
                 // assign data value
                 input_confirmation.data('value', reservation.user);
 
+                // set the confirm button to disabled.
+                $('.btn-confirm').attr('disabled', true);
+
                 // check for existing input confirmation value.
                 if (input_confirmation.val() == reservation.user) {
                     $('.btn-confirm').attr('disabled', false);
@@ -698,15 +692,6 @@
             //. update reservation to cancelled.
 
             //. -------------------------- Reservation status update modals --------------------------------------//
-
-            // input confirmation
-            $('.input_confirmation').on('change keyup', function() {
-                if ($(this).val() == $(this).data('value')) {
-                    $('.btn-confirm').attr('disabled', false);
-                } else {
-                    $('.btn-confirm').attr('disabled', true);
-                }
-            });
 
             // -------------------------- Reservation day update modals --------------------------------------//
 
@@ -782,7 +767,7 @@
             //. -------------------------- Reservation day update modals --------------------------------------//
 
 
-            // add payment modal.
+            // -------------------------- Add payment modal --------------------------------------//
             $('.add-payment').on('click', function(e) {
                 e.preventDefault();
 
@@ -798,7 +783,25 @@
                     form.submit();
                 });
             });
-            //. add payment modal.
+            //. -------------------------- Add payment modal --------------------------------------//
+
+
+            $('.modal').on('hidden.bs.modal', function(e) {
+                // re-enable disabled .btn-confirm buttons
+                $('.btn-confirm').attr('disabled', false);
+
+                // clear values of input confirmations
+                $('.input_confirmation').val('');
+            });
+
+            // input confirmation
+            $('.input_confirmation').on('change keyup', function(e) {
+                if ($(this).val() == $(this).data('value')) {
+                    $('.btn-confirm').attr('disabled', false);
+                } else {
+                    $('.btn-confirm').attr('disabled', true);
+                }
+            });
         });
     </script>
 @endsection

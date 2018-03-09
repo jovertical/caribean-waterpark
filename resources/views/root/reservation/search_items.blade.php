@@ -178,15 +178,15 @@
                             <div class="m-widget5">
                                 <div class="m-widget5__item">
                                     <div class="m-widget5__pic">
-                                        <img src="{{ Helper::fileUrl($available_item->images->first(), 'thumbnail') }}"
+                                        <img src="{{ Helper::fileUrl($available_item->item->images->first(), 'thumbnail') }}"
                                             class="m-widget7__img"  alt="Image">
                                     </div>
 
                                     <div class="m-widget5__content">
-                                        <h4 class="m-widget5__title">{{ $available_item->name }}</h4>
+                                        <h4 class="m-widget5__title">{{ $available_item->item->name }}</h4>
 
                                         <p class="m-widget5__desc">
-                                            {!! Str::limit($available_item->description, 50) !!}
+                                            {!! Str::limit($available_item->item->description, 50) !!}
                                         </p>
 
                                         <div class="m-widget5__info">
