@@ -60,60 +60,62 @@
         <!--/. Days -->
 
         <!-- Enter -->
-        @if(! $reservation->has_entered)
-            <li class="m-menu__item" aria-haspopup="true">
-                <a href="javascript:void(0);"
-                    class="m-menu__link reservation-day-to-entered"
-                    title="Set reservation day to entered"
-                    @if ($reservation->day != null)
-                        @if (! $reservation->has_exited)
-                            data-form="#reservationDayToEntered"
-                            data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
-                            data-toggle="modal"
-                            data-target="#reservationDayToEnteredConfirmation"
-                            data-reservation-user="{{ $reservation->user->titled_full_name }}"
-                            data-reservation-day-adult_quantity="{{ $reservation->day->adult_quantity }}"
-                            data-reservation-day-children_quantity="{{ $reservation->day->children_quantity }}"
-                        @endif
-                    @else
-                        style="cursor: not-allowed;"
-                    @endif
-                >
-                    <i class="m-menu__link-icon la la-sign-out"></i>
-                    <span class="m-menu__link-title">
-                        <span class="m-menu__link-text">Enter</span>
-                    </span>
-                </a>
-            </li>
-        @endif
-        <!--/. Enter -->
-
-        <!-- Exit -->
-        @if($reservation->has_entered)
-            <li class="m-menu__item" aria-haspopup="true">
-                <a href="javascript:void(0);"
-                    class="m-menu__link reservation-day-to-exited"
-                    title="Set reservation day to exited"
-                    @if ($reservation->day != null)
-                        @if (! $reservation->has_exited)
-                            data-form="#reservationDayToExited"
-                            data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
-                            data-toggle="modal"
-                            data-target="#reservationDayToExitedConfirmation"
-                            data-reservation-user="{{ $reservation->user->titled_full_name }}"
+        @if(! in_array(strtolower($reservation->status), ['cancelled', 'void']))
+            @if(! $reservation->has_entered)
+                <li class="m-menu__item" aria-haspopup="true">
+                    <a href="javascript:void(0);"
+                        class="m-menu__link reservation-day-to-entered"
+                        title="Set reservation day to entered"
+                        @if ($reservation->day != null)
+                            @if (! $reservation->has_exited)
+                                data-form="#reservationDayToEntered"
+                                data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
+                                data-toggle="modal"
+                                data-target="#reservationDayToEnteredConfirmation"
+                                data-reservation-user="{{ $reservation->user->titled_full_name }}"
+                                data-reservation-day-adult_quantity="{{ $reservation->day->adult_quantity }}"
+                                data-reservation-day-children_quantity="{{ $reservation->day->children_quantity }}"
+                            @endif
                         @else
                             style="cursor: not-allowed;"
                         @endif
-                    @endif
-                >
-                    <i class="m-menu__link-icon la la-sign-in"></i>
-                    <span class="m-menu__link-title">
-                        <span class="m-menu__link-text">Exit</span>
-                    </span>
-                </a>
-            </li>
+                    >
+                        <i class="m-menu__link-icon la la-sign-out"></i>
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-text">Enter</span>
+                        </span>
+                    </a>
+                </li>
+            @endif
+            <!--/. Enter -->
+
+            <!-- Exit -->
+            @if($reservation->has_entered)
+                <li class="m-menu__item" aria-haspopup="true">
+                    <a href="javascript:void(0);"
+                        class="m-menu__link reservation-day-to-exited"
+                        title="Set reservation day to exited"
+                        @if ($reservation->day != null)
+                            @if (! $reservation->has_exited)
+                                data-form="#reservationDayToExited"
+                                data-action="{{ route('root.reservations.days.update', $reservation->day) }}"
+                                data-toggle="modal"
+                                data-target="#reservationDayToExitedConfirmation"
+                                data-reservation-user="{{ $reservation->user->titled_full_name }}"
+                            @else
+                                style="cursor: not-allowed;"
+                            @endif
+                        @endif
+                    >
+                        <i class="m-menu__link-icon la la-sign-in"></i>
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-text">Exit</span>
+                        </span>
+                    </a>
+                </li>
+            @endif
+            <!--/. Exit -->
         @endif
-        <!--/. Exit -->
     @endcomponent
 @endsection
 
@@ -130,14 +132,14 @@
                                     dropdown-toggle btn btn-sm btn-{{ $reservation->status_class }} m-btn m-btn--pill text-white">
                                         <span>{{ $reservation->status }}</span>
                                     </a>
-
+                                    
                                     <div class="m-dropdown__wrapper">
                                         <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
                                         <div class="m-dropdown__inner">
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
                                                     <ul class="m-nav">
-                                                        @if(! in_array(strtolower($reservation->status), ['paid']))
+                                                        @if(in_array(strtolower($reservation->status), ['reserved', 'pending']))
                                                             <li class="m-nav__item">
                                                                 <a href="javascript:void(0);"
                                                                     class="m-nav__link update-reservation-to-paid"
@@ -155,7 +157,7 @@
                                                             </li>
                                                         @endif
 
-                                                        @if(! in_array(strtolower($reservation->status), ['paid', 'reserved']))
+                                                        @if(in_array(strtolower($reservation->status), ['pending']))
                                                             <li class="m-nav__item">
                                                                 <a href="javascript:void(0);"
                                                                     class="m-nav__link update-reservation-to-reserved"
@@ -166,9 +168,9 @@
                                                                     data-status="reserved"
                                                                     data-reservation-user="{{ $reservation->user->titled_full_name }}"
                                                                     title="Set to reserved">
-                                                                        <span class="m-nav__link-text">Set to
-                                                                            <strong class="m--font-info">Reserved</strong>
-                                                                        </span>
+                                                                    <span class="m-nav__link-text">Set to
+                                                                        <strong class="m--font-info">Reserved</strong>
+                                                                    </span>
                                                                 </a>
                                                             </li>
                                                         @endif
@@ -681,6 +683,7 @@
                     '<p>You are setting ' +
                         '<span class="m--font-boldest">' + reservation.user + "</span>'s " +
                         'reservation to <span class="m--font-danger">' + status + '</span>. ' +
+                        'Please be noted that this action will make the reservation inactive. ' +
                         'Please enter the highlighted black text to proceed.' +
                     '</p>'
                 );

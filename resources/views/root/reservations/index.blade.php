@@ -187,28 +187,6 @@
     </div>
     <!--/. Portlet -->
 
-    <!-- Update Reservation to Reserved Form -->
-    <form method="POST" action="" id="updateReservationToReserved" style="display: none;">
-        {{ method_field('PATCH') }}
-        {{ csrf_field() }}
-        <input type="hidden" name="status" id="status" class="status">
-    </form>
-
-    <!-- Update Reservation to Reserved Modal -->
-    @component('root.components.modal')
-        @slot('name')
-            updateReservationToReservedConfirmation
-        @endslot
-
-        <div id="reservation-to-reserved-modal-text"></div>
-    @endcomponent
-
-    <!-- Update Reservation to Paid Form -->
-    <form method="POST" action="" id="updateReservationToPaid" style="display: none;">
-        {{ method_field('PATCH') }}
-        {{ csrf_field() }}
-        <input type="hidden" name="status" id="status" class="status">
-    </form>
 
     <!-- Update Reservation to Paid Modal -->
     @component('root.components.modal')
@@ -217,14 +195,47 @@
         @endslot
 
         <div id="reservation-to-paid-modal-text"></div>
-    @endcomponent
 
-    <!-- Update Reservation to Cancelled Form -->
-    <form method="POST" action="" id="updateReservationToCancelled" style="display: none;">
-        {{ method_field('PATCH') }}
-        {{ csrf_field() }}
-        <input type="hidden" name="status" id="status" class="status">
-    </form>
+        <!-- Update Reservation to Paid Form -->
+        <form method="POST" action="" id="updateReservationToPaid">
+            {{ method_field('PATCH') }}
+            {{ csrf_field() }}
+            <input type="hidden" name="status" id="status" class="status">
+
+            <!-- Confirmation -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label"></label>
+
+                <input type="text" class="form-control m-input input_confirmation">
+            </div>
+            <!--/. Confirmation -->
+        </form>
+    @endcomponent
+    <!--/. Update Reservation to Paid Modal -->
+
+    <!-- Update Reservation to Reserved Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            updateReservationToReservedConfirmation
+        @endslot
+
+        <div id="reservation-to-reserved-modal-text"></div>
+
+        <!-- Update Reservation to Reserved Form -->
+        <form method="POST" action="" id="updateReservationToReserved">
+            {{ method_field('PATCH') }}
+            {{ csrf_field() }}
+            <input type="hidden" name="status" id="status" class="status">
+
+            <!-- Confirmation -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label"></label>
+
+                <input type="text" class="form-control m-input input_confirmation">
+            </div>
+            <!--/. Confirmation -->
+        </form>
+    @endcomponent
 
     <!-- Update Reservation to Cancelled Modal -->
     @component('root.components.modal')
@@ -233,6 +244,22 @@
         @endslot
 
         <div id="reservation-to-cancelled-modal-text"></div>
+
+        <!-- Update Reservation to Cancelled Form -->
+        <form method="POST" action="" id="updateReservationToCancelled">
+            {{ method_field('PATCH') }}
+            {{ csrf_field() }}
+            <input type="hidden" name="status" id="status" class="status">
+
+            <!-- Confirmation -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label"></label>
+
+                <input type="text" class="form-control m-input input_confirmation">
+            </div>
+            <!--/. Confirmation -->
+        </form>
+        <!--/. Update Reservation to Cancelled Form -->
     @endcomponent
 @endsection
 
@@ -426,39 +453,7 @@
         $(document).ready(function() {
             reservations.init();
 
-            // update reservation to reserved.
-            $('.update-reservation-to-reserved').on('click', function(e) {
-                e.preventDefault();
-
-                var link = $(this);
-                var form = $(link.data('form'));
-                var action = link.data('action');
-                var modal = $(link.data('target'));
-                var status = link.data('status');
-                var reservation = {
-                    'user' : link.data('reservation-user')
-                };
-
-                // assign action to hidden form action attribute.
-                form.attr({action: action});
-
-                // set status of the hidden form input.
-                $('.status').val(status);
-
-                // set modal text.
-                $('#reservation-to-reserved-modal-text').html(
-                    '<p>You are setting ' +
-                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" + 
-                        'reservation to <span class="m--font-info">' + status + '</span>.' + 
-                    '</p>'
-                );
-
-                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
-                    form.submit();
-                });
-            });
-            //. update reservation to reserved.
-
+            // -------------------------- Reservation day update modals --------------------------------------//
             // update reservation to paid.
             $('.update-reservation-to-paid').on('click', function(e) {
                 e.preventDefault();
@@ -468,6 +463,7 @@
                 var action = link.data('action');
                 var modal = $(link.data('target'));
                 var status = link.data('status');
+                var input_confirmation = $('.input_confirmation');
                 var reservation = {
                     'user' : link.data('reservation-user')
                 };
@@ -478,11 +474,23 @@
                 // set status of the hidden form input.
                 $('.status').val(status);
 
+               // assign data value
+                input_confirmation.data('value', reservation.user);
+
+                // set the confirm button to disabled.
+                $('.btn-confirm').attr('disabled', true);
+
+                // check for existing input confirmation value.
+                if (input_confirmation.val() == reservation.user) {
+                    $('.btn-confirm').attr('disabled', false);
+                }
+
                 // set modal text.
                 $('#reservation-to-paid-modal-text').html(
                     '<p>You are setting ' +
-                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" + 
-                        'reservation to <span class="m--font-success">' + status + '</span>.' + 
+                        '<span class="m--font-boldest">' + reservation.user + "</span>'s " +
+                        'reservation to <span class="m--font-success">' + status + '</span>. ' +
+                        'Please enter the highlighted black text to proceed.' +
                     '</p>'
                 );
 
@@ -491,6 +499,52 @@
                 });
             });
             //. update reservation to paid.
+
+            // update reservation to reserved.
+            $('.update-reservation-to-reserved').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+                var status = link.data('status');
+                var input_confirmation = $('.input_confirmation');
+                var reservation = {
+                    'user' : link.data('reservation-user')
+                };
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                // set status of the hidden form input.
+                $('.status').val(status);
+
+               // assign data value
+                input_confirmation.data('value', reservation.user);
+
+                // set the confirm button to disabled.
+                $('.btn-confirm').attr('disabled', true);
+
+                // check for existing input confirmation value.
+                if (input_confirmation.val() == reservation.user) {
+                    $('.btn-confirm').attr('disabled', false);
+                }
+
+                // set modal text.
+                $('#reservation-to-reserved-modal-text').html(
+                    '<p>You are setting ' +
+                        '<span class="m--font-boldest">' + reservation.user + "</span>'s " +
+                        'reservation to <span class="m--font-info">' + status + '</span>. ' +
+                        'Please enter the highlighted black text to proceed.' +
+                    '</p>'
+                );
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. update reservation to reserved.
 
             // update reservation to cancelled.
             $('.update-reservation-to-cancelled').on('click', function(e) {
@@ -501,6 +555,7 @@
                 var action = link.data('action');
                 var modal = $(link.data('target'));
                 var status = link.data('status');
+                var input_confirmation = $('.input_confirmation');
                 var reservation = {
                     'user' : link.data('reservation-user')
                 };
@@ -511,11 +566,24 @@
                 // set status of the hidden form input.
                 $('.status').val(status);
 
+               // assign data value
+                input_confirmation.data('value', reservation.user);
+
+                // set the confirm button to disabled.
+                $('.btn-confirm').attr('disabled', true);
+
+                // check for existing input confirmation value.
+                if (input_confirmation.val() == reservation.user) {
+                    $('.btn-confirm').attr('disabled', false);
+                }
+
                 // set modal text.
                 $('#reservation-to-cancelled-modal-text').html(
                     '<p>You are setting ' +
-                        '<span class="m--font-bolder">' + reservation.user + "'s </span>" + 
-                        'reservation to <span class="m--font-danger">' + status + '</span>.' + 
+                        '<span class="m--font-boldest">' + reservation.user + "</span>'s " +
+                        'reservation to <span class="m--font-danger">' + status + '</span>. ' +
+                        'Please be noted that this action will make the reservation inactive. ' +
+                        'Please enter the highlighted black text to proceed.' +
                     '</p>'
                 );
 
@@ -524,6 +592,25 @@
                 });
             });
             //. update reservation to cancelled.
+            //. -------------------------- Reservation day update modals --------------------------------------//
+
+
+            $('.modal').on('hidden.bs.modal', function(e) {
+                // re-enable disabled .btn-confirm buttons
+                $('.btn-confirm').attr('disabled', false);
+
+                // clear values of input confirmations
+                $('.input_confirmation').val('');
+            });
+
+            // input confirmation
+            $('.input_confirmation').on('change keyup', function(e) {
+                if ($(this).val() == $(this).data('value')) {
+                    $('.btn-confirm').attr('disabled', false);
+                } else {
+                    $('.btn-confirm').attr('disabled', true);
+                }
+            });
         });
     </script>
 @endsection

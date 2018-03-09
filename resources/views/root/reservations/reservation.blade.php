@@ -21,7 +21,7 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right">
-                    @if(! in_array(strtolower($reservation->status), ['paid']))
+                    @if(! in_array(strtolower($reservation->status), ['paid', 'cancelled', 'void']))
                         <a href="javascript:void(0);" class="dropdown-item update-reservation-to-paid"
                             data-form="#updateReservationToPaid" 
                             data-action="{{ route('root.reservations.update', $reservation) }}"
@@ -34,7 +34,7 @@
                         </a>
                     @endif
 
-                    @if(! in_array(strtolower($reservation->status), ['paid', 'reserved']))
+                    @if(! in_array(strtolower($reservation->status), ['paid', 'reserved', 'cancelled', 'void']))
                         <a href="javascript:void(0);" class="dropdown-item update-reservation-to-reserved"
                             data-form="#updateReservationToReserved" 
                             data-action="{{ route('root.reservations.update', $reservation) }}"

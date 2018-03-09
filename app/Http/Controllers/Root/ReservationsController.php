@@ -660,7 +660,7 @@ class ReservationsController extends Controller
             }
 
             // check if reservation items are not valid.
-            if (in_array(strtolower($reservation->status), ['pending', 'cancelled'])) {
+            if (! in_array(strtolower($reservation->status), ['paid', 'reserved'])) {
                 if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
                     array_push($this->reservation_errors, 'The available items in the calendar is not enough, transaction cancelled');
                 }
@@ -678,7 +678,9 @@ class ReservationsController extends Controller
                     $transaction =  $reservation->createReservationTransaction($type, $mode, $amount);
 
                     if ($transaction) {
-                        $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+                        if (in_array(strtolower($reservation->status), ['pending'])) {
+                            $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+                        }
 
                         $reservation->status = $status;
 
@@ -778,15 +780,15 @@ class ReservationsController extends Controller
         for($i = 0; $i < count($items); $i++) {
             $count =    ItemCalendar::where('item_id', $items[$i]->item->id)
                             ->whereBetween('date', [$checkin_date, $checkout_date])
-                            ->where('quantity', '>=', $items[$i]->quantity)
+                            ->where('quantity', '<=', $items[$i]->quantity)
                             ->count();
 
-            if ($count == 0) {
-                return true;
+            if ($count != 0) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
