@@ -48,31 +48,23 @@
                 </ul>
 
                 <div class="awe-search-tabs__content tabs__content">
-                    <div id="awe-search-tabs-1" class="search-hotel">
+                    <div id="awe-search-tabs-1" class="search-bus ui-tabs-panel ui-widget-content ui-corner-bottom">
                         <h2>Share your precious time with us?</h2>
 
                         <form>
                             <div class="form-group">
                                 <div class="form-elements">
-                                    <label>Wildcard</label>
-                                    <div class="form-item">
-                                        <i class="awe-icon awe-icon-search"></i> 
-                                        <input type="text" value="Princess, pirates, coconut...">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-elements">
                                     <label>Check in</label>
-                                    <div class="form-item"><i class="awe-icon awe-icon-calendar"></i> 
+                                    <div class="form-item">
+                                        <i class="awe-icon awe-icon-calendar"></i> 
                                         <input type="text" class="awe-calendar" value="Date">
                                     </div>
                                 </div>
 
                                 <div class="form-elements">
                                     <label>Check out</label>
-                                    <div class="form-item"><i class="awe-icon awe-icon-calendar"></i> 
+                                    <div class="form-item">
+                                        <i class="awe-icon awe-icon-calendar"></i> 
                                         <input type="text" class="awe-calendar" value="Date">
                                     </div>
                                 </div>
@@ -80,14 +72,29 @@
 
                             <div class="form-group">
                                 <div class="form-elements">
-                                    <label>Category</label>
+                                    <label>Adult</label>
                                     <div class="form-item">
                                         <select class="awe-select">
-                                            <option>All types</option>
-                                            <option>Cottage</option>
-                                            <option>Rooms</option>
+                                            <option>0</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
                                         </select>
                                     </div>
+                                    <span>12 yo and above</span>
+                                </div>
+
+                                <div class="form-elements">
+                                    <label>Kids</label>
+                                    <div class="form-item">
+                                        <select class="awe-select">
+                                            <option>0</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <span>0-11 yo</span>
                                 </div>
                             </div>
 

@@ -47,7 +47,7 @@ class PaypalExpress
         $reservation->items->each(function($item) use ($items) {
             $items->push([
                 'name' => $item->name,
-                'price' => $item->price,
+                'price' => $item->price_original,
                 'qty' => $item->quantity
             ]);
         });

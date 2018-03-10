@@ -321,61 +321,46 @@
             <!-- Transaction type -->
             <input type="hidden" name="transaction_type" id="transaction_type" value="payment">
 
-            <!-- Transaction mode -->
-            <div class="form-group m-form__group">
-                <label class="form-control-label">Payment option</label>
-
-                <select name="transaction_mode" id="transaction_mode" class="form-control m-bootstrap-select">
-                    <option value="cash">Cash</option>
-                    <option value="paypal_express">Paypal Express</option>
-                </select>
-            </div>
-            <!--/. Transaction mode -->
-
-            <!-- Cash Block -->
-            <div id="transaction-type-cash-block">
-                <!-- Payment mode -->
-                <div class="m-form__group form-group">
-                    <label for="">Payment mode</label>
-                    <div class="m-radio-list">
+            <!-- Payment mode -->
+            <div class="m-form__group form-group">
+                <label for="">Payment mode</label>
+                <div class="m-radio-list">
+                    <label class="m-radio">
+                        <input type="radio" name="payment_mode" id="payment_mode_full" value="full"
+                            data-value="{{ Helper::moneyString($reservation->price_left_payable) }}" checked>Full
+                        <span></span>
+                    </label>
+                    @if (count($reservation->transactions) == 0)
                         <label class="m-radio">
-                            <input type="radio" name="payment_mode" id="payment_mode_full" value="full"
-                                data-value="{{ Helper::moneyString($reservation->price_left_payable) }}" checked>Full
+                            <input type="radio" name="payment_mode" id="payment_mode_partial" value="partial"
+                                data-value="{{ Helper::moneyString($reservation->price_partial_payable) }}">Partial
                             <span></span>
                         </label>
-                        @if (count($reservation->transactions) == 0)
-                            <label class="m-radio">
-                                <input type="radio" name="payment_mode" id="payment_mode_partial" value="partial"
-                                    data-value="{{ Helper::moneyString($reservation->price_partial_payable) }}">Partial
-                                <span></span>
-                            </label>
-                        @endif
-                    </div>
+                    @endif
                 </div>
-                <!--/. Payment mode -->
-
-                <!-- Transaction amount -->
-                <div class="m-form__group form-group">
-                    <label class="form-control-label">Amount: </label>
-
-                    <input type="text" id="transaction_amount" class="form-control m-input"
-                        value="{{ Helper::moneyString($reservation->price_left_payable) }}" readonly>
-                </div>
-                <!--/. Transaction amount -->
-
-                <!-- Notify user -->
-                <div class="m-form__group form-group">
-                    <div class="m-checkbox-list">
-                        <label class="m-checkbox">
-                            <input type="checkbox" name="notify_user" id="notify_user" checked>
-                                Notify customer
-                            <span></span>
-                        </label>
-                    </div>
-                </div>
-                <!--/. Notify user -->
             </div>
-            <!--/. Cash Block -->
+            <!--/. Payment mode -->
+
+            <!-- Transaction amount -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">Amount: </label>
+
+                <input type="text" id="transaction_amount" class="form-control m-input"
+                    value="{{ Helper::moneyString($reservation->price_left_payable) }}" readonly>
+            </div>
+            <!--/. Transaction amount -->
+
+            <!-- Notify user -->
+            <div class="m-form__group form-group">
+                <div class="m-checkbox-list">
+                    <label class="m-checkbox">
+                        <input type="checkbox" name="notify_user" id="notify_user" checked>
+                            Notify customer
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <!--/. Notify user -->
         </form>
     @endcomponent
     <!--/. Add Payment Modal -->
@@ -513,37 +498,7 @@
 
 @section('scripts')
     <script>
-        var show_reservation = function () {
-            // selects
-            var selectsInit = function () {
-                $('select[id=transaction_mode]').selectpicker();
-            }
-            //. selects
-
-            return {
-                init: function() {
-                    selectsInit();
-                }
-            };
-        }();
-
         $(document).ready(function() {
-            show_reservation.init();
-
-            // transaction mode
-            $('select[id=transaction_mode]').on('change', function(e) {
-                var transaction_mode = $(this);
-                var selected_transaction_mode = transaction_mode.find('option:selected').val();
-                var cash_block = $('#transaction-mode-cash-block');
-
-                if (selected_transaction_mode == 'cash') {
-                    cash_block.css({display: 'block'});
-                } else {
-                    cash_block.css({display: 'none'});
-                }
-            });
-            //. transaction mode
-
             // payment mode
             $('input[name=payment_mode]').on('change', function(e) {
                 var status_to_paid_block = $('#status-to-paid-block');

@@ -397,7 +397,7 @@ class ReservationsController extends Controller
      */
     public function user()
     {
-        $users = User::where('type', 'user')->get()->all();
+        $users = User::where('type', 'user')->where('active', 1)->get()->all();
 
         return view('root.reservation.user', [
             'users' => $users
@@ -638,12 +638,10 @@ class ReservationsController extends Controller
     {
         $this->validate($request, [
             'transaction_type' => 'required|string',
-            'transaction_mode' => 'required|string',
             'payment_mode' => 'required|string'
         ]);
 
         $type = strtolower($request->input('transaction_type'));
-        $mode = strtolower($request->input('transaction_mode'));
         $payment_mode = strtolower($request->input('payment_mode'));
         $amount = strtolower($request->input('payment_mode')) == 'full' ? $reservation->price_left_payable :
                         $reservation->price_partial_payable;
@@ -672,34 +670,26 @@ class ReservationsController extends Controller
                 return back();
             }
 
-            switch ($mode) {
-                case 'cash' :
-                    // create reservation transaction.
-                    $transaction =  $reservation->createReservationTransaction($type, $mode, $amount);
+            // create reservation transaction.
+            $transaction =  $reservation->createReservationTransaction($type, 'cash', $amount);
 
-                    if ($transaction) {
-                        if (in_array(strtolower($reservation->status), ['pending'])) {
-                            $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
-                        }
+            if ($transaction) {
+                if (in_array(strtolower($reservation->status), ['pending'])) {
+                    $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+                }
 
-                        $reservation->status = $status;
+                $reservation->status = $status;
 
-                        // notify customer.
-                        if ($request->has('notify_user')) {
+                // notify customer.
+                if ($request->has('notify_user')) {
 
-                        }
+                }
 
-                        if ($payment_mode == 'full') {
-                            $reservation->price_paid += $reservation->price_left_payable;
-                        } else {
-                            $reservation->price_paid += $reservation->price_partial_payable;
-                        }
-                    }
-                break;
-
-                case 'paypal_express' :
-
-                break;
+                if ($payment_mode == 'full') {
+                    $reservation->price_paid += $reservation->price_left_payable;
+                } else {
+                    $reservation->price_paid += $reservation->price_partial_payable;
+                }
             }
 
             if ($reservation->save()) {
@@ -723,17 +713,13 @@ class ReservationsController extends Controller
     public function paypalRedirect(Reservation $reservation)
     {
         try {
-            $response = $this->paypal_express->redirect($reservation);
+            $response = $this->paypal_express->redirect($reservation, true);
 
             if ($response['paypal_link'] == null) {
-                if ($response['L_ERRORCODE0'] == 10412) {
-                    Notify::warning('Payment has already made for this invoice.', 'Whooops!?');
-                }
+                Notify::warning('Cannot process your payment.', 'Whooops!?');
 
                 return redirect()->route('root.reservations.show', $reservation);
             }
-
-            Notify::success('Payment processed.', 'Success!');
 
             return redirect($response['paypal_link']);
         } catch (Exception $e) {
@@ -764,7 +750,7 @@ class ReservationsController extends Controller
 
     /**
      * Check if reservation_items are valid in the calendar.
-     * @param  array  $items
+     * @param  array  $reservation_items
      * @param  string $checkin_date
      * @param  string $checkout_date
      * @return boolean

@@ -125,33 +125,19 @@
                     </div>
                     <!--/. Days refundable -->
 
-                    <!-- Pre-reservation refund rate -->
+                    <!-- Refundable rate -->
                     <div class="form-group m-form__group row">
-                        <label class="col-form-label col-lg-3 col-sm-12">Pre-reservation refund rate: </label>
+                        <label class="col-form-label col-lg-3 col-sm-12">Refundable rate: </label>
                         <div class="col-lg-4 col-md-9 col-sm-12">
                             <div class="m-ion-range-slider">
-                                <input type="hidden" name="pre_reservation_refund_rate" id="pre_reservation_refund_rate" 
-                                    data-min-value="1" data-max-value="100" value="{{ $settings['pre_reservation_refund_rate'] }}"
+                                <input type="hidden" name="refundable_rate" id="refundable_rate" 
+                                    data-min-value="1" data-max-value="100" value="{{ $settings['refundable_rate'] }}"
                                         disabled="disabled">
                             </div>
-                            <span class="m-form__help">Returnable rate of a cancelled inactive reservation.</span>
+                            <span class="m-form__help">Returnable rate of a cancelled reservation.</span>
                         </div>
                     </div>
-                    <!--/.Pre-reservation refund rate -->
-
-                    <!-- Post-reservation refund rate -->
-                    <div class="form-group m-form__group row">
-                        <label class="col-form-label col-lg-3 col-sm-12">Post-reservation refund rate: </label>
-                        <div class="col-lg-4 col-md-9 col-sm-12">
-                            <div class="m-ion-range-slider">
-                                <input type="hidden" name="post_reservation_refund_rate" id="post_reservation_refund_rate" 
-                                    data-min-value="1" data-max-value="100" value="{{ $settings['post_reservation_refund_rate'] }}"
-                                        disabled="disabled">
-                            </div>
-                            <span class="m-form__help">Returnable rate of a cancelled active reservation.</span>
-                        </div>
-                    </div>
-                    <!--/.Post-reservation refund rate -->
+                    <!--/. Refundable rate -->
                 </div>
                 <!--/. Allow refund block -->
 
@@ -207,8 +193,7 @@
             // sliders initializer
             var slidersInit = function () {
                 var partial_payment_rate = $('input[id=partial_payment_rate]');
-                var pre_reservation_refund_rate = $('input[id=pre_reservation_refund_rate]');
-                var post_reservation_refund_rate = $('input[id=post_reservation_refund_rate]');
+                var refundable_rate = $('input[id=refundable_rate]');
 
                 partial_payment_rate.ionRangeSlider({
                     min: 1,
@@ -217,17 +202,10 @@
                     postfix: "%"
                 });
 
-                pre_reservation_refund_rate.ionRangeSlider({
+                refundable_rate.ionRangeSlider({
                     min: 1,
                     max: 100,
-                    from: pre_reservation_refund_rate.val(),
-                    postfix: "%"
-                });
-
-                post_reservation_refund_rate.ionRangeSlider({
-                    min: 1,
-                    max: 100,
-                    from: post_reservation_refund_rate.val(),
+                    from: refundable_rate.val(),
                     postfix: "%"
                 });
             };
