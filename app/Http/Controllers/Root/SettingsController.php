@@ -35,8 +35,9 @@ class SettingsController extends Controller
             'days_prior' => 'required|integer',
             'minimum_reservation_length' => 'required|integer',
             'maximum_reservation_length' => 'required|integer',
-            'days_refundable' => 'required|integer',
             'partial_payment_rate' => 'required|integer',
+            'tax_rate' => 'required|integer',
+            'days_refundable' => 'required|integer',
             'refundable_rate' => 'required|integer'
         ]);
 
@@ -61,6 +62,12 @@ class SettingsController extends Controller
 
             DB::table('settings')->where('name', 'partial_payment_rate')->update([
                 'value' => $request->input('partial_payment_rate'),
+                'updated_by' => auth()->user()->id,
+                'updated_at' => Carbon::now()
+            ]);
+
+            DB::table('settings')->where('name', 'tax_rate')->update([
+                'value' => $request->input('tax_rate'),
                 'updated_by' => auth()->user()->id,
                 'updated_at' => Carbon::now()
             ]);

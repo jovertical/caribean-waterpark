@@ -82,6 +82,19 @@
                 </div>
                 <!--/. Partial payment rate -->
 
+                <!-- Tax rate -->
+                <div class="form-group m-form__group row">
+                    <label class="col-form-label col-lg-3 col-sm-12">Tax rate: </label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                        <div class="m-ion-range-slider">
+                            <input type="hidden" name="tax_rate" id="tax_rate" data-min-value="1" 
+                                data-max-value="100" disabled="disabled" value="{{ $settings['tax_rate'] }}">
+                        </div>
+                        <span class="m-form__help">Applied tax rate to each items. (inclusive)</span>
+                    </div>
+                </div>
+                <!--/. Tax rate -->
+
                 <!-- Refunds -->
                 <div class="form-group m-form__group row">
                     <label class="col-form-label col-lg-3 col-sm-12">Refunds: </label>
@@ -193,12 +206,20 @@
             // sliders initializer
             var slidersInit = function () {
                 var partial_payment_rate = $('input[id=partial_payment_rate]');
+                var tax_rate = $('input[id=tax_rate]');
                 var refundable_rate = $('input[id=refundable_rate]');
 
                 partial_payment_rate.ionRangeSlider({
                     min: 1,
                     max: 100,
                     from: partial_payment_rate.val(),
+                    postfix: "%"
+                });
+
+                tax_rate.ionRangeSlider({
+                    min: 1,
+                    max: 100,
+                    from: tax_rate.val(),
                     postfix: "%"
                 });
 

@@ -16,6 +16,7 @@ class SettingsTableSeeder extends Seeder
             ['name' => 'days_prior', 'value' => 1],
             ['name' => 'minimum_reservation_length', 'value' => 1],
             ['name' => 'maximum_reservation_length', 'value' => 15],
+            ['name' => 'tax_rate', 'value' => 12],
             ['name' => 'partial_payment_rate', 'value' => 10],
             ['name' => 'allow_refund', 'value' => 0],
             ['name' => 'days_refundable', 'value' => 1],

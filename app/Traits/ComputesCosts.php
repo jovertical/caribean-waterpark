@@ -6,10 +6,8 @@ trait ComputesCosts
 {
     public function computeItemCosts(array $reservation_settings, array $items, float $deductable = null)
     {
-        $vat_rate = 12;
-
         foreach ($items as $index => $item) {
-            $price_taxable = $item->price / $vat_rate;
+            $price_taxable = $item->price * ($reservation_settings['tax_rate'] / 100);
             $price_subpayable = $item->price;
             $price_deductable = 0.00;
             $price_payable = $item->price - $price_deductable;

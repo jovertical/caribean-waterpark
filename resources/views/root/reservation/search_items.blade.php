@@ -238,9 +238,11 @@
             @endforeach
 
             <!-- Pagination -->
-            <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
-                {{ $available_items->appends(Request::all())->links() }}
-            </div>
+            @if (count($available_items))
+                <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
+                    {{ $available_items->appends(Request::all())->links() }}
+                </div>
+            @endif
         </div>
     </div>
 @endsection
