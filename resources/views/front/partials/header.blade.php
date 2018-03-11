@@ -9,14 +9,22 @@
 
             <nav class="navigation awe-navigation" data-responsive="1200">
                 <ul class="menu-list">
-                    <li class="menu-item {{ Helper::activeMenu(Request::segment(2)) == '' ? 
+                    <li class="menu-item {{ Helper::activeMenu(Request::segment(2)) == '' ?
                         'current-menu-parent' : ''}}">
                         <a href="{{ route('front.welcome') }}">Home</a>
                     </li>
 
-                    <li class="menu-item {{ Helper::activeMenu(Request::segment(2)) == 'reservation' ? 
-                        'current-menu-parent' : ''}}">
-                        <a href="{{ route('front.reservation.search') }}">Reservation</a>
+                    <li class="menu-item menu-item-has-children
+                        {{ Helper::activeMenu(Request::segment(2)) == 'reservation' ? 'current-menu-parent' : ''}}">
+                        <a href="javascript:void(0);">Reservation</a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="{{ route('front.reservation.search') }}">Search</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('front.reservation.cart.index') }}">Cart</a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="menu-item-has-children">

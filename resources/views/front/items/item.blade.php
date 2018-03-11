@@ -46,10 +46,11 @@
             </span>
         </div>
 
-        <a href="{{ route('front.reservation.show-item', $available_item->item) }}?ci={{ Request::input('ci')
-            }}&co={{ Request::input('co') }}&aq={{ Request::input('aq') }}&cq={{
-                Request::input('cq') }}" class="awe-btn">Reserve
-        </a>
+        <form method="POST" action="{{ route('front.reservation.add-item', $index) }}" style="margin-top: 36px;">
+            {{ csrf_field() }}
+
+            <button type="submit" class="awe-btn">Add this</button>
+        </form>
     </div>
 
 </div>

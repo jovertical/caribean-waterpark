@@ -108,16 +108,24 @@
     <!-- Results -->
     <section class="filter-page">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="page-top">
-                        <div class="awe-select-wrapper">
-                            <select class="awe-select">
-                                <option>Best Match</option>
-                                <option>Best Rate</option>
-                            </select>
-                            <i class="fa fa-caret-down"></i>
-                        </div>
+            <div class="row page-top">
+                <!-- Search result counts -->
+                <div class="col-md-6">
+                    @if(count($available_items))
+                        <p>Showing <strong>{{ $available_items->count() }}</strong> of
+                            <strong>{{ $available_items->total() }}</strong> available items.
+                        </p>
+                    @endif
+                </div>
+                <!--/. Search result counts -->
+
+                <div class="col-md-6">
+                    <div class="awe-select-wrapper">
+                        <select class="awe-select">
+                            <option>Best Match</option>
+                            <option>Best Rate</option>
+                        </select>
+                        <i class="fa fa-caret-down"></i>
                     </div>
                 </div>
 
@@ -125,14 +133,20 @@
                 <div class="col-md-9 col-md-push-3">
                     <div class="filter-page__content">
                         <div class="filter-item-wrapper">
+                            <!-- Message -->
+                            @if (Session::has('message'))
+                                @component('front.components.alert')
+                                    {{ Session::get('message.content') }}
+                                @endcomponent
+                            @endif
+
                             @foreach($available_items as $index => $available_item)
                                 @if($available_item->calendar_unoccupied > 0)
                                     @include('front.items.item')
                                 @endif
                             @endforeach
-                            <!-- Available items -->
                         </div>
-                        
+
                         <!-- Pagination -->
                         @if (count($available_items))
                             {{ $available_items->appends(Request::all())->links('front.components.pagination') }}
@@ -140,7 +154,7 @@
                     </div>
                 </div>
                 <!--/. Available items -->
-                
+
                 <!-- Filters -->
                 <div class="col-md-3 col-md-pull-9">
                     <div class="page-sidebar">
@@ -190,38 +204,13 @@
                             <ul>
                                 <li>
                                     <label>
-                                        <input type="checkbox"> 
-                                        <i class="awe-icon awe-icon-check"></i> 
+                                        <input type="checkbox">
+                                        <i class="awe-icon awe-icon-check"></i>
                                         <span class="rating">
-                                            <i class="fa fa-star"></i> 
-                                            <i class="fa fa-star"></i> 
-                                            <i class="fa fa-star"></i> 
-                                            <i class="fa fa-star"></i> 
                                             <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> 
-                                        <i class="awe-icon awe-icon-check"></i> 
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i> 
-                                            <i class="fa fa-star"></i> 
-                                            <i class="fa fa-star"></i> 
                                             <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> 
-                                        <i class="awe-icon awe-icon-check"></i> 
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i> 
-                                            <i class="fa fa-star"></i> 
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
                                         </span>
                                     </label>
@@ -230,9 +219,11 @@
                                 <li>
                                     <label>
                                         <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i> 
+                                        <i class="awe-icon awe-icon-check"></i>
                                         <span class="rating">
-                                            <i class="fa fa-star"></i> 
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
                                         </span>
                                     </label>
@@ -240,8 +231,31 @@
 
                                 <li>
                                     <label>
-                                        <input type="checkbox"> 
-                                        <i class="awe-icon awe-icon-check"></i> 
+                                        <input type="checkbox">
+                                        <i class="awe-icon awe-icon-check"></i>
+                                        <span class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </span>
+                                    </label>
+                                </li>
+
+                                <li>
+                                    <label>
+                                        <input type="checkbox">
+                                        <i class="awe-icon awe-icon-check"></i>
+                                        <span class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </span>
+                                    </label>
+                                </li>
+
+                                <li>
+                                    <label>
+                                        <input type="checkbox">
+                                        <i class="awe-icon awe-icon-check"></i>
                                         <span class="rating">
                                             <i class="fa fa-star"></i>
                                         </span>
@@ -250,8 +264,8 @@
 
                                 <li>
                                     <label>
-                                        <input type="checkbox"> 
-                                        <i class="awe-icon awe-icon-check"></i> 
+                                        <input type="checkbox">
+                                        <i class="awe-icon awe-icon-check"></i>
                                         <span class="rating">Unrated</span>
                                     </label>
                                 </li>
@@ -263,7 +277,7 @@
                             <ul>
                                 <li>
                                     <label>
-                                        <input type="checkbox"> 
+                                        <input type="checkbox">
                                         <i class="awe-icon awe-icon-check"></i> Near Airport
                                     </label>
                                 </li>
@@ -276,14 +290,14 @@
 
                                 <li>
                                     <label>
-                                        <input type="checkbox"> 
+                                        <input type="checkbox">
                                         <i class="awe-icon awe-icon-check"></i> Near Attractions
                                     </label>
                                 </li>
 
                                 <li>
                                     <label>
-                                        <input type="checkbox"> 
+                                        <input type="checkbox">
                                         <i class="awe-icon awe-icon-check"></i> Near Traffic station
                                     </label>
                                 </li>
@@ -345,9 +359,9 @@
 
                         <div class="widget widget_product_tag_cloud">
                             <h3>Tags</h3><div class="tagcloud">
-                                <a href="#">Hotel</a> 
-                                <a href="#">Motel</a> 
-                                <a href="#">Hostel</a> 
+                                <a href="#">Hotel</a>
+                                <a href="#">Motel</a>
+                                <a href="#">Hostel</a>
                                 <a href="#">Homestay</a>
                             </div>
                         </div>

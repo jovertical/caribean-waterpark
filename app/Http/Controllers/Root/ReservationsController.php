@@ -66,7 +66,7 @@ class ReservationsController extends Controller
 
         $items = collect([]);
 
-        if (($search_parameters['checkin_date'] != null) AND ($search_parameters['checkout_date'] != null)) {
+        if (($search_parameters['checkin_date'] != null) OR ($search_parameters['checkout_date'] != null)) {
             if (! $this->validateSearch($search_parameters)) {
                 if (count($this->reservation_errors)) {
                     session(['reservation' => []]);
@@ -236,7 +236,7 @@ class ReservationsController extends Controller
      */
     public function addItem(Request $request, $index)
     {
-        $quantity = (int) $request->input('quantity');
+        $quantity = $request->input('quantity');
 
         $available_items = session()->get('reservation.available_items');
         $selected_items = session()->get('reservation.selected_items');
@@ -244,7 +244,7 @@ class ReservationsController extends Controller
         $item_added = $available_items[$index];
 
         if ($quantity <= $item_added->calendar_unoccupied) {
-            if(! in_array($item_added->id, array_column($selected_items, 'id'))) {
+            if(! in_array($item_added->item->id, array_column(array_column($selected_items, 'item'), 'id'))) {
                 $item_added->index = $index;
                 $item_added->calendar_occupied += $quantity;
                 $item_added->calendar_unoccupied -= $quantity;
@@ -269,7 +269,9 @@ class ReservationsController extends Controller
 
             $item_added->calendar_occupied += $quantity;
             $item_added->calendar_unoccupied -= $quantity;
-            $selected_items[array_search($item_added->item->id, array_column($selected_items, 'id'))]->quantity += $quantity;
+            $selected_items[array_search(
+                $item_added->item->id, array_column(array_column($selected_items, 'item'), 'id')
+            )]->quantity += $quantity;
             $item_added->price = $item_added->calendar_price * $item_added->quantity;
 
             // re-compute item costs
@@ -298,7 +300,7 @@ class ReservationsController extends Controller
      */
     public function removeItem(Request $request, $index)
     {
-        $quantity = (int) $request->input('quantity');
+        $quantity = $request->input('quantity') ?? 1;
 
         $available_items = session()->get('reservation.available_items');
         $selected_items = session()->get('reservation.selected_items');

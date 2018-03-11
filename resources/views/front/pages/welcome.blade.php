@@ -130,7 +130,49 @@
     </section>
 
     <section class="masonry-section-demo">
-        <div class="container"><div class="destination-grid-content"><div class="section-title"><h3>More than <a href="destinations-grid.html">238 Destinations</a> is waiting</h3></div><div class="row"><div class="awe-masonry"><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/1.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Florenze</a></h2><div class="item-cat"><ul><li><a href="#">Italy</a></li></ul></div></div><div class="item-available"><span class="count">845</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/2.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Toluca</a></h2><div class="item-cat"><ul><li><a href="#">USA</a></li></ul></div></div><div class="item-available"><span class="count">132</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/3.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Venice</a></h2><div class="item-cat"><ul><li><a href="#">Italy</a></li></ul></div></div><div class="item-available"><span class="count">2341</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/4.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Ohio</a></h2><div class="item-cat"><ul><li><a href="#">USA</a></li></ul></div></div><div class="item-available"><span class="count">2531</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/5.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Venice</a></h2><div class="item-cat"><ul><li><a href="#">Italy</a></li></ul></div></div><div class="item-available"><span class="count">2531</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/6.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Mandives</a></h2><div class="item-cat"><ul><li><a href="#">Mandives</a></li></ul></div></div><div class="item-available"><span class="count">2531</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/7.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Istanbul</a></h2><div class="item-cat"><ul><li><a href="#">Turkey</a></li></ul></div></div><div class="item-available"><span class="count">2531</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/8.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Bali</a></h2><div class="item-cat"><ul><li><a href="#">Thailand</a></li></ul></div></div><div class="item-available"><span class="count">2531</span> available hotel</div></div><div class="awe-masonry__item"><a href="#"><div class="image-wrap image-cover"><img src="/front/assets/images/img/9.jpg" alt=""></div></a><div class="item-title"><h2><a href="#">Phu Quoc</a></h2><div class="item-cat"><ul><li><a href="#">Vietnam</a></li></ul></div></div><div class="item-available"><span class="count">2531</span> available hotel</div></div></div></div><div class="more-destination"><a href="#">More Destinations</a></div></div></div>
+        <div class="container">
+            <div class="destination-grid-content">
+                <div class="section-title">
+                    <h3>About <a href="#">{{ $items->count() }} Accomodations</a> are waiting</h3>
+                </div>
+                <div class="row">
+                    <div class="awe-masonry">
+                        @foreach($items as $index => $item)
+                            <div class="awe-masonry__item">
+                                <a href="#">
+                                    <div class="image-wrap image-cover">
+                                        <img src="{{ Helper::fileUrl($item->images->first()) }}" alt="">
+                                    </div>
+                                </a>
+                                <div class="item-title">
+                                    <h2>
+                                        <a href="{{ route('front.items.show', $item) }}">
+                                            {{ $item->name }}
+                                        </a>
+                                    </h2>
+                                    <div class="item-cat">
+                                        <ul>
+                                            <li>
+                                                <a href="#">
+                                                    {{ $item->category->name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="item-available">
+                                    <span class="count">{{ $item->quantity }}</span> items
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="more-destination">
+                    <a href="#">More Accomodations</a>
+                </div>
+            </div>
+        </div>
     </section>
 
 

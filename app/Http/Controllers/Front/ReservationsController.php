@@ -121,8 +121,17 @@ class ReservationsController extends Controller
                 (session()->get('reservation.filters.minimum_price') != $filters['minimum_price']) OR
                 (session()->get('reservation.filters.maximum_price') != $filters['maximum_price'])) {
 
+                if (count(session()->get('reservation.selected_items'))) {
+                    session()->flash('message', [
+                        'type' => 'info',
+                        'content' => 'Cart cleared.'
+                    ]);
+                }
+
+
                 session(['reservation.available_items' => $available_items->all()]);
                 session(['reservation.selected_items' => []]);
+
             }
 
             // set reservation data
@@ -134,13 +143,20 @@ class ReservationsController extends Controller
             session(['reservation.filters.minimum_price' => $filters['minimum_price']]);
             session(['reservation.filters.maximum_price' => $filters['maximum_price']]);
 
+            // add item if available
+            if ($request->has('item')) {
+                $items = array_column($available_items->all(), 'item');
+                $index = array_search($request->input('item'), array_column($items, 'slug'));
+                $redirect_to = Helper::searchRequestUrl(request(['ci', 'co', 'aq', 'cq']));
+
+                return $this->addItem($request, $index, $redirect_to);
+            }
+
             return view('front.reservation.search', [
                 'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
                 'selected_items' => session()->get('reservation.selected_items')
             ]);
         }
-
-        session(['reservation' => []]);
 
         return view('front.reservation.search', [
             'available_items' => collect([]),
@@ -163,10 +179,6 @@ class ReservationsController extends Controller
         $days_prior = $this->reservation_settings['days_prior'];
         $minimum_reservation_length = $this->reservation_settings['minimum_reservation_length'];
         $maximum_reservation_length = $this->reservation_settings['maximum_reservation_length'];
-
-        if (($checkin_date == null) OR ($checkout_date == null)) {
-            array_push($this->reservation_errors, 'You must set a checkin and checkout date');
-        }
 
         if (($adult_quantity == null) OR (! is_numeric($adult_quantity))) {
             array_push($this->reservation_errors, 'Adult quantity is not valid');
@@ -207,5 +219,189 @@ class ReservationsController extends Controller
     public function showItem(Item $item)
     {
         return view('front.items.show', compact('item'));
+    }
+
+    /**
+     * Add specific item to the cart.
+     * @param  Request $request
+     * @param  int  $index
+     * @return back
+     */
+    public function addItem(Request $request, $index, $redirect_to = null)
+    {
+        $quantity = $request->input('quantity') ?? 1;
+
+        $available_items = session()->get('reservation.available_items');
+        $selected_items = session()->get('reservation.selected_items');
+
+        $item_added = $available_items[$index];
+
+        if ($quantity <= $item_added->calendar_unoccupied) {
+            if(! in_array($item_added->item->id, array_column(array_column($selected_items, 'item'), 'id'))) {
+                $item_added->index = $index;
+                $item_added->calendar_occupied += $quantity;
+                $item_added->calendar_unoccupied -= $quantity;
+                $item_added->quantity = $quantity;
+                $item_added->price = $item_added->calendar_price * $quantity;
+
+                // push the item to the selected_items array
+                session()->push('reservation.selected_items', $item_added);
+
+                // re-compute item costs
+                $item_costs =   $this->computeItemCosts(
+                                    $this->reservation_settings,
+                                    session()->get('reservation.selected_items')
+                                );
+
+                session(['reservation.item_costs' => $item_costs]);
+
+                session()->flash('message', [
+                    'type' => 'success',
+                    'content' => "{$item_added->item->name} added to cart."
+                ]);
+
+                return $redirect_to != null ? redirect($redirect_to) : back();
+            }
+
+            $item_added->calendar_occupied += $quantity;
+            $item_added->calendar_unoccupied -= $quantity;
+            $selected_items[array_search(
+                $item_added->item->id, array_column(array_column($selected_items, 'item'), 'id')
+            )]->quantity += $quantity;
+            $item_added->price = $item_added->calendar_price * $item_added->quantity;
+
+            // re-compute item costs
+            $item_costs =   $this->computeItemCosts(
+                                $this->reservation_settings,
+                                session()->get('reservation.selected_items')
+                            );
+
+            session(['reservation.item_costs' => $item_costs]);
+
+            session()->flash('message', [
+                'type' => 'success',
+                'content' => "{$item_added->item->name} quantity updated."
+            ]);
+
+            return $redirect_to != null ? redirect($redirect_to) : back();
+        }
+
+        session()->flash('message', [
+            'type' => 'success',
+            'content' => "{$item_added->item->name} not added."
+        ]);
+
+        return $redirect_to != null ? redirect($redirect_to) : back();
+    }
+
+    /**
+     * Remove specific item from the cart.
+     * @param  Request $request
+     * @param  int  $index
+     * @return back
+     */
+    public function removeItem(Request $request, $index)
+    {
+        $quantity = $request->input('quantity') ?? 1;
+
+        $available_items = session()->get('reservation.available_items');
+        $selected_items = session()->get('reservation.selected_items');
+
+        $item_removed = $selected_items[$index];
+
+        if ($quantity <= $item_removed->quantity) {
+            $item_removed->calendar_occupied -= $quantity;
+            $item_removed->calendar_unoccupied += $quantity;
+            $item_removed->quantity -= $quantity;
+            $item_removed->price = $item_removed->calendar_price * $item_removed->quantity;
+
+            if ($item_removed->quantity == 0) {
+                // pull the item from the selected_items array
+                session()->pull('reservation.selected_items.'.$index);
+
+                // re-compute item costs
+                $item_costs =   $this->computeItemCosts(
+                                    $this->reservation_settings,
+                                    session()->get('reservation.selected_items')
+                                );
+
+                session(['reservation.item_costs' => $item_costs]);
+
+                session()->flash('message', [
+                    'type' => 'success',
+                    'content' => "{$item_removed->item->name} removed."
+                ]);
+
+                return back();
+            }
+
+            // re-compute item costs
+            $item_costs =   $this->computeItemCosts(
+                                $this->reservation_settings,
+                                session()->get('reservation.selected_items')
+                            );
+
+            session(['reservation.item_costs' => $item_costs ]);
+
+            session()->flash('message', [
+                'type' => 'success',
+                'content' => "{$item_removed->item->name} quantity updated."
+            ]);
+
+            return back();
+        }
+
+        session()->flash('message', [
+            'type' => 'success',
+            'content' => "{$item_removed->item->name} not removed."
+        ]);
+
+        return back();
+    }
+
+    /**
+     * Show selected items
+     * @return view
+     */
+    public function cart()
+    {
+        $items = session()->get('reservation.selected_items') ?? [];
+        $item_costs = session()->get('reservation.item_costs');
+
+        return view('front.reservation.cart', [
+            'items' => $items,
+            'item_costs' => $item_costs
+        ]);
+    }
+
+    /**
+     * Clear all cart items
+     * @return back
+     */
+    public function destroyCart()
+    {
+        try {
+            session(['reservation.selected_items' => []]);
+
+            // re-compute item costs
+            $item_costs =   $this->computeItemCosts(
+                                $this->reservation_settings,
+                                session()->get('reservation.selected_items')
+                            );
+
+            session(['reservation.item_costs' => $item_costs ]);
+
+            session()->flash('message', [
+                'type' => 'success',
+                'content' => 'Cart cleared.'
+            ]);
+        } catch (Exception $e) {
+            session()->flash('message', [
+                'type' => 'error',
+                'content' => $e->getMessage()
+            ]);
+        }
+
+        return back();
     }
 }

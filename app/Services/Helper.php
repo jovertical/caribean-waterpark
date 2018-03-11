@@ -88,6 +88,17 @@ class Helper {
         return $currency_sign.number_format($amount, 2, '.', ',');
     }
 
+    public static function searchRequestUrl(array $search_parameters)
+    {
+        $input_with_values = [];
+
+        foreach ($search_parameters as $index => $search_parameter) {
+            $input_with_values[] = $index.'='.$search_parameter;
+        }
+
+        return url()->current().'?'.implode('&', $input_with_values);
+    }
+
     public static function paginate($data, $perPage = 10)
     {
         if (is_array($data)) {

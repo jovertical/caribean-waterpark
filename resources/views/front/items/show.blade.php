@@ -164,28 +164,30 @@
                     <div class="product-tabs tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
                         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
                             <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active" role="tab" tabindex="0" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true">
-                                <a href="#tabs-1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">Room detail</a>
+                                <a href="#tabs-1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">
+                                    Availability
+                                </a>
                             </li>
 
                             <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false">
                                 <a href="#tabs-2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-2">
-                                Facilities &amp; freebies</a>
-                            </li>
-
-                            <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false">
-                                <a href="#tabs-3" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-3">Good to know
+                                    Facilities &amp; freebies
                                 </a>
                             </li>
 
-                            <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-4" aria-selected="false">
-                                <a href="#tabs-4" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-4">Review &amp; rating
+                            <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false">
+                                <a href="#tabs-3" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-4">Review &amp; rating
                                 </a>
                             </li>
                         </ul>
                         <div class="product-tabs__content">
+                            <!-- Availability -->
                             <div id="tabs-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="true" aria-hidden="false">
                                 <div class="check-availability">
-                                    <form>
+                                    <form method="GET" action="{{ route('front.reservation.search', $item) }}">
+                                        <!-- item -->
+                                        <input type="hidden" name="item" id="item" value="{{ $item->slug }}">
+
                                         <div class="form-group">
                                             <div class="form-elements form-checkin">
                                                 <label for="ci">Check in</label>
@@ -254,7 +256,9 @@
                                     </form>
                                 </div>
                             </div>
+                            <!--/. Availability -->
 
+                            <!-- Facilities & Freebies -->
                             <div id="tabs-2" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
                                 <table class="facilities-freebies-table">
                                     <tbody>
@@ -278,23 +282,10 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!--/. Facilities & Freebies -->
 
+                            <!-- Review & Rating -->
                             <div id="tabs-3" aria-labelledby="ui-id-3" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
-                                <table class="good-to-know-table">
-                                    <tbody>
-                                        <tr>
-                                            <th>
-                                                <p>Accepted cards for payment</p>
-                                            </th>
-                                            <td>
-                                                <p><img src="/front/assets/images/paypal2.png" alt=""></p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div id="tabs-4" aria-labelledby="ui-id-4" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
                                 <div id="reviews">
                                     <div class="rating-info">
                                         <div class="average-rating-review good">
@@ -434,6 +425,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!--/. Review & Rating -->
                         </div>
                     </div>
                 </div>
