@@ -11,10 +11,14 @@ class ItemsTableSeeder extends Seeder
      */
     public function run()
     {
+        $description =  str_shuffle(
+                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur provident fuga eos exercitationem cumque nemo blanditiis illum harum ut tempora, nam odit doloribus, culpa labore dicta reiciendis minus quod cum!'
+                        );
+
         \App\Item::create([
             'category_id' => 1,
             'name' => 'princess',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 2000.00,
             'quantity' => 5
         ]);
@@ -22,7 +26,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 1,
             'name' => 'prince',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 2000.00,
             'quantity' => 5
         ]);
@@ -30,7 +34,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 1,
             'name' => 'hotel',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 3000.00,
             'quantity' => 5
         ]);
@@ -38,7 +42,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 1,
             'name' => 'bahay kubo',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 1500.00,
             'quantity' => 10
         ]);
@@ -46,7 +50,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 2,
             'name' => 'pirates',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 1500.00,
             'quantity' => 10
         ]);
@@ -54,7 +58,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 2,
             'name' => 'modern',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 700.00,
             'quantity' => 15
         ]);
@@ -62,7 +66,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 2,
             'name' => 'family',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 2000.00,
             'quantity' => 15
         ]);
@@ -70,7 +74,7 @@ class ItemsTableSeeder extends Seeder
         \App\Item::create([
             'category_id' => 2,
             'name' => 'coconut',
-            'description' => str_random(100),
+            'description' => $description,
             'price' => 500.00,
             'quantity' => 25
         ]);

@@ -135,7 +135,7 @@ class ReservationsController extends Controller
             session(['reservation.filters.maximum_price' => $filters['maximum_price']]);
 
             return view('front.reservation.search', [
-                'available_items' => Helper::paginate(session()->get('reservation.available_items')),
+                'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
                 'selected_items' => session()->get('reservation.selected_items')
             ]);
         }

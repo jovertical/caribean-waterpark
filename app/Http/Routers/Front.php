@@ -3,6 +3,11 @@
 Route::namespace('Front')->name('front.')->group(function () {
     Route::get('/', 'PagesController@welcome')->name('welcome');
 
+    Route::prefix('items')->name('items.')->group(function() {
+        Route::get('/', 'ItemsController@index')->name('index');
+        Route::get('/{item}', 'ItemsController@show')->name('show');
+    });
+
     Route::namespace('Auth')->group(function() {
         Route::get('register', 'RegisterController@showRegisterForm')->name('register');
         Route::post('register', 'RegisterController@register');

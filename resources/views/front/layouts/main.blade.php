@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
@@ -124,8 +124,6 @@
 
                     autoHeight:"off",
                     forceFullWidth:"off",
-                    
-                    
                     
                     hideThumbsOnMobile:"off",
                     hideNavDelayOnMobile:1500,
