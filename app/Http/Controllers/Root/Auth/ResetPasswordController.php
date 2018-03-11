@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Root\Auth;
 
 use Toastr as Notify;
-use App\{User, PasswordReset};
+use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -32,13 +33,13 @@ class ResetPasswordController extends Controller
             'password_confirmation' => 'required|min:6|max:255'
         ]);
 
-        $password_reset = PasswordReset::where('token', $token)->first();
+        $password_reset = DB::table('password_resets')->where('token', $token)->first();
 
         $user = User::where('email', $password_reset->email)->first();
         $user->password = bcrypt($request->input('password'));
         $user->save();
 
-        PasswordReset::where('token', $token)->delete();
+        DB::table('password_resets')->where('token', $token)->delete();
 
         Auth::loginUsingId($user->id);
 

@@ -4,7 +4,7 @@
     @component('root.components.sidebar')
         <!-- Cart -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="{{ route('root.reservation.show-items') }}" class="m-menu__link">
+            <a href="{{ route('root.reservation.cart') }}" class="m-menu__link">
                 <i class="m-menu__link-icon la la-shopping-cart"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
@@ -22,7 +22,7 @@
 @endsection
 
 @section('content')
-    <form method="GET" action="{{ route('root.reservation.search-items') }}">
+    <form method="GET" action="{{ route('root.reservation.search') }}">
         <div class="row">
             <div class="col-lg">
                 @if(Session::has('message'))

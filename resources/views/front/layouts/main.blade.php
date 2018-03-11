@@ -31,6 +31,8 @@
         <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
                 <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
 
+        <link rel="stylesheet" type="text/css" href="/front/assets/css/main.css">
+
         @yield('styles')
     </head>
 
@@ -53,11 +55,10 @@
         <script type="text/javascript" src="/front/assets/js/lib/jquery.magnific-popup.min.js"></script>
         <script type="text/javascript" src="/front/assets/js/lib/jquery-ui.js"></script>
         <script type="text/javascript" src="/front/assets/js/scripts.js"></script>
+        <script type="text/javascript" src="/front/assets/revslider-demo/js/jquery.themepunch.revolution.min.js"></script>
+        <script type="text/javascript" src="/front/assets/revslider-demo/js/jquery.themepunch.tools.min.js"></script>
 
-        <script type="text/javascript" src="/front/assets/revslider-demo/js/jquery.themepunch.revolution.min.js">
-        </script>
-        <script type="text/javascript" src="/front/assets/revslider-demo/js/jquery.themepunch.tools.min.js">
-        </script>
+        <script type="text/javascript" src="/front/assets/js/main.js"></script>
 
         <script type="text/javascript">
             if($('#slider-revolution').length) {

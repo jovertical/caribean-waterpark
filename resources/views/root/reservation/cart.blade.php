@@ -13,7 +13,7 @@
                     warning
                 @endslot
 
-                There are no items yet. <a href="{{ route('root.reservation.search-items') }}" class="m-link">Search now?</a>
+                There are no items yet. <a href="{{ route('root.reservation.search') }}" class="m-link">Search now?</a>
             @endcomponent
         @endif
     @else

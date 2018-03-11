@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Root\Auth;
 
-use App\{User, PasswordReset};
+use App\User;
 use App\Notifications\PasswordResetLink;
 use Helper;
-use Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -31,24 +31,22 @@ class ForgotPasswordController extends Controller
         $token = Helper::createRandomToken();
 
         $user = User::where('email', $email)->first();
-        $user->notify(new PasswordResetLink($token));
-        $this->saveResetToken($user, $token);
+        $user->notify(new PasswordResetLink($token, $user));
+        $this->storeResetToken($user, $token);
 
         session()->flash('message', [
             'type' => 'success',
             'content' => 'Password reset link has been sent to your email.'
         ]);
 
-        return redirect()->back();
+        return back();
     }
 
-    protected function saveResetToken(User $user, $token) 
+    protected function storeResetToken(User $user, $token) 
     {
-        PasswordReset::where('email', $user->email)->delete();
-
-        $password_reset = new PasswordReset;
-        $password_reset->email = $user->email;
-        $password_reset->token = $token;
-        $password_reset->save();
+        DB::table('password_resets')->where('email', $user->email)->delete();
+        DB::table('password_resets')->insert(
+            ['email' => $user->email, 'token' => $token]
+        );
     }
 }

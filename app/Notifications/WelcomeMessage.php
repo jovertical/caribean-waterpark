@@ -7,33 +7,23 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class PasswordResetLink extends Notification
+class WelcomeMessage extends Notification
 {
     use Queueable;
 
     /**
-     * Random generated token.
-     * @var string
+     * @var User
      */
-    protected $token;
-
-    /**
-     * The link that will be sent to the user's email.
-     * @var string
-     */
-    protected $reset_link;
+    protected $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token, $user)
+    public function __construct($user)
     {
-        $this->token = $token;
-        $this->reset_link = url(
-            config('app.url').route(strtolower($user->environment).'.password.reset', $this->token, false)
-        );
+        $this->user = $user;
     }
 
     /**
@@ -56,9 +46,9 @@ class PasswordResetLink extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('You are receiving this email because we received a password reset request for your account.')
-                    ->action('Reset Password', $this->reset_link)
-                    ->line('If you did not request a password reset, no further action is required.');
+                    ->line("Welcome {$this->user->first_name}! Thanks for joining us.")
+                    ->action('Click here to login', url(route('front.login')))
+                    ->line(" Please share some of your time with us. We can't wait to see you.");
     }
 
     /**

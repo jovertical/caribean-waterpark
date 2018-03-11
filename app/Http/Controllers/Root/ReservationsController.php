@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\Notifications\LoginCredential;
+use App\Notifications\{WelcomeMessage, LoginCredential};
 use App\Traits\{ComputesCosts};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Setting, Helper;
@@ -28,7 +28,6 @@ class ReservationsController extends Controller
 
     /**
      * @param Setting $setting Injected instance of the Setting Service.
-     * @param PaypalExpress $paypal_express Injected instance of the PaypalExpress Service.
      */
     public function __construct(Setting $setting)
     {
@@ -75,7 +74,7 @@ class ReservationsController extends Controller
                     Notify::warning($this->reservation_errors[0].'. Please try again.', 'Whooops?');
                 }
 
-                return redirect('/superuser/reservation/search');
+                return redirect()->route('root.reservation.search');
             }
 
             $checkin_date = Carbon::parse($search_parameters['checkin_date']);
@@ -143,7 +142,7 @@ class ReservationsController extends Controller
             session(['reservation.filters.minimum_price' => $filters['minimum_price']]);
             session(['reservation.filters.maximum_price' => $filters['maximum_price']]);
 
-            return view('root.reservation.search_items', [
+            return view('root.reservation.search', [
                 'available_items' => Helper::paginate(session()->get('reservation.available_items')),
                 'selected_items' => session()->get('reservation.selected_items')
             ]);
@@ -151,7 +150,7 @@ class ReservationsController extends Controller
 
         session(['reservation' => []]);
 
-        return view('root.reservation.search_items', [
+        return view('root.reservation.search', [
             'available_items' => collect([]),
             'selected_items' => collect([])
         ]);
@@ -381,7 +380,7 @@ class ReservationsController extends Controller
         $items = session()->get('reservation.selected_items') ?? [];
         $item_costs = session()->get('reservation.item_costs');
 
-        return view('root.reservation.show_items', [
+        return view('root.reservation.cart', [
             'items' => $items,
             'item_costs' => $item_costs
         ]);
@@ -435,6 +434,10 @@ class ReservationsController extends Controller
             $user->phone_number    = $request->input('phone_number');
 
             if ($user->save()) {
+                // Welcome email.
+                $user->notify(new WelcomeMessage($user));
+
+                // Login credential email.
                 $user->notify(new LoginCredential($login_credential, $login_credential));
 
                 // Proceed to reservation.

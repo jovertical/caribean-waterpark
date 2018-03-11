@@ -77,13 +77,13 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
         });
 
         Route::prefix('reservation')->name('reservation.')->group(function() {
-            Route::get('/search', 'ReservationsController@searchItems')->name('search-items');
+            Route::get('/search', 'ReservationsController@searchItems')->name('search');
             Route::post('/cart/{index}/add', 'ReservationsController@addItem')->name('add-item');
             Route::post('/cart/{index}/remove', 'ReservationsController@removeItem')->name('remove-item');
             Route::post('/cart/clear', 'ReservationsController@clearItems')->name('clear-items');
-            Route::get('/cart', 'ReservationsController@showItems')->name('show-items');
+            Route::get('/cart', 'ReservationsController@showItems')->name('cart');
             Route::get('/user', 'ReservationsController@user')->name('user');
-            Route::post('/user/store', 'ReservationsController@storeUser')->name('store-user');
+            Route::post('/user', 'ReservationsController@storeUser');
             Route::post('/{user}/store', 'ReservationsController@store')->name('store');
         });
 

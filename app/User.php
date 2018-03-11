@@ -114,7 +114,11 @@ class User extends Authenticatable
 
     public function getTitleAttribute($value)
     {
-        return $this->attributes['gender'] == 'male' ? 'Sir' : "Ma'am";
+        if ($this->attributes['gender'] != null) {
+            return $this->attributes['gender'] == 'male' ? 'Sir' : "Ma'am";
+        }
+
+        return;
     }
 
     public function setAddressAttribute($value)
@@ -125,6 +129,11 @@ class User extends Authenticatable
     public function getAddressAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function getEnvironmentAttribute($value)
+    {
+        return ucfirst(strtolower($this->type) == 'superuser' ? 'root' : 'front');
     }
 
     public function getRouteKeyName()

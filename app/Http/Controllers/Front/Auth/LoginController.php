@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Root\Auth;
+namespace App\Http\Controllers\Front\Auth;
 
-use Toastr as Notify;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -10,16 +9,20 @@ use App\Http\Controllers\Controller;
 
 class LoginController extends Controller
 {
-    protected $redirectTo = '/superuser';
+    /**
+     * Where to redirect user after successful login
+     * @var string
+     */
+    protected $redirectTo = '/user';
 
     public function __construct()
     {
-        $this->middleware('root.guest')->except('logout');
+        $this->middleware('front.guest')->except('logout');
     }
 
     public function showLoginForm()
     {
-        return view('root.auth.login');
+        return view('front.auth.login');
     }
 
     public function login(Request $request)
@@ -33,8 +36,6 @@ class LoginController extends Controller
         if ($this->attempt($request)) {
             // if login attempt is successful
             $request->session()->regenerate();
-
-            Notify::success('Good luck for the day ahead.', 'Welcome back!');
 
             return redirect()->intended($this->redirectTo);
         }
@@ -54,7 +55,7 @@ class LoginController extends Controller
                     'password'  => $request->input('password'),
                     'verified'  => true,
                     'active'    => true,
-                    'type'      => 'superuser'
+                    'type'      => 'user'
                 ], $request->filled('remember'));
     }
 
@@ -69,6 +70,6 @@ class LoginController extends Controller
             'content' => 'You have been logged out from the system.'
         ]);
 
-        return redirect()->route('root.login');
+        return redirect()->route('front.login');
     }
 }

@@ -30,7 +30,7 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('root.reservation.store-user') }}" id="form-reservation-store"
+                    <form method="POST" action="{{ route('root.reservation.user') }}" id="form-reservation-store"
                         class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed m-form--state">
                         {{ csrf_field() }}
 

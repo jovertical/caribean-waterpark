@@ -46,8 +46,9 @@ class LoginCredential extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('You are receiving this email because we received a login credential request for your account.')
-                    ->line("We generated this username:{$this->name}, and password:{$this->password}");
+                    ->line('You are receiving this email because an account is created for you.')
+                    ->action('Review account', url(route('root.login')))
+                    ->line("We have generated this username: {$this->name} and password: {$this->password}");
     }
 
     /**

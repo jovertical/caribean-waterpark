@@ -1,39 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Front\Auth;
 
+use App\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
+    protected $redirectTo = '/user';
 
-    use ResetsPasswords;
-
-    /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('front.guest');
+    }
+
+    public function showResetForm(Request $request, $token = null)
+    {
+        return view('front.auth.passwords.reset', [
+            'token' => $token, 
+            'email' => $request->email
+        ]);
+    }
+
+    public function reset(Request $request, $token)
+    {
+        $this->validate($request, [
+            'password' => 'required|confirmed|min:6|max:255',
+            'password_confirmation' => 'required|min:6|max:255'
+        ]);
+
+        $password_reset = DB::table('password_resets')->where('token', $token)->first();
+
+        $user = User::where('email', $password_reset->email)->first();
+        $user->password = bcrypt($request->input('password'));
+        $user->save();
+
+        DB::table('password_resets')->where('token', $token)->delete();
+
+        Auth::loginUsingId($user->id);
+
+        return redirect()->route('front.home');
     }
 }

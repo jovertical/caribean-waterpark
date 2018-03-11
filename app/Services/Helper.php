@@ -44,6 +44,8 @@ class Helper {
             'inventory'     => ['categories', 'items', 'coupons'],
             'reservations'  => ['reservations'],
             'manage'        => ['users', 'superusers', 'user-roles', 'settings'],
+
+            'reservation'   => ['search', 'user', 'review']
         ];
 
         foreach ($segments as $index => $segment) {
@@ -52,7 +54,7 @@ class Helper {
             }
         }
 
-        return 'dashboard';
+        return;
     }
 
     public static function fileUrl($data, $type = '')
