@@ -9,8 +9,13 @@
             <div class="category-heading-content category-heading-content__2 text-uppercase">
                 <div class="breadcrumb">
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><span>Hotels</span></li>
+                        <li>
+                            <a href="{{ route('front.welcome') }}">Home</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Reservation</a>
+                        </li>
                     </ul>
                 </div>
 

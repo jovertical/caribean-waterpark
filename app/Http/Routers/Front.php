@@ -3,11 +3,6 @@
 Route::namespace('Front')->name('front.')->group(function () {
     Route::get('/', 'PagesController@welcome')->name('welcome');
 
-    Route::prefix('items')->name('items.')->group(function() {
-        Route::get('/', 'ItemsController@index')->name('index');
-        Route::get('/{item}', 'ItemsController@show')->name('show');
-    });
-
     Route::namespace('Auth')->group(function() {
         Route::get('register', 'RegisterController@showRegisterForm')->name('register');
         Route::post('register', 'RegisterController@register');
@@ -23,6 +18,7 @@ Route::namespace('Front')->name('front.')->group(function () {
 
     Route::prefix('reservation')->name('reservation.')->group(function() {
         Route::get('/search', 'ReservationsController@search')->name('search');
+        Route::get('/search/{item}', 'ReservationsController@showItem')->name('show-item');
         Route::get('/user', 'ReservationsController@user')->name('user');
         Route::post('/user', 'ReservationsController@storeUser');
         Route::post('/store', 'ReservationsController@store')->name('store');

@@ -203,4 +203,9 @@ class ReservationsController extends Controller
 
         return count($this->reservation_errors) > 0 ? false : true;
     }
+
+    public function showItem(Item $item)
+    {
+        return view('front.items.show', compact('item'));
+    }
 }
