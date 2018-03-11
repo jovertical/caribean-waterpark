@@ -133,7 +133,7 @@
         <div class="container">
             <div class="destination-grid-content">
                 <div class="section-title">
-                    <h3>About <a href="#">{{ $items->count() }} Accomodations</a> are waiting</h3>
+                    <h3>About <a href="#">{{ $items->total() }} Accomodations</a> to stay with.</h3>
                 </div>
                 <div class="row">
                     <div class="awe-masonry">

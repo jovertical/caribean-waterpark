@@ -22,7 +22,12 @@
                                 <a href="{{ route('front.reservation.search') }}">Search</a>
                             </li>
                             <li>
-                                <a href="{{ route('front.reservation.cart.index') }}">Cart</a>
+                                <a href="{{ route('front.reservation.cart.index') }}">Cart
+                                    <span style="float: right;">
+                                        {{ session()->has('reservation.selected_items') ?
+                                            count(session()->get('reservation.selected_items')) : 0 }}
+                                    </span>
+                                </a>
                             </li>
                         </ul>
                     </li>

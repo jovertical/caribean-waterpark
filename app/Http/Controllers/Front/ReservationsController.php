@@ -121,17 +121,17 @@ class ReservationsController extends Controller
                 (session()->get('reservation.filters.minimum_price') != $filters['minimum_price']) OR
                 (session()->get('reservation.filters.maximum_price') != $filters['maximum_price'])) {
 
-                if (count(session()->get('reservation.selected_items'))) {
-                    session()->flash('message', [
-                        'type' => 'info',
-                        'content' => 'Cart cleared.'
-                    ]);
+                if (session()->has('reservation.selected_items')) {
+                    if (count(session()->get('reservation.selected_items'))) {
+                        session()->flash('message', [
+                            'type' => 'info',
+                            'content' => 'Cart cleared.'
+                        ]);
+                    }
                 }
-
 
                 session(['reservation.available_items' => $available_items->all()]);
                 session(['reservation.selected_items' => []]);
-
             }
 
             // set reservation data
@@ -257,7 +257,8 @@ class ReservationsController extends Controller
 
                 session()->flash('message', [
                     'type' => 'success',
-                    'content' => "{$item_added->item->name} added to cart."
+                    'content' => $item_added->item->name.' was added to '.'<a href="'.
+                                    route('front.reservation.cart.index').'">cart.</a>'
                 ]);
 
                 return $redirect_to != null ? redirect($redirect_to) : back();
@@ -280,7 +281,7 @@ class ReservationsController extends Controller
 
             session()->flash('message', [
                 'type' => 'success',
-                'content' => "{$item_added->item->name} quantity updated."
+                'content' => "{$item_added->item->name} quantity has been updated."
             ]);
 
             return $redirect_to != null ? redirect($redirect_to) : back();
@@ -288,7 +289,7 @@ class ReservationsController extends Controller
 
         session()->flash('message', [
             'type' => 'success',
-            'content' => "{$item_added->item->name} not added."
+            'content' => "{$item_added->item->name} was not added."
         ]);
 
         return $redirect_to != null ? redirect($redirect_to) : back();
@@ -403,5 +404,15 @@ class ReservationsController extends Controller
         }
 
         return back();
+    }
+
+    /**
+     * @return view
+     */
+    public function user()
+    {
+        $users = User::where('type', 'user')->where('active', 1)->get();
+
+        return view('front.reservation.user', compact('users'));
     }
 }

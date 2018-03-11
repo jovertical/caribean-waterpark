@@ -73,7 +73,7 @@
                                                                 id="form-remove-item" style="display: none;">
                                                             {{ csrf_field() }}
 
-                                                            <input type="hidden" name="quantity" id="quantity" 
+                                                            <input type="hidden" name="quantity" id="quantity"
                                                                 value="{{ $item->quantity }}">
                                                         </form>
                                                     </td>

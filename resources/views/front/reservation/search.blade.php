@@ -136,7 +136,7 @@
                             <!-- Message -->
                             @if (Session::has('message'))
                                 @component('front.components.alert')
-                                    {{ Session::get('message.content') }}
+                                    {!! Session::get('message.content') !!}
                                 @endcomponent
                             @endif
 
