@@ -23,7 +23,7 @@
                             <!-- Message -->
                             @if (Session::has('message'))
                                 <div class="m-section__content">
-                                    <div class="alert alert-info alert-dismissible" role="alert">
+                                    <div class="alert alert-{{ Session::get('message.type') }} alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
                                         {{ Session::get('message.content') }}
                                     </div>

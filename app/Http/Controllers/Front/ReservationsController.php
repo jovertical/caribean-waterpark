@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Traits\{ComputesCosts};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
-use Setting, Helper;
+use Setting, Helper, PaypalExpress;
 use Str, Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -41,7 +41,7 @@ class ReservationsController extends Controller
         $this->paypal_express = $paypal_express;
     }
 
-    public function search()
+    public function search(Request $request)
     {
         $search_parameters = [
             'checkin_date' => $request->input('ci'),

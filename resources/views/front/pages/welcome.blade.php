@@ -51,51 +51,72 @@
                     <div id="awe-search-tabs-1" class="search-bus ui-tabs-panel ui-widget-content ui-corner-bottom">
                         <h2>Share your precious time with us?</h2>
 
-                        <form>
+                        <form method="GET" action="{{ route('front.reservation.search') }}">
                             <div class="form-group">
+                                <!-- Check-out -->
                                 <div class="form-elements">
-                                    <label>Check in</label>
+                                    <label>Check-in</label>
                                     <div class="form-item">
                                         <i class="awe-icon awe-icon-calendar"></i> 
-                                        <input type="text" class="awe-calendar" value="Date">
+                                        <input type="text" name="ci" id="ci" class="awe-calendar" 
+                                            value="{{ Request::input('ci') }}">
                                     </div>
                                 </div>
-
+                                <!--/. Check-out -->
+                                
+                                <!-- Check-out -->
                                 <div class="form-elements">
-                                    <label>Check out</label>
+                                    <label>Check-out</label>
                                     <div class="form-item">
                                         <i class="awe-icon awe-icon-calendar"></i> 
-                                        <input type="text" class="awe-calendar" value="Date">
+                                        <input type="text" name="co" id="co" class="awe-calendar" 
+                                            value="{{ Request::input('co') }}">
                                     </div>
                                 </div>
+                                <!--/. Check-out -->
                             </div>
 
                             <div class="form-group">
+                                <!-- Adult -->
                                 <div class="form-elements">
-                                    <label>Adult</label>
+                                    <label for="aq">Adult</label>
                                     <div class="form-item">
-                                        <select class="awe-select">
-                                            <option>0</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
+                                        <select name="aq" id="aq" class="awe-select">
+                                            <option value="1" {{ Request::input('aq') == '1' ? 'selected' : '' }}>1</option>
+                                            <option value="2" {{ Request::input('aq') == '2' ? 'selected' : '' }}>2</option>
+                                            <option value="3" {{ Request::input('aq') == '3' ? 'selected' : '' }}>3</option>
+                                            <option value="4" {{ Request::input('aq') == '4' ? 'selected' : '' }}>4</option>
+                                            <option value="5" {{ Request::input('aq') == '5' ? 'selected' : '' }}>5</option>
+                                            <option value="6" {{ Request::input('aq') == '6' ? 'selected' : '' }}>6</option>
+                                            <option value="7" {{ Request::input('aq') == '7' ? 'selected' : '' }}>7</option>
+                                            <option value="8" {{ Request::input('aq') == '8' ? 'selected' : '' }}>8</option>
+                                            <option value="9" {{ Request::input('aq') == '9' ? 'selected' : '' }}>9</option>
                                         </select>
                                     </div>
-                                    <span>12 yo and above</span>
+                                    <span>12 y/o and above</span>
                                 </div>
+                                <!--/. Adult -->
 
+                                <!-- Children -->
                                 <div class="form-elements">
-                                    <label>Kids</label>
+                                    <label for="cq">Children</label>
                                     <div class="form-item">
-                                        <select class="awe-select">
-                                            <option>0</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
+                                        <select name="cq" id="cq" class="awe-select">
+                                            <option value="" disabled selected>0</option>
+                                            <option value="1" {{ Request::input('cq') == '1' ? 'selected' : '' }}>1</option>
+                                            <option value="2" {{ Request::input('cq') == '2' ? 'selected' : '' }}>2</option>
+                                            <option value="3" {{ Request::input('cq') == '3' ? 'selected' : '' }}>3</option>
+                                            <option value="4" {{ Request::input('cq') == '4' ? 'selected' : '' }}>4</option>
+                                            <option value="5" {{ Request::input('cq') == '5' ? 'selected' : '' }}>5</option>
+                                            <option value="6" {{ Request::input('cq') == '6' ? 'selected' : '' }}>6</option>
+                                            <option value="7" {{ Request::input('cq') == '7' ? 'selected' : '' }}>7</option>
+                                            <option value="8" {{ Request::input('cq') == '8' ? 'selected' : '' }}>8</option>
+                                            <option value="9" {{ Request::input('cq') == '9' ? 'selected' : '' }}>9</option>
                                         </select>
                                     </div>
-                                    <span>0-11 yo</span>
+                                    <span>0-11 y/o</span>
                                 </div>
+                                <!--/. Children -->
                             </div>
 
                             <div class="form-actions">

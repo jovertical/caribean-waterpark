@@ -29,15 +29,24 @@ class ForgotPasswordController extends Controller
 
         $email = $request->input('email');
         $token = Helper::createRandomToken();
+        $user = User::where('email', $email)->where('type', 'superuser')->first();
+        
+        if ($user != null) {
+            $user->notify(new PasswordResetLink($token, $user));
+            $this->storeResetToken($user, $token);
 
-        $user = User::where('email', $email)->first();
-        $user->notify(new PasswordResetLink($token, $user));
-        $this->storeResetToken($user, $token);
+            session()->flash('message', [
+                'type' => 'success',
+                'content' => 'Password reset link has been sent to your email.'
+            ]);         
+
+            return back();
+        }
 
         session()->flash('message', [
-            'type' => 'success',
-            'content' => 'Password reset link has been sent to your email.'
-        ]);
+            'type' => 'danger',
+            'content' => 'We cannot find your account.'
+        ]);    
 
         return back();
     }
