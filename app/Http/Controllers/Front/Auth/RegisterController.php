@@ -36,22 +36,28 @@ class RegisterController extends Controller
         ]);
 
         $token = base64_encode($request->input('email'));
+        $name = Helper::createUsername($request->input('email'));
+        $password = $request->input('password');
 
         $user = new User;
         $user->first_name       = $request->input('first_name');
         $user->middle_name      = $request->input('middle_name');
         $user->last_name        = $request->input('last_name');
-        $user->name             = Helper::createUsername($request->input('email'));
+        $user->name             = $name;
         $user->email            = $request->input('email');
         $user->email_token      = $token;
-        $user->password         = bcrypt($request->input('password'));
+        $user->password         = bcrypt($password);
         $user->birthdate        = $request->input('birthdate');
         $user->gender           = $request->input('gender');
         $user->address          = $request->input('address');
         $user->phone_number     = $request->input('phone_number');
 
         if ($user->save()) {
+            // Welcome email.
             $user->notify(new WelcomeMessage($user));
+
+            // Login credential email.
+            $user->notify(new LoginCredential($name, $password));
 
             event(new Registered($user));
 

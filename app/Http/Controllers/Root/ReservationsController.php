@@ -513,9 +513,11 @@ class ReservationsController extends Controller
         }
 
         // check if reservation items are not valid.
-        if (in_array(strtolower($reservation->status), ['pending', 'cancelled'])) {
-            if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
-                array_push($this->reservation_errors, 'The available items in the calendar is not enough');
+        if (! in_array(strtolower($status), ['cancelled', 'void'])) {
+            if (in_array(strtolower($reservation->status), ['pending'])) {
+                if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
+                    array_push($this->reservation_errors, 'The available items in the calendar is not enough');
+                }
             }
         }
 

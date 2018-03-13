@@ -34,7 +34,7 @@
                             <!-- Message -->
                             @if (Session::has('message'))
                                 @component('front.components.alert')
-                                    {{ Session::get('message.content') }}
+                                    {!! Session::get('message.content') !!}
                                 @endcomponent
                             @endif
 
@@ -162,7 +162,7 @@
                                             </div>
                                         </form>
                                     @else
-                                        <form method="POST" action="">
+                                        <form method="POST" action="{{ route('front.login') }}">
                                             {{ csrf_field() }}
 
                                             <!-- Name -->
@@ -170,6 +170,9 @@
                                                 <div class="form-row width-33 padding-x-4">
                                                     <label>Email or username <span class="text-danger">*</span></label>
                                                     <input type="text" name="name" id="name" value="{{ old('name') }}">
+                                                    <span id="name-error" class="text-danger">
+                                                        {{ $errors->first('name') }}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <!--/. Name -->
@@ -179,6 +182,9 @@
                                                 <div class="form-row width-33 padding-x-4">
                                                     <label>Password <span class="text-danger">*</span></label>
                                                     <input type="password" name="password" id="password">
+                                                    <span id="password-error" class="text-danger">
+                                                        {{ $errors->first('password') }}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <!--/. Password -->
@@ -192,35 +198,43 @@
                                 </div>
 
                             @else
-
-                                <div id="payment">
-                                    <h3>Payment method</h3>
-                                    <ul class="payment_methods methods">
-                                        <li class="payment_method_bacs">
-                                            <input id="payment_method_bacs" type="radio" name="payment_method">
-                                            <label for="payment_method_bacs">Direct Cash Payment</label>
-                                            <div class="payment_box payment_method_bacs">
-                                                <p>Make your payment directly at the resort. Please save your Reference Number (will be created shortly) as we will be looking it by the time you visit us. Your reservation will be on pending state, please wait for our email and calls.</p>
-                                            </div>
-                                        </li>
-
-                                        <li class="payment_method_paypal">
-                                            <input id="payment_method_paypal" type="radio" name="payment_method">
-                                            <label for="payment_method_paypal">PayPal
-                                                <img src="/front/assets/images/paypal.png" alt="">
-                                                <a href="www.paypal.com" class="about_paypal">What is PayPal?</a>
-                                            </label>
-
-                                            <div class="payment_box payment_method_paypal">
-                                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.</p>
-                                            </div>
-                                        </li>
-                                    </ul>
-
-                                    <div class="form-row place-order">
-                                        <button type="submit" class="button button-primary">Place reservation</button>
-                                    </div>
+                                <div class="woocommerce-info">You're almost done, please make sure you have read our
+                                    <a href="{{ route('front.terms') }}">
+                                        Terms &amp; Conditions</a>
                                 </div>
+
+                                <form method="POST" action="{{ route('front.reservation.store') }}">
+                                    {{ csrf_field() }}
+                                    <div id="payment">
+                                        <h3>Payment method</h3>
+                                        <ul class="payment_methods methods">
+                                            <li class="payment_method_bacs">
+                                                <input id="payment_method_bacs" type="radio" name="payment_mode" value="cash">
+                                                <label for="payment_method_bacs">Direct Cash Payment</label>
+                                                <div class="payment_box payment_method_bacs">
+                                                    <p>Make your payment directly at the resort. Please save your Reference Number (will be created shortly) as we will be looking it by the time you visit us. Your reservation will be on pending state, please wait for our email and calls.</p>
+                                                </div>
+                                            </li>
+
+                                            <li class="payment_method_paypal">
+                                                <input id="payment_method_paypal" type="radio" name="payment_mode"
+                                                    value="paypal_express">
+                                                <label for="payment_method_paypal">PayPal
+                                                    <img src="/front/assets/images/paypal.png" alt="">
+                                                    <a href="https://www.paypal.com" class="about_paypal">What is PayPal?</a>
+                                                </label>
+
+                                                <div class="payment_box payment_method_paypal">
+                                                    <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                        <div class="form-row place-order">
+                                            <button type="submit" class="button button-primary">Place reservation</button>
+                                        </div>
+                                    </div>
+                                </form>
                             @endguest
                         </div>
                     </div>

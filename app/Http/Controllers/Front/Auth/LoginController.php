@@ -37,7 +37,11 @@ class LoginController extends Controller
             // if login attempt is successful
             $request->session()->regenerate();
 
-            return redirect()->intended($this->redirectTo);
+            if (url()->previous() == route('root.login')) {
+                return redirect()->intended($this->redirectTo);
+            }
+
+            return back();
         }
 
         // if login attempt failed

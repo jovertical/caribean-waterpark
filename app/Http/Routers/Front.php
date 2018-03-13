@@ -2,6 +2,9 @@
 
 Route::namespace('Front')->name('front.')->group(function () {
     Route::get('/', 'PagesController@welcome')->name('welcome');
+    Route::get('/about', 'PagesController@about')->name('about');
+    Route::get('/contact', 'PagesController@contact')->name('contact');
+    Route::get('/terms', 'PagesController@terms')->name('terms');
 
     Route::prefix('items')->name('items.')->group(function() {
         Route::get('/', 'ItemsController@index')->name('index');
@@ -30,10 +33,10 @@ Route::namespace('Front')->name('front.')->group(function () {
         Route::get('/cart', 'ReservationsController@cart')->name('cart.index');
         Route::post('/cart', 'ReservationsController@destroyCart')->name('cart.destroy');
         Route::get('/user', 'ReservationsController@user')->name('user');
-        Route::post('/user', 'ReservationsController@storeUser');
         Route::post('/store', 'ReservationsController@store')->name('store');
-        Route::get('/paypal-express-redirect', 'ReservationsController@paypalRedirect')->name('paypal.redirect');
-        Route::get('/paypal-express-callback', 'ReservationsController@paypalCallback')->name('paypal.callback');
+        Route::get('/paypal-express-redirect/{reservation}', 'ReservationsController@paypalRedirect')->name('paypal.redirect');
+        Route::get('/paypal-express-callback/{reservation}', 'ReservationsController@paypalCallback')->name('paypal.callback');
+        Route::get('/review/{reservation}', 'ReservationsController@review')->name('review');
     });
 
     Route::middleware('front.auth')->prefix('user')->group(function() {

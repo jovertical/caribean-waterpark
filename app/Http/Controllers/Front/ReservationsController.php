@@ -405,8 +405,9 @@ class ReservationsController extends Controller
      * @param  User    $user
      * @return
      */
-    public function store(User $user)
+    public function store(Request $request)
     {
+        $user = auth()->user();
         $items = session()->get('reservation.selected_items');
         $checkin_date = session()->get('reservation.checkin_date');
         $checkout_date = session()->get('reservation.checkout_date');
@@ -419,7 +420,10 @@ class ReservationsController extends Controller
 
         try {
             if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
-                // Notify::warning('The available items in the calendar is not enough. Please try again.', 'Whooops!?');
+                session()->flash('message', [
+                    'type' => 'warning',
+                    'content' => 'The available items in the calendar is not enough. Please try again.'
+                ]);
 
                 return back();
             }
@@ -433,17 +437,53 @@ class ReservationsController extends Controller
             // store reservation days.
             $this->storeReservationDays($reservation, $guests, $rates);
 
+            // If payment mode is paypal_express, redirect.
+            if (strtolower($request->input('payment_mode')) == 'paypal_express') {
+                return $this->paypalRedirect($reservation);
+            }
+
             // clear reservation data from the session.
             session()->pull('reservation');
 
-            // Notify::success('Reservation created.', 'Success!');
-
-            return redirect()->route('front.reservations.show', $reservation);
+            return redirect()->route('front.reservation.review', $reservation);
         } catch(Exception $e) {
-            // Notify::error($e->getMessage(), 'Whooops!');
+            session()->flash('message', [
+                'type' => 'error',
+                'content' => $e->getMessage()
+            ]);
         }
 
         return back();
+    }
+
+    public function storeTransaction(Reservation $reservation)
+    {
+        $type = 'payment';
+        $payment_mode = 'paypal_express';
+        $amount = $reservation->price_left_payable;
+
+        // create reservation transaction.
+        $transaction =  $reservation->createReservationTransaction($type, $payment_mode, $amount);
+
+        $checkin_date = $reservation->checkin_date;
+        $checkout_date = $reservation->checkout_date;
+        $items = $reservation->items->all();
+
+        if ($transaction) {
+            $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+        }
+
+        return [
+            'amount' => $amount
+        ];
+    }
+
+    /**
+     * @return view
+     */
+    public function review(Reservation $reservation)
+    {
+        return view('front.reservation.review', compact('reservation'));
     }
 
     /**
@@ -453,8 +493,6 @@ class ReservationsController extends Controller
     public function index()
     {
         $reservations = auth()->user()->reservations;
-
-        dd($reservations);
 
         return view('front.reservations.index', compact('reservations'));
     }
@@ -466,8 +504,6 @@ class ReservationsController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        dd($reservation);
-
         return view('front.reservations.show', compact('reservation'));
     }
 
@@ -481,17 +517,28 @@ class ReservationsController extends Controller
             $response = $this->paypal_express->redirect($reservation, true);
 
             if ($response['paypal_link'] == null) {
-                Notify::warning('Cannot process your payment.', 'Whooops!?');
+                if ($reservation->delete()) {
+                    // clear reservation from session.
+                    session()->pull('reservation');
 
-                return redirect()->route('root.reservations.show', $reservation);
+                    session()->flash('message', [
+                        'type' => 'warning',
+                        'content' =>    'We cannot process your payment. Transaction has been cancelled.'
+                    ]);
+                }
+
+                return redirect()->route('front.reservation.cart');
             }
 
             return redirect($response['paypal_link']);
         } catch (Exception $e) {
-            Notify::error($e->getMessage(), 'Whooops!');
+            session()->flash('message', [
+                'type' => 'error',
+                'content' => $e->getMessage()
+            ]);
         };
 
-        return redirect()->route('root.reservations.show', $reservation);
+        return redirect()->route('front.reservation.welcome');
     }
 
     /**
@@ -504,12 +551,51 @@ class ReservationsController extends Controller
         $token = $request->get('token');
         $payer_id = $request->get('PayerID');
 
-        $status = $this->paypal_express->callback($reservation, $token, $payer_id);
+        $items = $reservation->items->all();
+        $checkin_date = $reservation->checkin_date;
+        $checkout_date = $reservation->checkout_date;
 
-        if (! strcasecmp($status, 'Completed') || ! strcasecmp($status, 'Processed')) {
-            Notify::success('Payment processed.', 'Success!');
+        try {
+            if ($this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
+                $status = $this->paypal_express->callback($reservation, $token, $payer_id);
+
+                if (in_array(strtolower($status), ['completed', 'processed', 'pending'])) {
+                    // store transaction.
+                    $transaction = $this->storeTransaction($reservation);
+
+                    $reservation->price_paid = $transaction['amount'];
+                    $reservation->status = 'paid';
+
+                    if ($reservation->save()) {
+                        // clear reservation from session.
+                        session()->pull('reservation');
+
+                        session()->flash('message', [
+                            'type' => 'success',
+                            'content' => 'Your reservation has been completed. We cannot wait to see you!'
+                        ]);
+                    }
+
+                    return redirect()->route('front.reservation.review', $reservation);
+                }
+            }
+
+            if ($reservation->delete()) {
+                // clear reservation from session.
+                session()->pull('reservation');
+
+                session()->flash('message', [
+                    'type' => 'warning',
+                    'content' =>    'We cannot process your payment. Transaction has been cancelled.'
+                ]);
+            }
+        } catch (Exception $e) {
+            session()->flash('message', [
+                'type' => 'error',
+                'content' => $e->getMessage()
+            ]);
         }
 
-        return redirect()->route('root.reservations.show', $reservation);
+        return redirect()->route('front.reservation.cart');
     }
 }

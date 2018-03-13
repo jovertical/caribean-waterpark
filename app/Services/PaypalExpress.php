@@ -46,7 +46,7 @@ class PaypalExpress
 
         $reservation->items->each(function($item) use ($items) {
             $items->push([
-                'name' => $item->name,
+                'name' => $item->item->name,
                 'price' => $item->price_original,
                 'qty' => $item->quantity
             ]);
@@ -59,8 +59,8 @@ class PaypalExpress
         }
 
         return [
-            'return_url' => route('root.reservations.paypal.callback', $reservation),
-            'cancel_url' => route('root.reservations.show', $reservation),
+            'return_url' => route('front.reservation.paypal.callback', $reservation),
+            'cancel_url' => route('front.reservation.cart.index'),
             'invoice_id' => uniqid(),
             'invoice_description' => 'Transaction #'.$reservation->id,
             'items' => $items->toArray(),
