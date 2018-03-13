@@ -26,19 +26,29 @@ class RegisterController extends Controller
     {
         $this->validate($request, [
             'first_name'    => 'required|string|max:255',
+            'middle_name'   => 'max:255',
             'last_name'     => 'required|string|max:255',
-            'email'         => 'required|email|unique:users',
-            'password'      => 'required|string|confirmed|min:6|pwned:100'
+            'email'         => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+            'password'      => 'required|string|confirmed|min:6|pwned:100',
+            'birthdate'     => 'max:255',
+            'address'       => 'max:510',
+            'phone_number'  => 'max:255'
         ]);
+
         $token = base64_encode($request->input('email'));
 
         $user = new User;
-        $user->first_name   = $request->input('first_name');
-        $user->last_name    = $request->input('last_name');
-        $user->name         = Helper::createUsername($request->input('email'));
-        $user->email        = $request->input('email');
-        $user->password     = bcrypt($request->input('password'));
-        $user->email_token  = $token;
+        $user->first_name       = $request->input('first_name');
+        $user->middle_name      = $request->input('middle_name');
+        $user->last_name        = $request->input('last_name');
+        $user->name             = Helper::createUsername($request->input('email'));
+        $user->email            = $request->input('email');
+        $user->email_token      = $token;
+        $user->password         = bcrypt($request->input('password'));
+        $user->birthdate        = $request->input('birthdate');
+        $user->gender           = $request->input('gender');
+        $user->address          = $request->input('address');
+        $user->phone_number     = $request->input('phone_number');
 
         if ($user->save()) {
             $user->notify(new WelcomeMessage($user));

@@ -251,6 +251,9 @@ class ReservationsController extends Controller
                 // pull the item from the selected_items array
                 session()->pull('reservation.selected_items.'.$index);
 
+                // reset indexes of selected_items array
+                session(['reservation.selected_items' => array_values(session()->get('reservation.selected_items'))]);
+
                 // re-compute item costs
                 $item_costs =   $this->computeItemCosts(
                                     $this->reservation_settings,
@@ -355,7 +358,7 @@ class ReservationsController extends Controller
         try {
             $name = Helper::createUsername($request->input('email'));
             $password = Helper::createPassword();
-            
+
             $user = new User;
             $user->verified        = true;
             $user->type            = 'user';

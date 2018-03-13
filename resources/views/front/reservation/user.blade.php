@@ -55,8 +55,15 @@
                                     <h3>Customer info</h3>
 
                                     @if(! Request::input('existing'))
-                                        <form method="POST" action="{{ route('front.reservation.user') }}">
+                                        <form method="POST" action="{{ route('front.register') }}">
                                             {{ csrf_field() }}
+
+                                            <!-- Random password -->
+                                            <input type="hidden" name="password"
+                                                value="{{ $password = Helper::createPassword() }}">
+
+                                            <!-- Random password confirmation  -->
+                                            <input type="hidden" name="password_confirmation" value="{{ $password }}">
 
                                             <div class="display-inline width-100">
                                                 <div class="form-row width-33 padding-x-4">
@@ -191,23 +198,17 @@
                                     <ul class="payment_methods methods">
                                         <li class="payment_method_bacs">
                                             <input id="payment_method_bacs" type="radio" name="payment_method">
-                                            <label for="payment_method_bacs">Direct Bank Transfer</label>
+                                            <label for="payment_method_bacs">Direct Cash Payment</label>
                                             <div class="payment_box payment_method_bacs">
-                                                <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+                                                <p>Make your payment directly at the resort. Please save your Reference Number (will be created shortly) as we will be looking it by the time you visit us. Your reservation will be on pending state, please wait for our email and calls.</p>
                                             </div>
                                         </li>
 
-                                        <li class="payment_method_cheque">
-                                            <input id="payment_method_cheque" type="radio" name="payment_method">
-                                            <label for="payment_method_cheque">Cheque Payment</label>
-                                            <div class="payment_box payment_method_cheque">
-                                                <p>Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                                            </div>
-                                        </li>
                                         <li class="payment_method_paypal">
                                             <input id="payment_method_paypal" type="radio" name="payment_method">
                                             <label for="payment_method_paypal">PayPal
-                                                <img src="/front/assets/images/paypal.png" alt=""> <a href="#" class="about_paypal">What is PayPal?</a>
+                                                <img src="/front/assets/images/paypal.png" alt="">
+                                                <a href="www.paypal.com" class="about_paypal">What is PayPal?</a>
                                             </label>
 
                                             <div class="payment_box payment_method_paypal">

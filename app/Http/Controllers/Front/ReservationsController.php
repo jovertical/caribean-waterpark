@@ -208,7 +208,7 @@ class ReservationsController extends Controller
 
                     session()->flash('message', [
                         'type' => 'success',
-                        'content' => $item_added->item->name.' was added to '.'<a href="'.
+                        'content' => $item_added->item->name.' was added to your '.'<a href="'.
                                         route('front.reservation.cart.index').'">cart.</a>'
                     ]);
 
@@ -240,7 +240,7 @@ class ReservationsController extends Controller
 
             session()->flash('message', [
                 'type' => 'success',
-                'content' => "{$item_added->item->name} was not added."
+                'content' => "{$item_added->item->name} was not added to your cart."
             ]);
 
             return $redirect_to != null ? redirect($redirect_to) : back();
@@ -282,6 +282,9 @@ class ReservationsController extends Controller
                     // pull the item from the selected_items array
                     session()->pull('reservation.selected_items.'.$index);
 
+                    // reset indexes of selected_items array
+                    session(['reservation.selected_items' => array_values(session()->get('reservation.selected_items'))]);
+
                     // re-compute item costs
                     $item_costs =   $this->computeItemCosts(
                                         $this->reservation_settings,
@@ -292,7 +295,8 @@ class ReservationsController extends Controller
 
                     session()->flash('message', [
                         'type' => 'success',
-                        'content' => "{$item_removed->item->name} removed."
+                        'content' => "{$item_removed->item->name} removed from your ".'<a href="'.
+                                        route('front.reservation.cart.index').'">cart.</a>'
                     ]);
 
                     return back();
@@ -394,65 +398,6 @@ class ReservationsController extends Controller
         }
 
         return redirect()->route('front.welcome');
-    }
-
-    public function storeUser(Request $request)
-    {
-        $this->validate($request, [
-            'email'         => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
-            'first_name'    => 'required|string|max:255',
-            'middle_name'   => 'max:255',
-            'last_name'     => 'required|string|max:255',
-            'birthdate'     => 'max:255',
-            'address'       => 'max:510',
-            'phone_number'  => 'max:255'
-        ]);
-
-        try {
-            $name = Helper::createUsername($request->input('email'));
-            $password = Helper::createPassword();
-
-            $user = new User;
-            $user->type            = 'user';
-            $user->name            = $name;
-            $user->email           = $request->input('email');
-            $user->password        = bcrypt($password);
-            $user->first_name      = $request->input('first_name');
-            $user->middle_name     = $request->input('middle_name');
-            $user->last_name       = $request->input('last_name');
-            $user->birthdate       = $request->input('birthdate');
-            $user->gender          = $request->input('gender');
-            $user->address         = $request->input('address');
-            $user->phone_number    = $request->input('phone_number');
-
-            if ($user->save()) {
-                // Welcome email.
-                $user->notify(new WelcomeMessage($user));
-
-                // Login credential email.
-                $user->notify(new LoginCredential($name, $password));
-
-                // Prompt user for email verification.
-                session()->flash('message', [
-                    'type' => 'success',
-                    'content' => 'Your account has been created, check your email for verification.'
-                ]);
-
-                return back();
-            }
-
-            session()->flash('message', [
-                'type' => 'warning',
-                'content' => 'Cannot create an account, Please try again.'
-            ]);
-        } catch (Exception $e) {
-            session()->flash('message', [
-                'type' => 'error',
-                'content' => $e->getMessage()
-            ]);
-        }
-
-        return back();
     }
 
     /**

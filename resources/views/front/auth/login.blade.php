@@ -19,7 +19,8 @@
 
                 @if(count($errors))
                     @component('front.components.alert')
-                        There are errors in your credentials. Try again
+                        We cannot authenticate you. This may be due to wrong credentials or
+                        your account has not yet been confirmed. Please try again.
                     @endcomponent
                 @endif
 
