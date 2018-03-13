@@ -15,9 +15,14 @@ class Helper {
         return  "{$name}.{$ext}";
     }
 
-    public static function createLoginCredential($email)
+    public static function createUsername($email)
     {
         return substr($email, 0, strrpos($email, '@'));
+    }
+
+    public static function createPassword()
+    {
+        return mt_rand(100000, 999999);
     }
 
     public static function createRandomToken()
@@ -45,7 +50,7 @@ class Helper {
             'reservations'  => ['reservations'],
             'manage'        => ['users', 'superusers', 'user-roles', 'settings'],
 
-            'reservation'   => ['search', 'user', 'review']
+            'reservation'   => ['search', 'cart', 'user', 'review']
         ];
 
         foreach ($segments as $index => $segment) {

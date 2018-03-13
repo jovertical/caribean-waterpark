@@ -9,7 +9,7 @@
         <!-- Name -->
         <div class="item-title">
             <h2>
-                <a href="{{ route('front.reservation.show-item', $available_item->item) }}">{{ $available_item->item->name }}</a>
+                <a href="{{ route('front.items.show', $available_item->item) }}">{{ $available_item->item->name }}</a>
             </h2>
         </div>
 

@@ -84,7 +84,7 @@
                     </div>
                     <!--/. Confirm password -->
 
-                    <a href="#" class="terms-conditions">By registering, you accept terms &amp; conditions</a>
+                    <a href="#" class="terms-conditions">By registering, you are accepting our Terms &amp; Conditions</a>
 
                     <div class="form-actions">
                         <input type="submit" value="Register">

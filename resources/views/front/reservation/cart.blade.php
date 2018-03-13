@@ -19,7 +19,7 @@
                                 <a href="#">Your Cart</a>
                             </li>
                             <li>
-                                <a href="#">Customer information</a>
+                                <a href="{{ route('front.reservation.user') }}">Customer information</a>
                             </li>
                             <li>
                                 <a href="#">Complete reservation</a>
@@ -30,24 +30,25 @@
 
                 <div class="col-lg-9">
                     <div class="checkout-page__content">
-                        <!-- Message -->
-                        @if (Session::has('message'))
-                            @component('front.components.alert')
-                                {{ Session::get('message.content') }}
-                            @endcomponent
-                        @endif
+                        <div class="yourcart-content">
+                            <!-- Message -->
+                            @if (Session::has('message'))
+                                @component('front.components.alert')
+                                    {{ Session::get('message.content') }}
+                                @endcomponent
+                            @endif
 
-                        @if(count($items) == 0)
-                            @component('front.components.alert')
-                                There are no items yet. <a href="{{ route('front.reservation.search') }}">Search now?</a>
-                            @endcomponent
-                        @endif
+                            @if(count($items) == 0)
+                                @component('front.components.alert')
+                                    There are no items yet. <a href="{{ route('front.reservation.search') }}">Search now?</a>
+                                @endcomponent
+                            @endif
 
-                        @if(count($items))
-                            <div class="yourcart-content">
+                            @if(count($items))
                                 <div class="content-title">
-                                    <h2><i class="awe-icon awe-icon-cart"></i>Check Your Cart</h2>
+                                    <h2><i class="awe-icon awe-icon-cart"></i>Your Cart</h2>
                                 </div>
+
                                 <div class="cart-content">
                                     <table class="cart-table">
                                         <thead>
@@ -161,27 +162,27 @@
                                         </div>
                                         <!--/. Total -->
 
-                                        <div class="cart-submit">
+                                        <div class="cart-submit" style="display: flex;">
                                             <!-- Clear cart -->
-                                            <input type="submit" value="Clear Cart" class="update-cart"
-                                                onclick="event.preventDefault();
-                                                    document.getElementById('form-clear-cart').submit();">
                                             <form method="POST" action="{{ route('front.reservation.cart.destroy') }}"
-                                                id="form-clear-cart" style="display: none;">
+                                                style="margin-left: auto;">
                                                 {{ csrf_field() }}
+
+                                                <button href="{{ route('front.reservation.cart.destroy') }}"
+                                                    class="button button-secondary">Clear cart
+                                                </button>
                                             </form>
                                             <!--/. Clear cart -->
 
                                             <!-- User -->
-                                            <input type="submit" value="Continue Checkout" class="checkout"
-                                                onclick="event.preventDefault();
-                                                    window.location.href='{{ route('front.reservation.user') }}'">
+                                            <a href="{{ route('front.reservation.user') }}" class="button button-primary">
+                                                Continue checkout
+                                            </a>
                                         </div>
-
                                     </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

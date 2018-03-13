@@ -70,18 +70,16 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::get('/{reservation}', 'ReservationsController@show')->name('show');
             Route::get('/{reservation}/transactions', 'ReservationsController@transactions')->name('transactions.index');
             Route::post('/{reservation}/transactions', 'ReservationsController@storeTransaction')->name('transactions.store');
-            Route::get('/{reservation}/paypal-express-redirect', 'ReservationsController@paypalRedirect')->name('paypal.redirect');
-            Route::get('/{reservation}/paypal-express-callback', 'ReservationsController@paypalCallback')->name('paypal.callback');
             Route::get('/{reservation}/days', 'ReservationsController@days')->name('days.index');
             Route::patch('/days/{reservation_day}/update', 'ReservationsController@updateDay')->name('days.update');
         });
 
         Route::prefix('reservation')->name('reservation.')->group(function() {
-            Route::get('/search', 'ReservationsController@searchItems')->name('search');
+            Route::get('/search', 'ReservationsController@search')->name('search');
             Route::post('/cart/{index}/add', 'ReservationsController@addItem')->name('add-item');
             Route::post('/cart/{index}/remove', 'ReservationsController@removeItem')->name('remove-item');
-            Route::post('/cart/clear', 'ReservationsController@clearItems')->name('clear-items');
-            Route::get('/cart', 'ReservationsController@showItems')->name('cart');
+            Route::get('/cart', 'ReservationsController@cart')->name('cart.index');
+            Route::post('/cart/clear', 'ReservationsController@destroyCart')->name('cart.destroy');
             Route::get('/user', 'ReservationsController@user')->name('user');
             Route::post('/user', 'ReservationsController@storeUser');
             Route::post('/{user}/store', 'ReservationsController@store')->name('store');

@@ -149,7 +149,7 @@
                             <div>
                                 <button type="button" class="btn btn-secondary clear-items"
                                     data-form="#clearItems"
-                                    data-action="{{ route('root.reservation.clear-items') }}"
+                                    data-action="{{ route('root.reservation.cart.destroy') }}"
                                     data-toggle="modal"
                                     data-target="#clearItemsConfirmation"
                                     title="Clear items">Clear cart

@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Traits\{ComputesCosts};
+use App\Notifications\{WelcomeMessage, LoginCredential};
+use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Setting, Helper, PaypalExpress;
-use Str, Carbon;
+use Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ReservationsController extends Controller
 {
-    use ComputesCosts;
+    /**
+     * Item calendar functionalities
+     */
+    use ItemCalendarProcesses;
+
+    /**
+     * Reservation process functionalities
+     */
+    use ReservationProcesses;
 
     /**
      * Array of reservation settings.
@@ -58,15 +67,13 @@ class ReservationsController extends Controller
         $items = collect([]);
 
         if (($search_parameters['checkin_date'] != null) AND ($search_parameters['checkout_date'] != null)) {
-            if (! $this->validateSearch($search_parameters)) {
-                if (count($this->reservation_errors)) {
-                    session(['reservation' => []]);
+            if (count($validate_search = $this->validateSearch($search_parameters, $this->reservation_settings))) {
+                session(['reservation' => []]);
 
-                    session()->flash('message', [
-                        'type' => 'warning',
-                        'content' => $this->reservation_errors[0].'. Please try again.'
-                    ]);
-                }
+                session()->flash('message', [
+                    'type' => 'warning',
+                    'content' => $validate_search[0].'. Please try again.'
+                ]);
 
                 return redirect()->route('front.reservation.search');
             }
@@ -165,63 +172,6 @@ class ReservationsController extends Controller
     }
 
     /**
-     * Validate search.
-     * @param  array  $search_parameters
-     * @return null
-     */
-    protected function validateSearch(array $search_parameters)
-    {
-        $checkin_date = $search_parameters['checkin_date'];
-        $checkout_date = $search_parameters['checkout_date'];
-        $adult_quantity = $search_parameters['adult_quantity'];
-        $children_quantity = $search_parameters['children_quantity'];
-
-        $days_prior = $this->reservation_settings['days_prior'];
-        $minimum_reservation_length = $this->reservation_settings['minimum_reservation_length'];
-        $maximum_reservation_length = $this->reservation_settings['maximum_reservation_length'];
-
-        if (($adult_quantity == null) OR (! is_numeric($adult_quantity))) {
-            array_push($this->reservation_errors, 'Adult quantity is not valid');
-        }
-
-        if ($children_quantity != null) {
-            if (! is_numeric($children_quantity)) {
-                array_push($this->reservation_errors, 'Children quantity is not valid');
-            }
-        }
-
-        $checkin_date = Carbon::parse($checkin_date);
-        $checkout_date = Carbon::parse($checkout_date);
-        $days = $checkin_date->diffInDays($checkout_date) + 1;
-        $earliest = Carbon::parse(now()->addDays($days_prior)->format('Y-m-d'));
-
-        if ($checkin_date > $checkout_date) {
-            array_push($this->reservation_errors, 'Invalid date');
-        }
-
-        if ($checkin_date < $earliest) {
-            array_push($this->reservation_errors, 'Check-in date must be '.$days_prior.' day(s) prior today');
-        }
-
-        if ($days > $maximum_reservation_length) {
-            array_push($this->reservation_errors,
-                'Reservation length must not be greater than '.$maximum_reservation_length.' day(s)');
-        }
-
-        if ($days < $minimum_reservation_length) {
-            array_push($this->reservation_errors,
-                'Reservation length must not be lesser than '.$minimum_reservation_length.' day(s)');
-        }
-
-        return count($this->reservation_errors) > 0 ? false : true;
-    }
-
-    public function showItem(Item $item)
-    {
-        return view('front.items.show', compact('item'));
-    }
-
-    /**
      * Add specific item to the cart.
      * @param  Request $request
      * @param  int  $index
@@ -236,16 +186,41 @@ class ReservationsController extends Controller
 
         $item_added = $available_items[$index];
 
-        if ($quantity <= $item_added->calendar_unoccupied) {
-            if(! in_array($item_added->item->id, array_column(array_column($selected_items, 'item'), 'id'))) {
-                $item_added->index = $index;
+        try {
+            if ($quantity <= $item_added->calendar_unoccupied) {
+                if(! in_array($item_added->item->id, array_column(array_column($selected_items, 'item'), 'id'))) {
+                    $item_added->index = $index;
+                    $item_added->calendar_occupied += $quantity;
+                    $item_added->calendar_unoccupied -= $quantity;
+                    $item_added->quantity = $quantity;
+                    $item_added->price = $item_added->calendar_price * $quantity;
+
+                    // push the item to the selected_items array
+                    session()->push('reservation.selected_items', $item_added);
+
+                    // re-compute item costs
+                    $item_costs =   $this->computeItemCosts(
+                                        $this->reservation_settings,
+                                        session()->get('reservation.selected_items')
+                                    );
+
+                    session(['reservation.item_costs' => $item_costs]);
+
+                    session()->flash('message', [
+                        'type' => 'success',
+                        'content' => $item_added->item->name.' was added to '.'<a href="'.
+                                        route('front.reservation.cart.index').'">cart.</a>'
+                    ]);
+
+                    return $redirect_to != null ? redirect($redirect_to) : back();
+                }
+
                 $item_added->calendar_occupied += $quantity;
                 $item_added->calendar_unoccupied -= $quantity;
-                $item_added->quantity = $quantity;
-                $item_added->price = $item_added->calendar_price * $quantity;
-
-                // push the item to the selected_items array
-                session()->push('reservation.selected_items', $item_added);
+                $selected_items[array_search(
+                    $item_added->item->id, array_column(array_column($selected_items, 'item'), 'id')
+                )]->quantity += $quantity;
+                $item_added->price = $item_added->calendar_price * $item_added->quantity;
 
                 // re-compute item costs
                 $item_costs =   $this->computeItemCosts(
@@ -257,42 +232,28 @@ class ReservationsController extends Controller
 
                 session()->flash('message', [
                     'type' => 'success',
-                    'content' => $item_added->item->name.' was added to '.'<a href="'.
-                                    route('front.reservation.cart.index').'">cart.</a>'
+                    'content' => "{$item_added->item->name} quantity has been updated."
                 ]);
 
                 return $redirect_to != null ? redirect($redirect_to) : back();
             }
 
-            $item_added->calendar_occupied += $quantity;
-            $item_added->calendar_unoccupied -= $quantity;
-            $selected_items[array_search(
-                $item_added->item->id, array_column(array_column($selected_items, 'item'), 'id')
-            )]->quantity += $quantity;
-            $item_added->price = $item_added->calendar_price * $item_added->quantity;
-
-            // re-compute item costs
-            $item_costs =   $this->computeItemCosts(
-                                $this->reservation_settings,
-                                session()->get('reservation.selected_items')
-                            );
-
-            session(['reservation.item_costs' => $item_costs]);
-
             session()->flash('message', [
                 'type' => 'success',
-                'content' => "{$item_added->item->name} quantity has been updated."
+                'content' => "{$item_added->item->name} was not added."
             ]);
 
             return $redirect_to != null ? redirect($redirect_to) : back();
+        } catch (Exception $e) {
+            session()->pull('reservation');
+
+            session()->flash('message', [
+                'type' => 'danger',
+                'content' => $e->getMessage()
+            ]);
         }
 
-        session()->flash('message', [
-            'type' => 'success',
-            'content' => "{$item_added->item->name} was not added."
-        ]);
-
-        return $redirect_to != null ? redirect($redirect_to) : back();
+        return back();
     }
 
     /**
@@ -310,15 +271,32 @@ class ReservationsController extends Controller
 
         $item_removed = $selected_items[$index];
 
-        if ($quantity <= $item_removed->quantity) {
-            $item_removed->calendar_occupied -= $quantity;
-            $item_removed->calendar_unoccupied += $quantity;
-            $item_removed->quantity -= $quantity;
-            $item_removed->price = $item_removed->calendar_price * $item_removed->quantity;
+        try {
+            if ($quantity <= $item_removed->quantity) {
+                $item_removed->calendar_occupied -= $quantity;
+                $item_removed->calendar_unoccupied += $quantity;
+                $item_removed->quantity -= $quantity;
+                $item_removed->price = $item_removed->calendar_price * $item_removed->quantity;
 
-            if ($item_removed->quantity == 0) {
-                // pull the item from the selected_items array
-                session()->pull('reservation.selected_items.'.$index);
+                if ($item_removed->quantity == 0) {
+                    // pull the item from the selected_items array
+                    session()->pull('reservation.selected_items.'.$index);
+
+                    // re-compute item costs
+                    $item_costs =   $this->computeItemCosts(
+                                        $this->reservation_settings,
+                                        session()->get('reservation.selected_items')
+                                    );
+
+                    session(['reservation.item_costs' => $item_costs]);
+
+                    session()->flash('message', [
+                        'type' => 'success',
+                        'content' => "{$item_removed->item->name} removed."
+                    ]);
+
+                    return back();
+                }
 
                 // re-compute item costs
                 $item_costs =   $this->computeItemCosts(
@@ -326,36 +304,28 @@ class ReservationsController extends Controller
                                     session()->get('reservation.selected_items')
                                 );
 
-                session(['reservation.item_costs' => $item_costs]);
+                session(['reservation.item_costs' => $item_costs ]);
 
                 session()->flash('message', [
                     'type' => 'success',
-                    'content' => "{$item_removed->item->name} removed."
+                    'content' => "{$item_removed->item->name} quantity updated."
                 ]);
 
                 return back();
             }
 
-            // re-compute item costs
-            $item_costs =   $this->computeItemCosts(
-                                $this->reservation_settings,
-                                session()->get('reservation.selected_items')
-                            );
-
-            session(['reservation.item_costs' => $item_costs ]);
-
             session()->flash('message', [
                 'type' => 'success',
-                'content' => "{$item_removed->item->name} quantity updated."
+                'content' => "{$item_removed->item->name} not removed."
             ]);
+        } catch (Exception $e) {
+            session()->pull('reservation');
 
-            return back();
+            session()->flash('message', [
+                'type' => 'danger',
+                'content' => $e->getMessage()
+            ]);
         }
-
-        session()->flash('message', [
-            'type' => 'success',
-            'content' => "{$item_removed->item->name} not removed."
-        ]);
 
         return back();
     }
@@ -411,8 +381,190 @@ class ReservationsController extends Controller
      */
     public function user()
     {
-        $users = User::where('type', 'user')->where('active', 1)->get();
+        if (session()->has('reservation')) {
+            if (count($reservation = session()->get('reservation'))) {
+                if (isset($reservation['selected_items'])) {
+                    if (count($reservation['selected_items']) < 1) {
+                        return redirect()->route('front.reservation.cart.index');
+                    }
+                }
 
-        return view('front.reservation.user', compact('users'));
+                return view('front.reservation.user');
+            }
+        }
+
+        return redirect()->route('front.welcome');
+    }
+
+    public function storeUser(Request $request)
+    {
+        $this->validate($request, [
+            'email'         => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+            'first_name'    => 'required|string|max:255',
+            'middle_name'   => 'max:255',
+            'last_name'     => 'required|string|max:255',
+            'birthdate'     => 'max:255',
+            'address'       => 'max:510',
+            'phone_number'  => 'max:255'
+        ]);
+
+        try {
+            $name = Helper::createUsername($request->input('email'));
+            $password = Helper::createPassword();
+
+            $user = new User;
+            $user->type            = 'user';
+            $user->name            = $name;
+            $user->email           = $request->input('email');
+            $user->password        = bcrypt($password);
+            $user->first_name      = $request->input('first_name');
+            $user->middle_name     = $request->input('middle_name');
+            $user->last_name       = $request->input('last_name');
+            $user->birthdate       = $request->input('birthdate');
+            $user->gender          = $request->input('gender');
+            $user->address         = $request->input('address');
+            $user->phone_number    = $request->input('phone_number');
+
+            if ($user->save()) {
+                // Welcome email.
+                $user->notify(new WelcomeMessage($user));
+
+                // Login credential email.
+                $user->notify(new LoginCredential($name, $password));
+
+                // Prompt user for email verification.
+                session()->flash('message', [
+                    'type' => 'success',
+                    'content' => 'Your account has been created, check your email for verification.'
+                ]);
+
+                return back();
+            }
+
+            session()->flash('message', [
+                'type' => 'warning',
+                'content' => 'Cannot create an account, Please try again.'
+            ]);
+        } catch (Exception $e) {
+            session()->flash('message', [
+                'type' => 'error',
+                'content' => $e->getMessage()
+            ]);
+        }
+
+        return back();
+    }
+
+    /**
+     * Store the reservation.
+     * @param  User    $user
+     * @return
+     */
+    public function store(User $user)
+    {
+        $items = session()->get('reservation.selected_items');
+        $checkin_date = session()->get('reservation.checkin_date');
+        $checkout_date = session()->get('reservation.checkout_date');
+        $adult_quantity = session()->get('reservation.adult_quantity');
+        $children_quantity = session()->get('reservation.children_quantity');
+        $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
+        $rates = ['adult' => 200, 'children' => 120];
+        $item_costs = session()->get('reservation.item_costs');
+        $reference_number = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
+
+        try {
+            if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
+                // Notify::warning('The available items in the calendar is not enough. Please try again.', 'Whooops!?');
+
+                return back();
+            }
+
+            // create a new reservation.
+            $reservation =  $user->createReservation($reference_number, $checkin_date, $checkout_date, $item_costs);
+
+            // store reservation items.
+            $this->storeReservationItems($reservation, $items, $item_costs);
+
+            // store reservation days.
+            $this->storeReservationDays($reservation, $guests, $rates);
+
+            // clear reservation data from the session.
+            session()->pull('reservation');
+
+            // Notify::success('Reservation created.', 'Success!');
+
+            return redirect()->route('front.reservations.show', $reservation);
+        } catch(Exception $e) {
+            // Notify::error($e->getMessage(), 'Whooops!');
+        }
+
+        return back();
+    }
+
+    /**
+     * Display listing of the resource
+     * @return view
+     */
+    public function index()
+    {
+        $reservations = auth()->user()->reservations;
+
+        dd($reservations);
+
+        return view('front.reservations.index', compact('reservations'));
+    }
+
+    /**
+     * Show reservation
+     * @param  Reservation $reservation
+     * @return view
+     */
+    public function show(Reservation $reservation)
+    {
+        dd($reservation);
+
+        return view('front.reservations.show', compact('reservation'));
+    }
+
+    /**
+     * @param  Reservation $reservation
+     * @return redirect
+     */
+    public function paypalRedirect(Reservation $reservation)
+    {
+        try {
+            $response = $this->paypal_express->redirect($reservation, true);
+
+            if ($response['paypal_link'] == null) {
+                Notify::warning('Cannot process your payment.', 'Whooops!?');
+
+                return redirect()->route('root.reservations.show', $reservation);
+            }
+
+            return redirect($response['paypal_link']);
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Whooops!');
+        };
+
+        return redirect()->route('root.reservations.show', $reservation);
+    }
+
+    /**
+     * @param  Request     $request
+     * @param  Reservation $reservation
+     * @return redirect
+     */
+    public function paypalCallback(Request $request, Reservation $reservation)
+    {
+        $token = $request->get('token');
+        $payer_id = $request->get('PayerID');
+
+        $status = $this->paypal_express->callback($reservation, $token, $payer_id);
+
+        if (! strcasecmp($status, 'Completed') || ! strcasecmp($status, 'Processed')) {
+            Notify::success('Payment processed.', 'Success!');
+        }
+
+        return redirect()->route('root.reservations.show', $reservation);
     }
 }

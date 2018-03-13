@@ -3,16 +3,24 @@
 namespace App\Http\Controllers\Root;
 
 use App\Notifications\{WelcomeMessage, LoginCredential};
-use App\Traits\{ComputesCosts};
+use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Setting, Helper;
-use Str, Carbon, Notify;
+use Carbon, Notify;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ReservationsController extends Controller
 {
-    use ComputesCosts;
+    /**
+     * Item calendar functionalities
+     */
+    use ItemCalendarProcesses;
+
+    /**
+     * Reservation process functionalities
+     */
+    use ReservationProcesses;
 
     /**
      * Array of reservation settings.
@@ -50,7 +58,7 @@ class ReservationsController extends Controller
      * @param  Request $request
      * @return view
      */
-    public function searchItems(Request $request)
+    public function search(Request $request)
     {
         $search_parameters = [
             'checkin_date' => $request->input('ci'),
@@ -67,12 +75,10 @@ class ReservationsController extends Controller
         $items = collect([]);
 
         if (($search_parameters['checkin_date'] != null) OR ($search_parameters['checkout_date'] != null)) {
-            if (! $this->validateSearch($search_parameters)) {
-                if (count($this->reservation_errors)) {
-                    session(['reservation' => []]);
+            if (count($validate_search = $this->validateSearch($search_parameters, $this->reservation_settings))) {
+                session(['reservation' => []]);
 
-                    Notify::warning($this->reservation_errors[0].'. Please try again.', 'Whooops?');
-                }
+                Notify::warning($validate_search[0].'. Please try again.', 'Whooops?');
 
                 return redirect()->route('root.reservation.search');
             }
@@ -154,78 +160,6 @@ class ReservationsController extends Controller
             'available_items' => collect([]),
             'selected_items' => collect([])
         ]);
-    }
-
-    /**
-     * Validate search.
-     * @param  array  $search_parameters
-     * @return null
-     */
-    protected function validateSearch(array $search_parameters)
-    {
-        $checkin_date = $search_parameters['checkin_date'];
-        $checkout_date = $search_parameters['checkout_date'];
-        $adult_quantity = $search_parameters['adult_quantity'];
-        $children_quantity = $search_parameters['children_quantity'];
-
-        $days_prior = $this->reservation_settings['days_prior'];
-        $minimum_reservation_length = $this->reservation_settings['minimum_reservation_length'];
-        $maximum_reservation_length = $this->reservation_settings['maximum_reservation_length'];
-
-        if (($checkin_date == null) OR ($checkout_date == null)) {
-            array_push($this->reservation_errors, 'You must set a checkin and checkout date');
-        }
-
-        if (($adult_quantity == null) OR (! is_numeric($adult_quantity))) {
-            array_push($this->reservation_errors, 'Adult quantity is not valid');
-        }
-
-        if ($children_quantity != null) {
-            if (! is_numeric($children_quantity)) {
-                array_push($this->reservation_errors, 'Children quantity is not valid');
-            }
-        }
-
-        $checkin_date = Carbon::parse($checkin_date);
-        $checkout_date = Carbon::parse($checkout_date);
-        $days = $checkin_date->diffInDays($checkout_date) + 1;
-        $earliest = Carbon::parse(now()->addDays($days_prior)->format('Y-m-d'));
-
-        if ($checkin_date > $checkout_date) {
-            array_push($this->reservation_errors, 'Invalid date');
-        }
-
-        if ($checkin_date < $earliest) {
-            array_push($this->reservation_errors, 'Check-in date must be '.$days_prior.' day(s) prior today');
-        }
-
-        if ($days > $maximum_reservation_length) {
-            array_push($this->reservation_errors,
-                'Reservation length must not be greater than '.$maximum_reservation_length.' day(s)');
-        }
-
-        if ($days < $minimum_reservation_length) {
-            array_push($this->reservation_errors,
-                'Reservation length must not be lesser than '.$minimum_reservation_length.' day(s)');
-        }
-
-        return count($this->reservation_errors) > 0 ? false : true;
-    }
-
-    /**
-     * Check if item has passed the filters.
-     * @param  Item   $item    Instance of Item.
-     * @param  array  $filters
-     * @return boolean
-     */
-    protected function itemFiltered($item, array $filters)
-    {
-        if (($item->calendar_price >= $filters['minimum_price']) AND
-            ($item->calendar_price <= $filters['maximum_price'])) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -349,10 +283,25 @@ class ReservationsController extends Controller
     }
 
     /**
+     * Show selected items
+     * @return view
+     */
+    public function cart()
+    {
+        $items = session()->get('reservation.selected_items') ?? [];
+        $item_costs = session()->get('reservation.item_costs');
+
+        return view('root.reservation.cart', [
+            'items' => $items,
+            'item_costs' => $item_costs
+        ]);
+    }
+
+    /**
      * Clear all cart items
      * @return back
      */
-    public function clearItems()
+    public function destroyCart()
     {
         try {
             session(['reservation.selected_items' => []]);
@@ -371,21 +320,6 @@ class ReservationsController extends Controller
         }
 
         return back();
-    }
-
-    /**
-     * Show selected items
-     * @return view
-     */
-    public function showItems()
-    {
-        $items = session()->get('reservation.selected_items') ?? [];
-        $item_costs = session()->get('reservation.item_costs');
-
-        return view('root.reservation.cart', [
-            'items' => $items,
-            'item_costs' => $item_costs
-        ]);
     }
 
     /**
@@ -419,14 +353,15 @@ class ReservationsController extends Controller
         ]);
 
         try {
+            $name = Helper::createUsername($request->input('email'));
+            $password = Helper::createPassword();
+            
             $user = new User;
-            $login_credential = Helper::createLoginCredential($request->input('email'));
-
             $user->verified        = true;
             $user->type            = 'user';
-            $user->name            = $login_credential;
+            $user->name            = $name;
             $user->email           = $request->input('email');
-            $user->password        = bcrypt($login_credential);
+            $user->password        = bcrypt($password);
             $user->first_name      = $request->input('first_name');
             $user->middle_name     = $request->input('middle_name');
             $user->last_name       = $request->input('last_name');
@@ -440,7 +375,7 @@ class ReservationsController extends Controller
                 $user->notify(new WelcomeMessage($user));
 
                 // Login credential email.
-                $user->notify(new LoginCredential($login_credential, $login_credential));
+                $user->notify(new LoginCredential($name, $password));
 
                 // Proceed to reservation.
                 return $this->store($user);
@@ -708,91 +643,6 @@ class ReservationsController extends Controller
     }
 
     /**
-     * @param  Reservation $reservation
-     * @return redirect
-     */
-    public function paypalRedirect(Reservation $reservation)
-    {
-        try {
-            $response = $this->paypal_express->redirect($reservation, true);
-
-            if ($response['paypal_link'] == null) {
-                Notify::warning('Cannot process your payment.', 'Whooops!?');
-
-                return redirect()->route('root.reservations.show', $reservation);
-            }
-
-            return redirect($response['paypal_link']);
-        } catch (Exception $e) {
-            Notify::error($e->getMessage(), 'Whooops!');
-        };
-
-        return redirect()->route('root.reservations.show', $reservation);
-    }
-
-    /**
-     * @param  Request     $request
-     * @param  Reservation $reservation
-     * @return redirect
-     */
-    public function paypalCallback(Request $request, Reservation $reservation)
-    {
-        $token = $request->get('token');
-        $payer_id = $request->get('PayerID');
-
-        $status = $this->paypal_express->callback($reservation, $token, $payer_id);
-
-        if (! strcasecmp($status, 'Completed') || ! strcasecmp($status, 'Processed')) {
-            Notify::success('Payment processed.', 'Success!');
-        }
-
-        return redirect()->route('root.reservations.show', $reservation);
-    }
-
-    /**
-     * Check if reservation_items are valid in the calendar.
-     * @param  array  $reservation_items
-     * @param  string $checkin_date
-     * @param  string $checkout_date
-     * @return boolean
-     */
-    protected function reservationItemsValid(array $reservation_items, $checkin_date, $checkout_date)
-    {
-        /**
-         * Reset indexes of the array
-         * @var array
-         */
-        $items = array_values($reservation_items);
-
-        for($i = 0; $i < count($items); $i++) {
-            $count =    ItemCalendar::where('item_id', $items[$i]->item->id)
-                            ->whereBetween('date', [$checkin_date, $checkout_date])
-                            ->where('quantity', '<=', $items[$i]->quantity)
-                            ->count();
-
-            if ($count != 0) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Store the selected items for the reservation.
-     * @param  Reservation $reservation
-     * @param  array       $items
-     * @param  array       $item_costs
-     * @return null
-     */
-    protected function storeReservationItems(Reservation $reservation, array $items, array $item_costs)
-    {
-        foreach($items as $item) {
-            $reservation->createReservationItem($item, $item_costs);
-        }
-    }
-
-    /**
      * Reservation days.
      * @param  Reservation $reservation
      * @return view
@@ -851,78 +701,5 @@ class ReservationsController extends Controller
         }
 
         return back();
-    }
-
-    /**
-     * Store reservation days.
-     * @param  Reservation $reservation
-     * @param  array       $guests
-     * @return null
-     */
-    protected function storeReservationDays(Reservation $reservation, array $guests, array $rates)
-    {
-        $date = $reservation->checkin_date;
-
-        while ($date <= $reservation->checkout_date) {
-            $reservation->createReservationDay($date, $guests, $rates);
-
-            $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
-        }
-    }
-
-    /**
-     * Store the selected items in the calendar.
-     * @param  array  $items
-     * @param  string $checkin_date
-     * @param  string $checkout_date
-     * @return null
-     */
-    protected function storeItemsInCalendar(array $items, $checkin_date, $checkout_date)
-    {
-        for($i = 0; $i < count($items); $i++) {
-            $date = $checkin_date;
-
-            while ($date <= $checkout_date) {
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $items[$i]->id)->first();
-
-                ItemCalendar::UpdateOrCreate([
-                    'item_id' => $items[$i]->item->id,
-                    'date' =>  $date
-                ], [
-                    'item_id' => $items[$i]->item->id,
-                    'date' =>  $date
-                ])->save();
-
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $items[$i]->item->id)->first();
-                $item_calendar->quantity += $items[$i]->quantity;
-                $item_calendar->save();
-
-                $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
-            }
-        }
-    }
-
-    /**
-     * Remove the items from the calendar.
-     * @param  array  $items
-     * @param  string $checkin_date
-     * @param  string $checkout_date
-     * @return null
-     */
-    protected function removeItemsInCalendar(array $items, $checkin_date, $checkout_date)
-    {
-        foreach($items as $item) {
-            $date = $checkin_date;
-
-            while ($date <= $checkout_date) {
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $item->item->id)->first();
-
-                // Update item calendar.
-                $item_calendar->quantity -= $item->quantity;
-                $item_calendar->save();
-
-                $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
-            }
-        }
     }
 }

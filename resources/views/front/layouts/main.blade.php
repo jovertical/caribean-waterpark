@@ -57,7 +57,7 @@
         <script type="text/javascript" src="/front/assets/js/scripts.js"></script>
         <script type="text/javascript" src="/front/assets/revslider-demo/js/jquery.themepunch.revolution.min.js"></script>
         <script type="text/javascript" src="/front/assets/revslider-demo/js/jquery.themepunch.tools.min.js"></script>
-
+        <script type="text/javascript" src="/front/assets/js/lib/moment.min.js"></script>
         <script type="text/javascript" src="/front/assets/js/main.js"></script>
 
         <script type="text/javascript">

@@ -31,10 +31,15 @@ Route::namespace('Front')->name('front.')->group(function () {
         Route::get('/user', 'ReservationsController@user')->name('user');
         Route::post('/user', 'ReservationsController@storeUser');
         Route::post('/store', 'ReservationsController@store')->name('store');
-        Route::get('/review', 'ReservationsController@review')->name('review');
+        Route::get('/paypal-express-redirect', 'ReservationsController@paypalRedirect')->name('paypal.redirect');
+        Route::get('/paypal-express-callback', 'ReservationsController@paypalCallback')->name('paypal.callback');
     });
 
     Route::middleware('front.auth')->prefix('user')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
+        Route::prefix('reservations')->name('reservations.')->group(function() {
+            Route::get('reservations', 'ReservationsController@index')->name('index');
+            Route::get('reservations/{reservation}', 'ReservationsController@show')->name('show');
+        });
     });
 });

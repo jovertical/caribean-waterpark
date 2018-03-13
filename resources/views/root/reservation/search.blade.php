@@ -4,7 +4,7 @@
     @component('root.components.sidebar')
         <!-- Cart -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="{{ route('root.reservation.cart') }}" class="m-menu__link">
+            <a href="{{ route('root.reservation.cart.index') }}" class="m-menu__link">
                 <i class="m-menu__link-icon la la-shopping-cart"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
