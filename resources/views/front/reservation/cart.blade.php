@@ -34,7 +34,7 @@
                             <!-- Message -->
                             @if (Session::has('message'))
                                 @component('front.components.alert')
-                                    {{ Session::get('message.content') }}
+                                    {!! Session::get('message.content') !!}
                                 @endcomponent
                             @endif
 
@@ -142,7 +142,7 @@
                                                 <span class="sale">- 0%</span>
                                             </div>
                                             <div class="coupon-code">
-                                                <label for="coupon">Coupon Code</label>
+                                                <label for="coupon">Discount</label>
                                                 <div class="form-item">
                                                     <input type="text" id="coupon">
                                                 </div>

@@ -50,27 +50,7 @@
                                             Click here to register</a>
                                     </div>
                                 @endif
-                            @endguest
 
-                            <div class="woocommerce-info" id="coupon-message-block">Have a coupon?
-                                <a href="javascript:void(0);" class="showcoupon"
-                                    onclick="event.preventDefault();
-                                        document.getElementById('coupon-block').style.display='block';
-                                            document.getElementById('coupon-message-block').style.display='none';">
-                                                Click here to enter your code</a>
-                            </div>
-                            <div class="coupon" id="coupon-block" style="display: none;">
-                                <form class="checkout_coupon">
-                                    <div class="form-row form-row-first">
-                                        <input type="text" value="Coupon code">
-                                    </div>
-                                    <div class="form-row form-row-last">
-                                        <input type="submit" class="button" value="Apply Coupon">
-                                    </div>
-                                </form>
-                            </div>
-
-                            @guest
                                 <div class="woocommerce-billing-fields">
                                     <h3>Customer info</h3>
 
@@ -170,7 +150,7 @@
                                             </div>
 
                                             <div class="form-row place-order width-100">
-                                                <button type="submit" class="button button-primary float-r">
+                                                <button type="submit" class="button button-primary">
                                                     Register</button>
                                             </div>
                                         </form>
@@ -197,7 +177,7 @@
                                             <!--/. Password -->
 
                                             <div class="form-row place-order width-100">
-                                                <button type="submit" class="button button-primary float-r">
+                                                <button type="submit" class="button button-primary">
                                                     Login</button>
                                             </div>
                                         </form>

@@ -53,8 +53,8 @@ class LoginController extends Controller
         return  Auth::attempt([
                     $username   => $request->input('name'),
                     'password'  => $request->input('password'),
-                    'verified'  => true,
-                    'active'    => true,
+                    'verified'  => 1,
+                    'active'    => 1,
                     'type'      => 'user'
                 ], $request->filled('remember'));
     }

@@ -15,7 +15,7 @@
                     </li>
 
                     <li>
-                        <a href="{{ route('front.reservation.search') }}?ci={{ Request::input('ci') }}&co={{ 
+                        <a href="{{ route('front.reservation.search') }}?ci={{ Request::input('ci') }}&co={{
                             Request::input('co') }}&aq={{ Request::input('aq') }}&cq={{ Request::input('cq') }}">Search</a>
                     </li>
 
@@ -163,103 +163,22 @@
                 <div class="col-md-9">
                     <div class="product-tabs tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
                         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
-                            <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active" role="tab" tabindex="0" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true">
+                            <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="false">
                                 <a href="#tabs-1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">
-                                    Availability
+                                    Facilities &amp; freebies
                                 </a>
                             </li>
 
                             <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false">
                                 <a href="#tabs-2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-2">
-                                    Facilities &amp; freebies
-                                </a>
-                            </li>
-
-                            <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false">
-                                <a href="#tabs-3" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-4">Review &amp; rating
+                                    Review &amp; rating
                                 </a>
                             </li>
                         </ul>
+
                         <div class="product-tabs__content">
-                            <!-- Availability -->
-                            <div id="tabs-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="true" aria-hidden="false">
-                                <div class="check-availability">
-                                    <form method="GET" action="{{ route('front.reservation.search', $item) }}">
-                                        <!-- item -->
-                                        <input type="hidden" name="item" id="item" value="{{ $item->slug }}">
-
-                                        <div class="form-group">
-                                            <div class="form-elements form-checkin">
-                                                <label for="ci">Check in</label>
-                                                <div class="form-item">
-                                                    <i class="awe-icon awe-icon-calendar"></i>
-                                                    <input type="text" name="ci" id="ci" class="awe-calendar"
-                                                        value="{{ Request::input('ci')}}">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-elements form-checkout">
-                                                <label for="co">Check-out</label>
-                                                <div class="form-item">
-                                                    <i class="awe-icon awe-icon-calendar"></i>
-                                                    <input type="text" name="co" id="co" class="awe-calendar"
-                                                        value="{{ Request::input('co')}}">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-elements form-adult">
-                                                <label>Adult</label>
-                                                <div class="form-item">
-                                                    <div class="awe-select-wrapper">
-                                                        <select name="aq" id="aq" class="awe-select">
-                                                            <option value="1" {{ Request::input('aq') == '1' ? 'selected' : '' }}>1</option>
-                                                            <option value="2" {{ Request::input('aq') == '2' ? 'selected' : '' }}>2</option>
-                                                            <option value="3" {{ Request::input('aq') == '3' ? 'selected' : '' }}>3</option>
-                                                            <option value="4" {{ Request::input('aq') == '4' ? 'selected' : '' }}>4</option>
-                                                            <option value="5" {{ Request::input('aq') == '5' ? 'selected' : '' }}>5</option>
-                                                            <option value="6" {{ Request::input('aq') == '6' ? 'selected' : '' }}>6</option>
-                                                            <option value="7" {{ Request::input('aq') == '7' ? 'selected' : '' }}>7</option>
-                                                            <option value="8" {{ Request::input('aq') == '8' ? 'selected' : '' }}>8</option>
-                                                            <option value="9" {{ Request::input('aq') == '9' ? 'selected' : '' }}>9</option>
-                                                        </select>
-                                                        <i class="fa fa-caret-down"></i>
-                                                    </div>
-                                                </div>
-                                                <span>12 yo and above</span>
-                                            </div>
-                                            <div class="form-elements form-kids">
-                                                <label>Kids</label>
-                                                <div class="form-item">
-                                                    <div class="awe-select-wrapper">
-                                                        <select name="cq" id="cq" class="awe-select">
-                                                            <option value="" disabled selected>0</option>
-                                                            <option value="1" {{ Request::input('cq') == '1' ? 'selected' : '' }}>1</option>
-                                                            <option value="2" {{ Request::input('cq') == '2' ? 'selected' : '' }}>2</option>
-                                                            <option value="3" {{ Request::input('cq') == '3' ? 'selected' : '' }}>3</option>
-                                                            <option value="4" {{ Request::input('cq') == '4' ? 'selected' : '' }}>4</option>
-                                                            <option value="5" {{ Request::input('cq') == '5' ? 'selected' : '' }}>5</option>
-                                                            <option value="6" {{ Request::input('cq') == '6' ? 'selected' : '' }}>6</option>
-                                                            <option value="7" {{ Request::input('cq') == '7' ? 'selected' : '' }}>7</option>
-                                                            <option value="8" {{ Request::input('cq') == '8' ? 'selected' : '' }}>8</option>
-                                                            <option value="9" {{ Request::input('cq') == '9' ? 'selected' : '' }}>9</option>
-                                                        </select>
-                                                        <i class="fa fa-caret-down"></i>
-                                                    </div>
-                                                </div>
-                                                <span>0-11 yo</span>
-                                            </div>
-
-                                            <div class="form-actions">
-                                                <input type="submit" value="CHECK AVAILABILITY" class="awe-btn awe-btn-style3">
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <!--/. Availability -->
-
                             <!-- Facilities & Freebies -->
-                            <div id="tabs-2" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
+                            <div id="tabs-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
                                 <table class="facilities-freebies-table">
                                     <tbody>
                                         <tr>
@@ -285,7 +204,7 @@
                             <!--/. Facilities & Freebies -->
 
                             <!-- Review & Rating -->
-                            <div id="tabs-3" aria-labelledby="ui-id-3" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
+                            <div id="tabs-2" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
                                 <div id="reviews">
                                     <div class="rating-info">
                                         <div class="average-rating-review good">
@@ -443,82 +362,114 @@
                             <!-- Reservation info -->
                             <div class="booking-info">
                                 <h3>Reservation info</h3>
-                                <div class="form-group">
-                                    <!-- Check-in -->
-                                    <div class="form-elements form-checkin">
-                                        <label>Check-in</label>
-                                        <div class="form-item">
-                                            <input type="text" value="{{ Request::input('ci') }}" readonly>
+                                <form method="GET" action="{{ route('front.reservation.search', $item) }}">
+                                    <input type="hidden" name="item" value="{{ $item->slug }}">
+
+                                    <div class="form-group">
+                                        <!-- Check-in -->
+                                        <div class="form-elements form-checkin">
+                                            <label>Check-in</label>
+                                            <div class="form-item">
+                                                <input type="text" name="ci" id="ci" class="awe-calendar"
+                                                    value="{{ Request::input('co')}}">
+                                            </div>
+                                        </div>
+                                        <!--/. Check-in -->
+
+                                        <!-- Check-out -->
+                                        <div class="form-elements form-checkout">
+                                            <label>Check-out</label>
+                                            <div class="form-item">
+                                                <input type="text" name="co" id="co" class="awe-calendar"
+                                                    value="{{ Request::input('co')}}">
+                                            </div>
+                                        </div>
+                                        <!--/. Check-out -->
+                                    </div>
+
+                                    <!-- Guests -->
+                                    <div class="form-group">
+                                        <!-- Adult -->
+                                        <div class="form-elements form-checkin">
+                                            <label>Adult</label>
+                                            <div class="form-item">
+                                                <div class="awe-select-wrapper">
+                                                    <select name="aq" id="aq" class="awe-select"
+                                                        value={{ $aq = Request::input('aq') }}>
+                                                        <option value="1" {{ $aq == '1' ? 'selected' : '' }}>1</option>
+                                                        <option value="2" {{ $aq == '2' ? 'selected' : '' }}>2</option>
+                                                        <option value="3" {{ $aq == '3' ? 'selected' : '' }}>3</option>
+                                                        <option value="4" {{ $aq == '4' ? 'selected' : '' }}>4</option>
+                                                        <option value="5" {{ $aq == '5' ? 'selected' : '' }}>5</option>
+                                                        <option value="6" {{ $aq == '6' ? 'selected' : '' }}>6</option>
+                                                        <option value="7" {{ $aq == '7' ? 'selected' : '' }}>7</option>
+                                                        <option value="8" {{ $aq == '8' ? 'selected' : '' }}>8</option>
+                                                        <option value="9" {{ $aq == '9' ? 'selected' : '' }}>9</option>
+                                                    </select>
+                                                    <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                            <span>12 yo and above</span>
+                                        </div>
+                                        <!--/. Adult -->
+
+                                        <!-- Children -->
+                                        <div class="form-elements form-checkout">
+                                            <label>Children</label>
+                                            <div class="form-item">
+                                                <div class="awe-select-wrapper">
+                                                    <select name="cq" id="cq" class="awe-select"
+                                                        value={{ $cq = Request::input('cq') }}>
+                                                        <option value="" disabled selected>0</option>
+                                                        <option value="1" {{ $cq == '1' ? 'selected' : '' }}>1</option>
+                                                        <option value="2" {{ $cq == '2' ? 'selected' : '' }}>2</option>
+                                                        <option value="3" {{ $cq == '3' ? 'selected' : '' }}>3</option>
+                                                        <option value="4" {{ $cq == '4' ? 'selected' : '' }}>4</option>
+                                                        <option value="5" {{ $cq == '5' ? 'selected' : '' }}>5</option>
+                                                        <option value="6" {{ $cq == '6' ? 'selected' : '' }}>6</option>
+                                                        <option value="7" {{ $cq == '7' ? 'selected' : '' }}>7</option>
+                                                        <option value="8" {{ $cq == '8' ? 'selected' : '' }}>8</option>
+                                                        <option value="9" {{ $cq == '9' ? 'selected' : '' }}>9</option>
+                                                    </select>
+                                                    <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                            <span>0-11 yo</span>
+                                        </div>
+                                        <!--/. Children -->
+                                    </div>
+                                    <!--/. Guests -->
+
+                                    <div class="form-group">
+                                        <!-- Quantity -->
+                                        <div class="form-elements form-checkin">
+                                            <label>Quantity</label>
+                                            <div class="form-item">
+                                                <div class="awe-select-wrapper">
+                                                    <select name="quantity" id="quantity" class="awe-select">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                    </select>
+                                                    <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/. Quantity -->
+                                    </div>
+
+                                    <div class="form-submit">
+                                        <div class="add-to-cart">
+                                            <button type="submit">Check availability</button>
                                         </div>
                                     </div>
-                                    <!--/. Check-in -->
-
-                                    <!-- Check-out -->
-                                    <div class="form-elements form-checkout">
-                                        <label>Check-out</label>
-                                        <div class="form-item">
-                                            <input type="text" value="{{ Request::input('co') }}" readonly>
-                                        </div>
-                                    </div>
-                                    <!--/. Check-out -->
-                                </div>
-                                
-                                <!-- Guests -->
-                                <div class="form-group">
-                                    <!-- Adult -->
-                                    <div class="form-elements form-checkin">
-                                        <label>Adult</label>
-                                        <div class="form-item">
-                                            <input type="text" value="{{ Request::input('aq') }}" readonly>
-                                        </div>
-                                    </div>
-                                    <!--/. Adult -->
-
-                                    <!-- Children -->
-                                    <div class="form-elements form-checkout">
-                                        <label>Children</label>
-                                        <div class="form-item">
-                                            <input type="text" value="{{ Request::input('cq') }}" readonly>
-                                        </div>
-                                    </div>
-                                    <!--/. Children -->
-                                </div>
-                                <!--/. Guests -->
-
-                                <div class="form-group">
-                                    <!-- Quantity -->
-                                    <div class="form-elements form-checkin">
-                                        <label>Quantity</label>
-                                        <div class="form-item">
-                                            <input type="text" value="1" readonly>
-                                        </div>
-                                    </div>
-                                    <!--/. Quantity -->
-                                </div>
-
-                                <div class="add-room-type">
-                                    <a href="#"><i class="awe-icon awe-icon-plus"></i>Add More</a>
-                                </div>
-
-                                <div class="price">
-                                    <em>Total for this item</em> <span class="amount">$5,923</span>
-                                    <div class="cart-added">
-                                        <i class="awe-icon awe-icon-check"></i> Added
-                                    </div>
-                                </div>
-
-                                <div class="reset">
-                                    <a href="#">Reset</a>
-                                </div>
-
-                                <div class="form-submit">
-                                    <div class="add-to-cart">
-                                        <button type="submit">
-                                            <i class="awe-icon awe-icon-cart"></i>Add this to Cart
-                                        </button>
-                                    </div>
-                                    <div class="view-cart"><a href="#">View cart</a></div>
-                                </div>
+                                </form>
                             </div>
                             <!--/. Reservation info -->
                         </div>

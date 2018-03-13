@@ -10,6 +10,19 @@
                     <h2 style="color: #fff;">JOIN US !</h2>
                 </div>
 
+                <!-- Message -->
+                @if (Session::has('message'))
+                    @component('front.components.alert')
+                        {!! Session::get('message.content') !!}
+                    @endcomponent
+                @endif
+
+                @if(count($errors))
+                    @component('front.components.alert')
+                        There are errors in your credentials. Try again
+                    @endcomponent
+                @endif
+
                 <form method="POST" action="{{ route('front.register') }}">
                     {{ csrf_field() }}
 
@@ -62,7 +75,7 @@
                     <div class="form-item">
                         <label>Password</label>
 
-                        <input type="password" name="password" id="password" 
+                        <input type="password" name="password" id="password"
                             required minlength="6" maxlength="255">
 
                         <span id="password-error" class="text-danger">
@@ -70,7 +83,7 @@
                         </span>
                     </div>
                     <!--/. Password -->
-                    
+
                     <!-- Confirm password -->
                     <div class="form-item">
                         <label>Confirm password</label>

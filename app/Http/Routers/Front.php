@@ -11,6 +11,7 @@ Route::namespace('Front')->name('front.')->group(function () {
     Route::namespace('Auth')->group(function() {
         Route::get('register', 'RegisterController@showRegisterForm')->name('register');
         Route::post('register', 'RegisterController@register');
+        Route::get('verify/{token}', 'RegisterController@verify')->name('register.verify');
         Route::get('login', 'LoginController@showLoginForm')->name('login');
         Route::post('login', 'LoginController@login');
         Route::post('logout', 'LoginController@logout')->name('logout');

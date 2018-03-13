@@ -32,6 +32,13 @@
                 <div class="col-lg-9">
                     <div class="checkout-page__content">
                         <div class="yourcart-content">
+                            <!-- Message -->
+                            @if (Session::has('message'))
+                                @component('front.components.alert')
+                                    {!! Session::get('message.content') !!}
+                                @endcomponent
+                            @endif
+
                             <div class="content-title">
                                 <h2><i class="awe-icon awe-icon-cart"></i>Check Your Cart</h2>
                             </div>

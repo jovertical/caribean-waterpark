@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Front\Auth;
 
 use Helper;
-use App\Notifications\{WelcomeMessage, LoginCredential};
+use App\Jobs\SendVerificationEmail;
+use App\Notifications\{WelcomeMessage, EmailVerification, LoginCredential};
 use App\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -28,25 +30,30 @@ class RegisterController extends Controller
             'email'         => 'required|email|unique:users',
             'password'      => 'required|string|confirmed|min:6|pwned:100'
         ]);
+        $token = base64_encode($request->input('email'));
 
         $user = new User;
         $user->first_name   = $request->input('first_name');
         $user->last_name    = $request->input('last_name');
-        $user->name         = Helper::createLoginCredential($request->input('email'));
+        $user->name         = Helper::createUsername($request->input('email'));
         $user->email        = $request->input('email');
         $user->password     = bcrypt($request->input('password'));
-        
-        if ($user->save()) {
-            auth()->login($user);
+        $user->email_token  = $token;
 
+        if ($user->save()) {
             $user->notify(new WelcomeMessage($user));
 
+            event(new Registered($user));
+
+            dispatch(new SendVerificationEmail($user, $token));
+
+            // Prompt user for email verification.
             session()->flash('message', [
                 'type' => 'success',
-                'content' => "Welcome {$user->first_name}! Thanks for registering."
+                'content' => 'Your account has been created, check your email for verification.'
             ]);
 
-            return redirect()->route('front.home');
+            return back();
         }
 
         session()->flash('message', [
@@ -55,5 +62,23 @@ class RegisterController extends Controller
         ]);
 
         return back();
+    }
+
+    public function verify($token)
+    {
+        $user = User::where('email_token', $token)->first();
+        $user->verified = 1;
+
+        if ($user->save()) {
+            auth()->login($user);
+
+            session()->flash('message', [
+                'type' => 'success',
+                'content' => 'Account has been successfuly verified! What are you waiting for?
+                                <a href="'.route('front.reservation.search').'">Search for accomodations</a>'
+            ]);
+
+            return redirect()->route('front.home');
+        }
     }
 }

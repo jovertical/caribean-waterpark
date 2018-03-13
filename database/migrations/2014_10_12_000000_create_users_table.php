@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->boolean('verified')->default(false);
+            $table->string('email_token')->nullable();
             $table->dateTime('last_activity')->nullable();
             $table->boolean('active')->default(true);
 
@@ -36,7 +37,7 @@ class CreateUsersTable extends Migration
             $table->text('file_path')->nullable();
             $table->text('file_directory')->nullable();
             $table->string('file_name')->nullable();
-            
+
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

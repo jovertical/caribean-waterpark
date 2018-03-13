@@ -10,6 +10,13 @@
                     <h2 style="color: #fff;">Guest</h2>
                 </div>
 
+                <!-- Message -->
+                @if (Session::has('message'))
+                    @component('front.components.alert')
+                        {!! Session::get('message.content') !!}
+                    @endcomponent
+                @endif
+
                 @if(count($errors))
                     @component('front.components.alert')
                         There are errors in your credentials. Try again
