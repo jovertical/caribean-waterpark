@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Item;
+use App\{Item, ItemReview};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

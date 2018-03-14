@@ -36,32 +36,28 @@
 
             <div class="col-md-2">
                 <div class="widget widget_categories">
-                    <h3>Categiries</h3>
+                    <h3>Services</h3>
                     <ul>
-                        <li><a href="#">Countries</a></li>
-                        <li><a href="#">Regions</a></li>
-                        <li><a href="#">Cities</a></li>
-                        <li><a href="#">Districts</a></li>
-                        <li><a href="#">Countries</a></li>
-                        <li><a href="#">Airports</a></li>
-                        <li><a href="#">Hotels</a></li>
-                        <li><a href="#">Places of interest</a></li>
+                        <li>
+                            <a href="{{ route('front.items.index') }}">Accomodations</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('front.items.index') }}">Facilities</a>
+                        </li>
                     </ul>
                 </div>
             </div>
 
             <div class="col-md-2">
                 <div class="widget widget_recent_entries">
-                    <h3>Recent Blog</h3>
+                    <h3>Useful links</h3>
                     <ul>
-                        <li><a href="#">Countries</a></li>
-                        <li><a href="#">Regions</a></li>
-                        <li><a href="#">Cities</a></li>
-                        <li><a href="#">Districts</a></li>
-                        <li><a href="#">Countries</a></li>
-                        <li><a href="#">Airports</a></li>
-                        <li><a href="#">Hotels</a></li>
-                        <li><a href="#">Places of interest</a></li>
+                        <li>
+                            <a href="{{ route('front.contact') }}">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('front.terms') }}">Terms &amp; Conditions</a>
+                        </li>
                     </ul>
                 </div>
             </div>

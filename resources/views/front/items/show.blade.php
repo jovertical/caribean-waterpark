@@ -245,10 +245,10 @@
                                                 <a href="{{ route('front.register') }}">Newcomer?</a>
                                             @endcomponent
                                         @else
-                                            @if(! Auth::user()->can_rate_item)
+                                            @if(! $item->reviewable)
                                                 @component('front.components.alert')
                                                     Hello {{ Auth::user()->titled_full_name }}, 
-                                                    You are not eligible to rate this item.
+                                                    You are not eligible to review this item.
                                                 @endcomponent
                                             @else
                                                 <h3 class="comment-reply-title">Add a review</h3>

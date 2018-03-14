@@ -9,9 +9,12 @@
 
             <nav class="navigation awe-navigation" data-responsive="1200">
                 <ul class="menu-list">
-                    <li class="menu-item {{ Helper::activeMenu(Request::segment(2)) == '' ?
-                        'current-menu-parent' : ''}}">
-                        <a href="{{ route('front.welcome') }}">Home</a>
+                    <li class="menu-item">
+                        <a href="{{ route('front.items.index') }}">Accomodations</a>
+                    </li>
+
+                    <li class="menu-item">
+                        <a href="#">Facilities</a>
                     </li>
 
                     <li class="menu-item menu-item-has-children
@@ -28,20 +31,6 @@
                                             count(session()->get('reservation.selected_items')) : 0 }}
                                     </span>
                                 </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-item-has-children">
-                        <a href="#">Services</a>
-                        <ul class="sub-menu">
-                            <li class="menu-item-has-children">
-                                <a href="#">2</a>
-                                <ul class="sub-menu">
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                </ul>
                             </li>
                         </ul>
                     </li>

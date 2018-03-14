@@ -136,11 +136,6 @@ class User extends Authenticatable
         return ucfirst(strtolower($this->type) == 'superuser' ? 'root' : 'front');
     }
 
-    public function getCanRateItemAttribute()
-    {
-        return false;
-    }
-
     public function getRouteKeyName()
     {
         return 'slug';

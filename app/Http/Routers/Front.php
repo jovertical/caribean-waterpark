@@ -2,11 +2,9 @@
 
 Route::namespace('Front')->name('front.')->group(function () {
     Route::get('/', 'PagesController@welcome')->name('welcome');
-    Route::get('/about', 'PagesController@about')->name('about');
     Route::get('/contact', 'PagesController@contact')->name('contact');
     Route::get('/terms', 'PagesController@terms')->name('terms');
-
-    Route::prefix('items')->name('items.')->group(function() {
+    Route::prefix('accomodations')->name('items.')->group(function() {
         Route::get('/', 'ItemsController@index')->name('index');
         Route::get('/{item}', 'ItemsController@show')->name('show');
     });
