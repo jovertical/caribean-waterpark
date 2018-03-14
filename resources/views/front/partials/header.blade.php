@@ -42,8 +42,8 @@
                                 <li><a href="{{ route('front.login') }}">Login</a></li>
                                 <li><a href="{{ route('front.register') }}">Register</a></li>
                             @else
-                                <li><a href="{{ route('front.profile') }}">Profile</a></li>
-                                <li><a href="{{ route('front.settings') }}">Settings</a></li>
+                                <li><a href="{{ route('front.account.profile') }}">Profile</a></li>
+                                <li><a href="{{ route('front.account.password') }}">Password</a></li>
                                 <li><a href="{{ route('front.reservations.index') }}">Reservations</a></li>
                                 <li>
                                     <a href="javascript:void(0);" onclick="event.preventDefault();

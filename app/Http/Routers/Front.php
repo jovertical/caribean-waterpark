@@ -40,11 +40,12 @@ Route::namespace('Front')->name('front.')->group(function () {
     Route::middleware('front.auth')->prefix('user')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
 
-        Route::get('/profile', 'AccountController@profile')->name('profile');
-        Route::patch('/profile', 'AccountController@updateProfile');
-        Route::get('/settings', 'AccountController@settings')->name('settings');
-        Route::patch('/settings', 'AccountController@updateSettings');
-
+        Route::prefix('account')->name('account.')->group(function() {
+            Route::get('/profile', 'AccountController@profile')->name('profile');
+            Route::patch('/profile', 'AccountController@updateProfile');
+            Route::get('/password', 'AccountController@password')->name('password');
+            Route::patch('/password', 'AccountController@updatePassword');
+        });
         Route::prefix('reservations')->name('reservations.')->group(function() {
             Route::get('/', 'ReservationsController@index')->name('index');
             Route::get('/{reservation}', 'ReservationsController@show')->name('show');

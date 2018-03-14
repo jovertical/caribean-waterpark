@@ -31,10 +31,14 @@ class PaypalExpress
         // Verify Express Checkout Token
         $response = $this->provider->getExpressCheckoutDetails($token);
 
-        if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
-            // Perform transaction on PayPal
-            $payment_status = $this->provider->doExpressCheckoutPayment($cart, $token, $payer_id);
-            $status = $payment_status['PAYMENTINFO_0_PAYMENTSTATUS'];
+        $status = 'error';
+
+        if (isset($response['ACK'])) {
+            if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
+                // Perform transaction on PayPal
+                $payment_status = $this->provider->doExpressCheckoutPayment($cart, $token, $payer_id);
+                $status = $payment_status['PAYMENTINFO_0_PAYMENTSTATUS'];
+            }
         }
 
         return $status;

@@ -110,7 +110,7 @@
                                         <tfoot>
                                             <tr>
                                                 <th>Subtotal</th>
-                                                <td>{{ Helper::moneyFormat($reservation->price_subpayable) }}</td>
+                                                <td>{{ Helper::moneyString($reservation->price_subpayable) }}</td>
                                             </tr>
 
                                             <tr>

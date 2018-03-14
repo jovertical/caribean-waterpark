@@ -32,6 +32,7 @@
                                             <th>Payable</th>
                                             <th>Paid</th>
                                             <th>Status</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
 
@@ -57,6 +58,11 @@
                                                     <span class="text-{{ $reservation->status_class }}">
                                                         {{ $reservation->status }}
                                                     </span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('front.reservations.show', $reservation) }}">
+                                                        View details
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
