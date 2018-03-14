@@ -41,9 +41,21 @@ Route::namespace('Front')->name('front.')->group(function () {
 
     Route::middleware('front.auth')->prefix('user')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
+
+        Route::get('/profile', 'AccountController@profile')->name('profile');
+        Route::patch('/profile', 'AccountController@updateProfile');
+        Route::get('/settings', 'AccountController@settings')->name('settings');
+        Route::patch('/settings', 'AccountController@updateSettings');
+
         Route::prefix('reservations')->name('reservations.')->group(function() {
-            Route::get('reservations', 'ReservationsController@index')->name('index');
-            Route::get('reservations/{reservation}', 'ReservationsController@show')->name('show');
+            Route::get('/', 'ReservationsController@index')->name('index');
+            Route::get('/{reservation}', 'ReservationsController@show')->name('show');
+        });
+
+        Route::prefix('item-reviews')->name('item-reviews.')->group(function() {
+            Route::post('/{item}', 'ItemReviewsController@store')->name('store');
+            Route::patch('/{item}', 'ItemReviewsController@update')->name('update');
+            Route::delete('/{item}', 'ItemReviewsController@destroy')->name('destroy');
         });
     });
 });

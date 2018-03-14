@@ -19,6 +19,24 @@ class Item extends Model
         return $this->hasMany(ItemImage::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(ItemReview::class);
+    }
+
+    public function createReview($user, $request)
+    {
+        return $this->reviews()->create([
+            'user_id' => $user->id,
+            'title' => $request['title'],
+            'facility_rating' => $request['facility_rating'],
+            'service_rating' => $request['service_rating'],
+            'cleanliness_rating' => $request['cleanliness_rating'],
+            'value_for_money_rating' => $request['value_for_money_rating'],
+            'body' => $request['body']
+        ]);
+    }
+
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = strtolower($value);
@@ -27,5 +45,44 @@ class Item extends Model
     public function getNameAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function getFacilityRatingAttribute()
+    {
+        return $this->reviews()->sum('facility_rating') / max($this->reviews()->count(), 1);
+    }
+
+    public function getServiceRatingAttribute()
+    {
+        return $this->reviews()->sum('service_rating') / max($this->reviews()->count(), 1);
+    }
+
+    public function getCleanlinessRatingAttribute()
+    {
+        return $this->reviews()->sum('cleanliness_rating') / max($this->reviews()->count(), 1);
+    }
+
+    public function getValueForMoneyRatingAttribute()
+    {
+        return $this->reviews()->sum('value_for_money_rating') / max($this->reviews()->count(), 1);
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return  ($this->facility_rating + $this->service_rating +
+                    $this->cleanliness_rating + $this->value_for_money_rating) / 4;
+    }
+
+    public function getRatingRemarkAttribute()
+    {
+        $average_rating = $this->average_rating;
+
+        if (($average_rating >= 5) AND ($average_rating <= 7)) {
+            return 'fine';
+        } elseif (($average_rating >= 7) AND ($average_rating <= 10)) {
+            return 'good';
+        }
+
+        return 'No rating yet';
     }
 }

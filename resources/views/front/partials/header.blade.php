@@ -46,16 +46,16 @@
                         </ul>
                     </li>
 
-                    <li class="menu-item">
-                        <a href="javascript:void(0);">My account</a>
+                    <li class="menu-item-has-children">
+                        <a href="#">My account</a>
                         <ul class="sub-menu">
                             @guest
                                 <li><a href="{{ route('front.login') }}">Login</a></li>
                                 <li><a href="{{ route('front.register') }}">Register</a></li>
                             @else
-                                <li><a href="javascript:void(0);">Profile</a></li>
-                                <li><a href="javascript:void(0);">Settings</a></li>
-                                <li><a href="javascript:void(0);">Reservations</a></li>
+                                <li><a href="{{ route('front.profile') }}">Profile</a></li>
+                                <li><a href="{{ route('front.settings') }}">Settings</a></li>
+                                <li><a href="{{ route('front.reservations.index') }}">Reservations</a></li>
                                 <li>
                                     <a href="javascript:void(0);" onclick="event.preventDefault();
                                         document.getElementById('form-logout').submit();">Logout</a>

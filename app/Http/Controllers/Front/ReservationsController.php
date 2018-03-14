@@ -492,7 +492,7 @@ class ReservationsController extends Controller
      */
     public function index()
     {
-        $reservations = auth()->user()->reservations;
+        $reservations = Reservation::where('user_id', auth()->user()->id)->paginate(5);
 
         return view('front.reservations.index', compact('reservations'));
     }

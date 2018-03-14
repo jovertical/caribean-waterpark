@@ -49,8 +49,6 @@ class Helper {
             'inventory'     => ['categories', 'items', 'coupons'],
             'reservations'  => ['reservations'],
             'manage'        => ['users', 'superusers', 'user-roles', 'settings'],
-
-            'reservation'   => ['search', 'cart', 'user', 'review']
         ];
 
         foreach ($segments as $index => $segment) {
@@ -83,9 +81,9 @@ class Helper {
         return '/root/assets/app/media/img/misc/noimage.png';
     }
 
-    public static function moneyFormat(float $amount)
+    public static function decimalFormat(float $number, int $places = 2)
     {
-        return number_format($amount, 2, '.', ',');
+        return number_format($number, $places, '.', ',');
     }
 
     public static function moneyString(float $amount, $currency_sign = '₱')

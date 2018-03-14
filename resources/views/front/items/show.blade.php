@@ -46,14 +46,14 @@
                             <a href="#">{{ $item->category->name }}</a>
                         </div>
                         <div class="rating-trip-reviews">
-                            <div class="item good">
-                                <span class="count">7.5</span>
+                            <div class="item {{ $item->rating_remark }}">
+                                <span class="count">{{ Helper::decimalFormat($item->average_rating, 1) }}</span>
                                 <h6>Average rating</h6>
-                                <p>Good</p>
+                                <p>{{ ucfirst($item->rating_remark) }}</p>
                             </div>
                             <div class="item">
                                 <h6>Reviews</h6>
-                                <p>No review yet</p>
+                                <p>{{ $item->reviews->count() }}</p>
                             </div>
                         </div>
                         <div class="product-descriptions">
@@ -165,7 +165,7 @@
                         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
                             <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="false">
                                 <a href="#tabs-1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">
-                                    Facilities &amp; freebies
+                                    Facilities
                                 </a>
                             </li>
 
@@ -207,140 +207,267 @@
                             <div id="tabs-2" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
                                 <div id="reviews">
                                     <div class="rating-info">
-                                        <div class="average-rating-review good">
-                                            <span class="count">7.5</span> <em>Average rating</em> <span>Good</span>
+                                        <div class="average-rating-review {{ $item->rating_remark }}">
+                                            <span class="count">
+                                                {{ Helper::decimalFormat($item->average_rating, 1) }}
+                                            </span>
+                                            <em>Average rating</em>
+                                            <span>{{ ucfirst($item->rating_remark) }}</span>
                                         </div>
 
                                         <ul class="rating-review">
-                                            <li><em>Facility</em> <span>7.5</span></li>
-                                            <li><em>Human</em> <span>9.0</span></li>
-                                            <li><em>Service</em> <span>9.5</span></li>
-                                            <li><em>Interesting</em> <span>8.7</span></li>
+                                            <li>
+                                                <em>Facility</em>
+                                                <span>{{ Helper::decimalFormat($item->facility_rating, 1) }}</span>
+                                            </li>
+                                            <li>
+                                                <em>Service</em>
+                                                <span>{{ Helper::decimalFormat($item->service_rating, 1) }}</span>
+                                            </li>
+                                            <li>
+                                                <em>Cleanliness</em>
+                                                <span>{{ Helper::decimalFormat($item->cleanliness_rating, 1) }}</span>
+                                            </li>
+                                            <li>
+                                                <em>Value for money</em>
+                                                <span>{{ Helper::decimalFormat($item->value_for_money_rating, 1) }}</span>
+                                            </li>
                                         </ul>
+
                                         <a href="#" class="write-review">Write a review</a>
                                     </div>
 
                                     <div id="add_review">
-                                        <h3 class="comment-reply-title">Add a review</h3>
-                                        <form>
-                                            <div class="comment-form-author">
-                                                <label for="author">Name <span class="required">*</span></label>
-                                                <input id="author" type="text">
-                                            </div>
-                                            <div class="comment-form-email">
-                                                <label for="email">Email <span class="required">*</span></label>
-                                                <input id="email" type="text"></div>
-                                                <div class="comment-form-rating">
-                                                    <h4>Your Rating</h4>
-                                                    <div class="comment-form-rating__content">
-                                                        <div class="item facility"><label>Facility</label>
-                                                            <div class="awe-select-wrapper">
-                                                                <select class="awe-select">
-                                                                    <option>5.0</option>
-                                                                    <option>6.5</option>
-                                                                    <option>7.5</option>
-                                                                    <option>8.5</option>
-                                                                    <option>9.0</option>
-                                                                    <option>10</option>
-                                                                </select>
-                                                                <i class="fa fa-caret-down"></i>
-                                                            </div>
-                                                        </div>
+                                        @guest
+                                            @component('front.components.alert')
+                                                Hello our beloved guest, We need to know who you are.
+                                                <a href="{{ route('front.login') }}">Already a member?</a> or
+                                                <a href="{{ route('front.register') }}">Newcomer?</a>
+                                            @endcomponent
+                                        @else
+                                            @if(! Auth::user()->can_rate_item)
+                                                @component('front.components.alert')
+                                                    Hello {{ Auth::user()->titled_full_name }}, 
+                                                    You are not eligible to rate this item.
+                                                @endcomponent
+                                            @else
+                                                <h3 class="comment-reply-title">Add a review</h3>
+                                                <form method="POST" action="{{ route('front.item-reviews.store', $item) }}">
+                                                    {{ csrf_field() }}
 
-                                                        <div class="item human">
-                                                            <label>Human</label>
-                                                            <div class="awe-select-wrapper">
-                                                                <select class="awe-select">
-                                                                    <option>5.0</option>
-                                                                    <option>6.5</option>
-                                                                    <option>7.5</option>
-                                                                    <option>8.5</option>
-                                                                    <option>9.0</option>
-                                                                    <option>10</option>
-                                                                </select>
-                                                                <i class="fa fa-caret-down"></i>
+                                                    <div class="comment-form-email">
+                                                        <label for="title">Title <span class="required">*</span></label>
+                                                        <input type="text" name="title" id="title" required>
+
+                                                        <span id="title-error" class="text-danger">
+                                                            {{ $errors->first('title') }}
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="comment-form-rating" style="width: 100%;">
+                                                        <h4>Your Rating</h4>
+                                                        <div class="comment-form-rating__content">
+                                                            <!-- Facility rating -->
+                                                            <div class="item service">
+                                                                <label>Facility</label>
+                                                                <div class="awe-select-wrapper">
+                                                                    <select name="facility_rating" id="facility_rating" class="awe-select" value="{{ $facility_rating = old('facility_rating') }}">
+                                                                        <option value="8" style="display: none;">8</option>
+                                                                        <option value="5" {{ $facility_rating == 5 ?
+                                                                            'selected' : '' }}>5</option>
+                                                                        <option value="6" {{ $facility_rating == 6 ?
+                                                                            'selected' : '' }}>6</option>
+                                                                        <option value="7" {{ $facility_rating == 7 ?
+                                                                            'selected' : '' }}>7</option>
+                                                                        <option value="8" {{ $facility_rating == 8 ?
+                                                                            'selected' : '' }}>8</option>
+                                                                        <option value="9" {{ $facility_rating == 9 ?
+                                                                            'selected' : '' }}>9</option>
+                                                                        <option value="10" {{ $facility_rating == 10 ?
+                                                                            'selected' : '' }}>10</option>
+                                                                    </select>
+                                                                    <i class="fa fa-caret-down"></i>
+
+                                                                    <span id="facility_rating-error" class="text-danger">
+                                                                        {{ $errors->first('facility_rating') }}
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="item service">
-                                                            <label>Service</label>
-                                                            <div class="awe-select-wrapper">
-                                                                <select class="awe-select">
-                                                                    <option>5.0</option>
-                                                                    <option>6.5</option>
-                                                                    <option>7.5</option>
-                                                                    <option>8.5</option>
-                                                                    <option>9.0</option>
-                                                                    <option>10</option>
-                                                                </select>
-                                                                <i class="fa fa-caret-down"></i>
+                                                            <!--/. Facility rating -->
+
+                                                            <!-- Service rating -->
+                                                            <div class="item service">
+                                                                <label>Service</label>
+                                                                <div class="awe-select-wrapper">
+                                                                    <select name="service_rating" id="service_rating" 
+                                                                        class="awe-select" value="{{ $service_rating = 
+                                                                            old('service_rating') }}">
+                                                                        <option value="8" style="display: none;">8</option>
+                                                                        <option value="5" {{ $service_rating == 5 ?
+                                                                            'selected' : '' }}>5</option>
+                                                                        <option value="6" {{ $service_rating == 6 ?
+                                                                            'selected' : '' }}>6</option>
+                                                                        <option value="7" {{ $service_rating == 7 ?
+                                                                            'selected' : '' }}>7</option>
+                                                                        <option value="8" {{ $service_rating == 8 ?
+                                                                            'selected' : '' }}>8</option>
+                                                                        <option value="9" {{ $service_rating == 9 ?
+                                                                            'selected' : '' }}>9</option>
+                                                                        <option value="10" {{ $service_rating == 10 ?
+                                                                            'selected' : '' }}>10</option>
+                                                                    </select>
+                                                                    <i class="fa fa-caret-down"></i>
+
+                                                                    <span id="service_rating-error" class="text-danger">
+                                                                        {{ $errors->first('service_rating') }}
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="item interesting">
-                                                            <label>Interesting</label>
-                                                            <div class="awe-select-wrapper">
-                                                                <select class="awe-select">
-                                                                    <option>5.0</option>
-                                                                    <option>6.5</option>
-                                                                    <option>7.5</option>
-                                                                    <option>8.5</option>
-                                                                    <option>9.0</option>
-                                                                    <option>10</option>
-                                                                </select>
-                                                                <i class="fa fa-caret-down"></i>
+                                                            <!--/. Service rating -->
+
+                                                            <!-- Cleanliness rating -->
+                                                            <div class="item service">
+                                                                <label>Cleanliness</label>
+                                                                <div class="awe-select-wrapper">
+                                                                    <select name="cleanliness_rating" id="cleanliness_rating"
+                                                                        class="awe-select" value="{{ $cleanliness_rating =
+                                                                            old('cleanliness_rating') }}">
+                                                                        <option value="8" style="display: none;">8</option>
+                                                                        <option value="5" {{ $cleanliness_rating == 5 ?
+                                                                            'selected' : '' }}>5</option>
+                                                                        <option value="6" {{ $cleanliness_rating == 6 ?
+                                                                            'selected' : '' }}>6</option>
+                                                                        <option value="7" {{ $cleanliness_rating == 7 ?
+                                                                            'selected' : '' }}>7</option>
+                                                                        <option value="8" {{ $cleanliness_rating == 8 ?
+                                                                            'selected' : '' }}>8</option>
+                                                                        <option value="9" {{ $cleanliness_rating == 9 ?
+                                                                            'selected' : '' }}>9</option>
+                                                                        <option value="10" {{ $cleanliness_rating == 10 ?
+                                                                            'selected' : '' }}>10</option>
+                                                                    </select>
+                                                                    <i class="fa fa-caret-down"></i>
+
+                                                                    <span id="cleanliness_rating-error" class="text-danger">
+                                                                        {{ $errors->first('cleanliness_rating') }}
+                                                                    </span>
+                                                                </div>
                                                             </div>
+                                                            <!--/. Cleanliness rating -->
+
+                                                            <!-- Value for money rating -->
+                                                            <div class="item service">
+                                                                <label>Value for money</label>
+                                                                <div class="awe-select-wrapper">
+                                                                    <select name="value_for_money_rating" id="value_for_money_rating"
+                                                                        class="awe-select" value="{{ $value_for_money_rating =
+                                                                            old('value_for_money_rating') }}">
+                                                                        <option value="8" style="display: none;">8</option>
+                                                                        <option value="5" {{ $value_for_money_rating == 5 ?
+                                                                            'selected' : '' }}>5</option>
+                                                                        <option value="6" {{ $value_for_money_rating == 6 ?
+                                                                            'selected' : '' }}>6</option>
+                                                                        <option value="7" {{ $value_for_money_rating == 7 ?
+                                                                            'selected' : '' }}>7</option>
+                                                                        <option value="8" {{ $value_for_money_rating == 8 ?
+                                                                            'selected' : '' }}>8</option>
+                                                                        <option value="9" {{ $value_for_money_rating == 9 ?
+                                                                            'selected' : '' }}>9</option>
+                                                                        <option value="10" {{ $value_for_money_rating == 10 ?
+                                                                            'selected' : '' }}>10</option>
+                                                                    </select>
+                                                                    <i class="fa fa-caret-down"></i>
+
+                                                                    <span id="value_for_money_rating-error" class="text-danger">
+                                                                        {{ $errors->first('value_for_money_rating') }}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <!--/. Value for money rating -->
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="comment-form-comment">
-                                                    <label for="comment">Your Review</label>
-                                                    <textarea id="comment"></textarea>
-                                                </div>
-                                                <div class="form-submit">
-                                                    <input type="submit" class="submit" value="Submit">
-                                                </div>
-                                            </form>
-                                        </div>
+                                                    <div class="comment-form-comment">
+                                                        <label for="body">Your Review</label>
 
-                                        <div id="comments">
-                                            <ol class="commentlist">
+                                                        <textarea name="body" id="body"></textarea>
+
+                                                        <span id="body-error" class="text-danger">
+                                                            {{ $errors->first('body') }}
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="form-submit">
+                                                        <input type="submit" class="submit" value="Submit">
+                                                    </div>
+                                                </form>
+                                            @endif
+                                        @endguest
+                                    </div>
+
+                                    <div id="comments">
+                                        <ol class="commentlist">
+                                            @foreach($item_reviews as $item_review)
                                                 <li>
-                                                <div class="comment-box">
-                                                    <div class="avatar">
-                                                        <img src="/front/assets/images/img/demo-thumb.jpg" alt="">
-                                                    </div>
-                                                    <div class="comment-body">
-                                                        <p class="meta">
-                                                            <strong>Nguyen Gallahendahry</strong>
-                                                            <span class="time">December 10, 2012</span>
-                                                        </p>
-                                                        <div class="description">
-                                                            <p>Takes me back to my youth. I love the design of this soda machine. A bit pricy though..!
+                                                    <div class="comment-box">
+                                                        <div class="avatar">
+                                                            <img src="{{ Helper::fileUrl($item_review->user, 'thumbnail') }}">
+                                                        </div>
+                                                        <div class="comment-body">
+                                                            <p class="meta">
+                                                                <strong>{{ $item_review->user->titled_full_name }}</strong>
+                                                                <span class="time">
+                                                                    {{ $item_review->created_at->diffForHumans() }}
+                                                                </span>
                                                             </p>
-                                                        </div>
-                                                        <div class="rating-info">
-                                                            <div class="average-rating-review good">
-                                                                <span class="count">7.5</span> <em>Average rating</em>
-                                                                <span>Good</span>
+                                                            <div class="description">
+                                                                <span>{{ $item_review->title }}</span>
+                                                                <p>{{ $item_review->body }}</p>
                                                             </div>
-                                                            <ul class="rating-review">
-                                                                <li>
-                                                                    <em>Facility</em> <span>7.5</span>
-                                                                </li>
-                                                                <li>
-                                                                    <em>Human</em> <span>9.0</span>
-                                                                </li>
-                                                                <li>
-                                                                    <em>Service</em> <span>9.5</span>
-                                                                </li>
-                                                                <li>
-                                                                    <em>Interesting</em> <span>8.7</span>
-                                                                </li>
-                                                            </ul>
+                                                            <div class="rating-info">
+                                                                <div class="average-rating-review
+                                                                    {{ $item_review->rating_remark }}">
+                                                                    <span class="count">
+                                                                        {{ Helper::decimalFormat(
+                                                                                $item_review->average_rating, 1) }}
+                                                                    </span>
+                                                                    <em>Average rating</em>
+                                                                    <span>{{ ucfirst($item_review->rating_remark) }}</span>
+                                                                </div>
+                                                                <ul class="rating-review">
+                                                                    <li>
+                                                                        <em>Facility</em>
+                                                                        <span>{{ Helper::decimalFormat(
+                                                                            $item_review->facility_rating, 1) }}</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <em>Service</em>
+                                                                        <span>{{ Helper::decimalFormat(
+                                                                            $item_review->service_rating, 1) }}</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <em>Cleanliness</em>
+                                                                        <span>{{ Helper::decimalFormat(
+                                                                            $item_review->cleanliness_rating, 1) }}</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <em>Value for money</em>
+                                                                        <span>{{ Helper::decimalFormat(
+                                                                            $item_review->value_for_money_rating, 1) }}</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @endforeach
                                         </ol>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <div class="display-flex margin-y-5 justify-content-center">
+                                        @if (count($item_reviews))
+                                            {{ $item_reviews->appends(Request::all())->links('front.components.pagination') }}
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -504,5 +631,7 @@
             selectOtherMonths: !0,
             dayNamesMin:["Sun","Mon","Tue","Wen","Thu","Fri","Sat"]
         });
+
+
     </script>
 @endsection

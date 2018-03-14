@@ -39,10 +39,14 @@
                             @endif
 
                             @guest
+                                <div class="woocommerce-info">
+                                    An account is required to see payment methods.
+                                </div>
+
                                 @if(! Request::input('existing'))
                                     <div class="woocommerce-info">Returning customer? Welcome back!
                                         <a href="{{ route('front.reservation.user').'?existing=true' }}" class="showlogin">
-                                            Click here to login</a>
+                                            Click here to login.</a>
                                     </div>
                                 @else
                                     <div class="woocommerce-info">New customer? You are welcome!
