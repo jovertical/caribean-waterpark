@@ -14,6 +14,12 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
 
     Route::middleware('root.auth')->group(function() {
         Route::get('/', 'HomeController@index')->name('home');
+        Route::prefix('account')->name('account.')->group(function() {
+            Route::get('/profile', 'AccountController@profile')->name('profile');
+            Route::patch('/profile', 'AccountController@updateProfile');
+            Route::get('/password', 'AccountController@password')->name('password');
+            Route::patch('/password', 'AccountController@updatePassword');
+        });
 
         Route::resource('users', 'UsersController');
         Route::prefix('users')->name('users.')->group(function() {

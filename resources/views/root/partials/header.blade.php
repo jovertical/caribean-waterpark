@@ -74,19 +74,27 @@
                                                         <li class="m-nav__section m--hide">
                                                             <span class="m-nav__section-text">Section</span>
                                                         </li>
+                                                        <!-- Profile -->
                                                         <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
+                                                            <a href="{{ route('root.account.profile') }}" class="m-nav__link">
                                                                 <i class="m-nav__link-icon flaticon-profile-1"></i>
                                                                 <span class="m-nav__link-title">
-                                                                    <span class="m-nav__link-wrap">
-                                                                        <span class="m-nav__link-text">My Profile</span>
-                                                                        <span class="m-nav__link-badge">
-                                                                            <span class="m-badge m-badge--success">2</span>
-                                                                        </span>
-                                                                    </span>
+                                                                    <span class="m-nav__link-text">Profile</span>
                                                                 </span>
                                                             </a>
                                                         </li>
+                                                        <!--/. Profile -->
+
+                                                        <!-- Password -->
+                                                        <li class="m-nav__item">
+                                                            <a href="{{ route('root.account.password') }}" class="m-nav__link">
+                                                                <i class="m-nav__link-icon flaticon-lock"></i>
+                                                                <span class="m-nav__link-title">
+                                                                    <span class="m-nav__link-text">Password</span>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                        <!--/. Password -->
 
                                                         <li class="m-nav__separator m-nav__separator--fit"></li>
 
@@ -127,7 +135,7 @@
                     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light">
                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow">
                             <!-- Dashboard -->
-                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == null ?
+                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'dashboard' ?
                                 'm-menu__item--active' : '' }}"  aria-haspopup="true">
                                 <a href="{{ route('root.home') }}" class="m-menu__link">
                                     <span class="m-menu__item-here"></span>
@@ -177,14 +185,40 @@
                             <!--/. Inventory -->
 
                             <!-- Reservations -->
-                            <li class="m-menu__item {{ Helper::activeMenu(Request::segment(2)) == 'reservations' ?
-                                'm-menu__item--active' : '' }}"  aria-haspopup="true">
-                                <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel
+                                {{ Helper::activeMenu(Request::segment(2)) == 'reservation' ? 'm-menu__item--active' : '' }}"
+                                    data-menu-submenu-toggle="click" aria-haspopup="true">
+                                <a href="#" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__item-here"></span>
-                                    <span class="m-menu__link-text">Reservations</span>
+                                    <span class="m-menu__link-text">Reservation</span>
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                                 </a>
+
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                    <ul class="m-menu__subnav">
+                                        <!-- Reservations -->
+                                        <li class="m-menu__item" aria-haspopup="true">
+                                            <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-interface-1"></i>
+                                                <span class="m-menu__link-text">Reservations</span>
+                                            </a>
+                                        </li>
+                                        <!--/. Reservations -->
+
+                                        <!-- Item Calendar -->
+                                        <li class="m-menu__item" aria-haspopup="true">
+                                            <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-calendar-3"></i>
+                                                <span class="m-menu__link-text">Item Calendar</span>
+                                            </a>
+                                        </li>
+                                        <!--/. Item Calendar -->
+                                    </ul>
+                                </div>
                             </li>
-                            <!--/. Reservations -->
+                            <!--/. Reservation -->
 
                             <!-- Reports -->
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true">
@@ -254,7 +288,7 @@
 
                                         <li class="m-menu__item" aria-haspopup="true">
                                             <a href="{{ route('root.settings.index') }}" class="m-menu__link">
-                                                <i class="m-menu__link-icon flaticon-cogwheel"></i>
+                                                <i class="m-menu__link-icon flaticon-settings"></i>
                                                 <span class="m-menu__link-text">Settings</span>
                                             </a>
                                         </li>
@@ -262,7 +296,7 @@
                                 </div>
                             </li>
                             <!--/. Manage -->
-    
+
                             <!-- More -->
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--icon-only" data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a href="javascript:void(0);" class="m-menu__link m-menu__toggle">

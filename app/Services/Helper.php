@@ -46,8 +46,9 @@ class Helper {
     public static function activeMenu($segment_2)
     {
         $segments = [
+            'dashboard'     => [null],
             'inventory'     => ['categories', 'items', 'coupons'],
-            'reservations'  => ['reservations'],
+            'reservation'   => ['reservations', 'item-calendar'],
             'manage'        => ['users', 'superusers', 'user-roles', 'settings'],
         ];
 
