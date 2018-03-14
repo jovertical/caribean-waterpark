@@ -52,6 +52,8 @@ class ReservationsController extends Controller
 
     public function search(Request $request)
     {
+        // dd(request()->all());
+        
         $search_parameters = [
             'checkin_date' => $request->input('ci'),
             'checkout_date' => $request->input('co'),
@@ -60,9 +62,13 @@ class ReservationsController extends Controller
         ];
 
         $filters = [
-            'minimum_price' => $request->input('mnp'),
-            'maximum_price' => $request->input('mxp')
+            'categories'        => $request->get('c'),
+            'rating_stars'      => request(['rs0', 'rs1', 'rs2', 'rs3', 'rs4', 'rs5']),
+            'minimum_price'     => $request->get('mnp'),
+            'maximum_price'     => $request->get('mxp')
         ];
+
+        $categories = Category::all();
 
         $items = collect([]);
 
@@ -104,17 +110,16 @@ class ReservationsController extends Controller
 
                 if ($count == 0) {
                     $reservation_item = new ReservationItem;
-                    $calendar_occupied = $item_calendars->sum('quantity');
+                    $calendar_occupied = $item_calendars->max('quantity');
                     $calendar_occupied_days = $item_calendars->count();
+                    $calendar_unoccupied = $item->quantity - $calendar_occupied;
 
                     $reservation_item->item = $item;
                     $reservation_item->quantity = 0;
                     $reservation_item->price = 0.00;
                     $reservation_item->calendar_price = $item->price * $days;
                     $reservation_item->calendar_occupied = $calendar_occupied;
-                    $reservation_item->calendar_unoccupied =    $calendar_occupied_days > 0 ? $item->quantity -
-                                                                    ($calendar_occupied /= $calendar_occupied_days) :
-                                                                        $item->quantity;
+                    $reservation_item->calendar_unoccupied = $calendar_unoccupied;
 
                     $available_items->push($reservation_item);
                 }
@@ -159,16 +164,33 @@ class ReservationsController extends Controller
                 return $this->addItem($request, $index, $redirect_to);
             }
 
-            return view('front.reservation.search', [
-                'available_items' => Helper::paginate(session()->get('reservation.available_items'), 5),
-                'selected_items' => session()->get('reservation.selected_items')
-            ]);
+            $available_items =  Helper::paginate(
+                                    $this->filter(session()->get('reservation.available_items'), $filters), 5
+                                );
+            $selected_items = session()->get('reservation.selected_items');
+
+            return view('front.reservation.search', compact(['categories', 'available_items', 'selected_items']));
         }
 
-        return view('front.reservation.search', [
-            'available_items' => collect([]),
-            'selected_items' => collect([])
-        ]);
+        $available_items = collect([]);
+        $selected_items = collect([]);
+
+        return view('front.reservation.search', compact(['categories', 'available_items', 'selected_items']));
+    }
+
+    protected function filter(array $items, array $filters)
+    {
+        $items = collect($items);
+
+        if  ($filters['maximum_price'] != null) {
+            $filtered = $items->filter(function($item) use ($filters) {
+                return $item->item->price <= $filters['maximum_price'];
+            });
+
+            $items = $filtered;
+        }
+
+        return $items;
     }
 
     /**

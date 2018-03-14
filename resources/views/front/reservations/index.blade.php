@@ -19,7 +19,7 @@
                             @endif
 
                             <div class="content-title">
-                                <h2>Your reservations</h2>
+                                <h2>My reservations</h2>
                             </div>
 
                             <div class="cart-content">

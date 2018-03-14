@@ -25,7 +25,7 @@ Route::namespace('Front')->name('front.')->group(function () {
 
     Route::prefix('reservation')->name('reservation.')->group(function() {
         Route::get('/search', 'ReservationsController@search')->name('search');
-        Route::get('/search/{item}', 'ReservationsController@showItem')->name('show-item');
+        Route::post('/filter', 'ReservationsController@filter')->name('filter');
         Route::post('/cart/{index}/add', 'ReservationsController@addItem')->name('add-item');
         Route::post('/cart/{index}/remove', 'ReservationsController@removeItem')->name('remove-item');
         Route::get('/cart', 'ReservationsController@cart')->name('cart.index');

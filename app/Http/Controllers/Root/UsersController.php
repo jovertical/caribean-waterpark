@@ -39,13 +39,14 @@ class UsersController extends Controller
 
         try {
             $user = new User;
-            $login_credential = Helper::createLoginCredential($request->input('email'));
+            $username = Helper::createUsername($request->input('email'));
+            $password = Helper::createPassword();
 
             $user->verified        = true;
             $user->type            = 'user';
-            $user->name            = $login_credential;
+            $user->name            = $username;
             $user->email           = $request->input('email');
-            $user->password        = bcrypt($login_credential);
+            $user->password        = bcrypt($password);
             $user->first_name      = $request->input('first_name');
             $user->middle_name     = $request->input('middle_name');
             $user->last_name       = $request->input('last_name');
@@ -55,7 +56,7 @@ class UsersController extends Controller
             $user->phone_number    = $request->input('phone_number');
 
             if ($user->save()) {
-                $user->notify(new LoginCredential($login_credential, $login_credential));
+                $user->notify(new LoginCredential($username, $password));
 
                 Notify::success('User created.', 'Success!');
 

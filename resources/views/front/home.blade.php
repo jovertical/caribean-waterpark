@@ -19,7 +19,7 @@
                             @endif
 
                             <div class="content-title">
-                                <h2><i class="awe-icon awe-icon-user"></i>Your profile</h2>
+                                <h2>Dashboard</h2>
                             </div>
 
                             <div class="cart-content">

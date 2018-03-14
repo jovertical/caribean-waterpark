@@ -11,12 +11,7 @@
                     </li>
 
                     <li>
-                        <a href="#">Reservation</a>
-                    </li>
-
-                    <li>
-                        <a href="{{ route('front.reservation.search') }}?ci={{ Request::input('ci') }}&co={{
-                            Request::input('co') }}&aq={{ Request::input('aq') }}&cq={{ Request::input('cq') }}">Search</a>
+                        <a href="{{ route('front.items.index') }}">Accomodations</a>
                     </li>
 
                     <li>{{ $item->name }}</li>
@@ -34,11 +29,9 @@
                         <div class="product-title">
                             <h2>{{ $item->name }}</h2>
                             <div class="hotel-star">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
+                                @for($i = 1; $i <= $item->rating_stars; $i++)
+                                    <i class="fa fa-star"></i>
+                                @endfor
                             </div>
                         </div>
                         <div class="product-email">
@@ -419,8 +412,8 @@
                                                                     {{ $item_review->created_at->diffForHumans() }}
                                                                 </span>
                                                             </p>
-                                                            <div class="description">
-                                                                <span>{{ $item_review->title }}</span>
+                                                            <div class="description margin-t-5">
+                                                                <strong>{{ $item_review->title }}</strong>
                                                                 <p>{{ $item_review->body }}</p>
                                                             </div>
                                                             <div class="rating-info">

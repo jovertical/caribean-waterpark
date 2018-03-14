@@ -47,8 +47,8 @@ class LoginCredential extends Notification
     {
         return (new MailMessage)
                     ->line('You are receiving this email because an account is created.')
-                    ->action('Review account', url(route('front.login')))
-                    ->line("We have generated this username: {$this->name} and password: {$this->password}");
+                    ->action('Review account', url(route('front.account.password')))
+                    ->line("We have generated this username: {$this->name}, and password: {$this->password}");
     }
 
     /**

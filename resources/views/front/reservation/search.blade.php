@@ -149,7 +149,9 @@
 
                         <!-- Pagination -->
                         @if (count($available_items))
-                            {{ $available_items->appends(Request::all())->links('front.components.pagination') }}
+                            <div class="text-center">
+                                {{ $available_items->appends(Request::all())->links('front.components.pagination') }}
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -158,213 +160,134 @@
                 <!-- Filters -->
                 <div class="col-md-3 col-md-pull-9">
                     <div class="page-sidebar">
-                        <div class="sidebar-title">
-                            <h2>Hotel filter</h2>
-                            <div class="clear-filter">
-                                <a href="#">Clear all</a>
-                            </div>
-                        </div>
-                        <div class="widget widget_has_radio_checkbox">
-                            <h3>Hotel Type</h3>
-                            <ul>
-                                <li>
-                                    <label><input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Hotel</label>
-                                </li>
-                                <li>
-                                    <label><input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Hostel</label>
-                                </li>
-                                <li>
-                                    <label><input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Motel</label>
-                                </li>
-                                <li>
-                                    <label><input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Homestay</label>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="widget widget_price_filter">
-                            <h3>Price Level</h3>
-                            <div class="price-slider-wrapper">
-                                <div class="price-slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" _vimium-has-onclick-listener="" aria-disabled="false">
-                                    <div class="ui-slider-range ui-widget-header ui-corner-all" style="left:0%;width:100%;">
-                                    </div>
-                                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;">
-                                    </a>
-                                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 100%;"></a>
-                                </div>
-                                <div class="price_slider_amount">
-                                    <div class="price_label">
-                                        <span class="from">$0</span> - <span class="to">$10000</span>
-                                    </div>
+                        <form method="GET" action="{{ route('front.reservation.search') }}">
+                            <input type="hidden" name="ci" value="{{ Request::input('ci') }}">
+                            <input type="hidden" name="co" value="{{ Request::input('co') }}">
+                            <input type="hidden" name="aq" value="{{ Request::input('aq') }}">
+                            <input type="hidden" name="cq" value="{{ Request::input('cq') }}">
+
+                            <div class="sidebar-title">
+                                <h2>Filters</h2>
+                                <div class="clear-filter">
+                                    <a href="{{ route('front.reservation.search').'?ci='.Request::get('ci').'&co='.
+                                    Request::get('co').'&aq='.Request::input('aq').'&cq='.Request::get('cq')}}">Clear all</a>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="widget widget_has_radio_checkbox">
-                            <h3>Star Rating</h3>
-                            <ul>
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i>
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i>
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i>
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i>
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i>
-                                        <span class="rating">
-                                            <i class="fa fa-star"></i>
-                                        </span>
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i>
-                                        <span class="rating">Unrated</span>
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="widget widget_has_radio_checkbox">
-                            <h3>Distance</h3>
-                            <ul>
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i> Near Airport
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Near Shopping District
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i> Near Attractions
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox">
-                                        <i class="awe-icon awe-icon-check"></i> Near Traffic station
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="widget widget_has_radio_checkbox">
-                            <h3>Service Include</h3>
-                            <ul>
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Room service
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Laundry
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Meal at room
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Wifi &amp; internet
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Parking lot
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> TV and appliances
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Pool
-                                    </label>
-                                </li>
-
-                                <li>
-                                    <label>
-                                        <input type="checkbox"> <i class="awe-icon awe-icon-check"></i> Gym and Spa
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="widget widget_product_tag_cloud">
-                            <h3>Tags</h3><div class="tagcloud">
-                                <a href="#">Hotel</a>
-                                <a href="#">Motel</a>
-                                <a href="#">Hostel</a>
-                                <a href="#">Homestay</a>
+                            <div class="widget widget_has_radio_checkbox">
+                                <h3>Category</h3>
+                                <ul>
+                                    @foreach($categories as $index => $category)
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" name="c[]" id="c{{ $loop->iteration }}"
+                                                    value="{{ $category->slug }}">
+                                                <i class="awe-icon awe-icon-check"></i> {{ $category->name }}
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        </div>
+                            <div class="widget widget_price_filter">
+                                <h3>Price Level</h3>
+                                <div class="price-slider-wrapper">
+                                    <div class="price-slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                                    aria-disabled="false">
+                                        <div class="ui-slider-range ui-widget-header ui-corner-all" style="left:0%;width:100%;">
+                                        </div>
+                                        <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;">
+                                        </a>
+                                        <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 100%;"></a>
+                                    </div>
+                                    <div class="price_slider_amount">
+                                        <div class="price_label">
+                                            <input type="hidden" name="mnp" id="mnp">
+                                            <input type="hidden" name="mxp" id="mxp">
+                                            <span class="from"></span> - <span class="to"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="widget widget_has_radio_checkbox">
+                                <h3>Star Rating</h3>
+                                <ul>
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="rs5" id="rs5" value="5"
+                                                {{ Request::get('rs5') == '5' ? 'checked' : '' }}>
+                                            <i class="awe-icon awe-icon-check"></i>
+                                            <span class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="rs4" id="rs4" value="4"
+                                                {{ Request::get('rs4') == '4' ? 'checked' : '' }}>
+                                            <i class="awe-icon awe-icon-check"></i>
+                                            <span class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="rs3" id="rs3" value="3"
+                                                {{ Request::get('rs3') == '3' ? 'checked' : '' }}>
+                                            <i class="awe-icon awe-icon-check"></i>
+                                            <span class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="rs2" id="rs2" value="2"
+                                                {{ Request::get('rs2') == '2' ? 'checked' : '' }}>
+                                            <i class="awe-icon awe-icon-check"></i>
+                                            <span class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="rs1" id="rs1" value="1"
+                                                {{ Request::get('rs1') == '1' ? 'checked' : '' }}>
+                                            <i class="awe-icon awe-icon-check"></i>
+                                            <span class="rating">
+                                                <i class="fa fa-star"></i>
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="rs0" id="rs0" value="0">
+                                            <i class="awe-icon awe-icon-check"></i>
+                                            <span class="rating">Unrated</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <button type="submit" class="button button-secondary">Apply</button>
+                        </form>
                     </div>
                 </div>
                 <!--/. Filters -->

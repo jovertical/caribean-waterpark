@@ -109,17 +109,17 @@ class ReservationsController extends Controller
 
                 if ($count == 0) {
                     $reservation_item = new ReservationItem;
-                    $calendar_occupied = $item_calendars->sum('quantity');
+                    $calendar_occupied = $item_calendars->max('quantity');
                     $calendar_occupied_days = $item_calendars->count();
+                    $calendar_unoccupied = $item->quantity - $calendar_occupied;
 
                     $reservation_item->item = $item;
                     $reservation_item->quantity = 0;
                     $reservation_item->price = 0.00;
                     $reservation_item->calendar_price = $item->price * $days;
                     $reservation_item->calendar_occupied = $calendar_occupied;
-                    $reservation_item->calendar_unoccupied =    $calendar_occupied_days > 0 ? $item->quantity -
-                                                                    ($calendar_occupied /= $calendar_occupied_days) :
-                                                                        $item->quantity;
+                    $reservation_item->calendar_unoccupied = $calendar_unoccupied;
+
                     // check if item has passed the filters. push if true
                     if ($this->itemFiltered($reservation_item, $filters)) {
                         $available_items->push($reservation_item);

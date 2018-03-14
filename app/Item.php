@@ -73,6 +73,23 @@ class Item extends Model
                     $this->cleanliness_rating + $this->value_for_money_rating) / 4;
     }
 
+    public function getRatingStarsAttribute()
+    {
+        $average_rating = $this->average_rating;
+
+        if (($average_rating >= 5) AND ($average_rating < 6)) {
+            return 1;
+        } elseif (($average_rating >= 6) AND ($average_rating < 7)) {
+            return 2;
+        } elseif (($average_rating >= 7) AND ($average_rating < 8)) {
+            return 3;
+        } elseif (($average_rating >= 8) AND ($average_rating < 9)) {
+            return 4;
+        } elseif (($average_rating >= 9) AND ($average_rating <= 10)) {
+            return 5;
+        }
+    }
+
     public function getRatingRemarkAttribute()
     {
         $average_rating = $this->average_rating;

@@ -15,9 +15,9 @@
 
         <!-- Stars -->
         <div class="item-hotel-star">
-            @foreach(range(1, rand(1, 5)) as $count)
+            @for($i = 1; $i <= $available_item->item->rating_stars; $i++)
                 <i class="fa fa-star"></i>
-            @endforeach
+            @endfor
         </div>
 
         <!-- Description -->
@@ -28,7 +28,7 @@
         <div class="item-footer">
             <!-- Rating -->
             <div class="item-rate">
-                <span>{{ number_format(rand(3, 10), 1, '.', '') }}</span>
+                <span>{{ Helper::decimalFormat($available_item->item->average_rating, 1) }}</span>
             </div>
             <div class="item-icon">
                 <span class="text-warning">
