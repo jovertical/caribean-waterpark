@@ -2,6 +2,21 @@
 
 @section('sidebar')
     @component('root.components.sidebar')
+        <!-- Export -->
+        <li class="m-menu__item" aria-haspopup="true">
+            <a href="javascript:void(0);" class="m-menu__link export"
+                data-form="#export"
+                data-action="{{ route('root.reports.sales') }}"
+                data-toggle="modal"
+                data-target="#exportConfirmation"
+            >
+                <i class="m-menu__link-icon la la-cloud-download"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-text">Export</span>
+                </span>
+            </a>
+        </li>
+        <!--/. Export -->
     @endcomponent
 @endsection
 
@@ -191,6 +206,47 @@
             </div>
         </div>
     </div>
+
+    <!-- Export Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            exportConfirmation
+        @endslot
+
+        @slot('title')
+            Export Sales Report
+        @endslot
+
+        @slot('content_position')
+            left
+        @endslot
+
+        <!-- Update Reservation to Reserved Form -->
+        <form method="POST" action="" id="export">
+            {{ csrf_field() }}
+
+            <!-- File name -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">File name: </label>
+
+                <input type="text" name="file_name" id="file_name" class="form-control m-input"
+                    value="Sales Report: {{ Request::get('from').' - '.Request::get('to') }}">
+            </div>
+            <!--/. File name -->
+
+            <!-- File type -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">File type: </label>
+
+                <select name="file_type" id="file_type" class="form-control m-bootstrap-select">
+                    <option value="pdf">PDF</option>
+                    <option value="excel">Excel</option>
+                    <option value="csv">CSV</option>
+                </select>
+            </div>
+            <!--/. File type -->
+        </form>
+    @endcomponent
 @endsection
 
 @section('scripts')
@@ -227,6 +283,8 @@
                     $('input[id=from]').val(moment(ranges[selected_value][0]).format('Y-MM-DD'));
                     $('input[id=to]').val(moment(ranges[selected_value][1]).format('Y-MM-DD'));
                 });
+
+                $('select[id=file_type]').selectpicker();
             }
 
             // dates
@@ -277,6 +335,24 @@
 
         $(document).ready(function() {
             sales.init();
+
+            // export.
+            $('.export').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. export.
         });
     </script>
 @endsection
