@@ -1,19 +1,19 @@
 @extends('front.layouts.main')
 
 @section('content')
-    <section class="hero-section"> 
+    <section class="hero-section">
         <div id="slider-revolution">
             <ul>
                 <li data-slotamount="7" data-masterspeed="500" data-title="Slide title 1">
                     <img src="/front/assets/images/bg/1.jpg" data-bgposition="left center" data-duration="14000" data-bgpositionend="right center" alt="">
 
-                    <div class="tp-caption sfb fadeout slider-caption-sub slider-caption-sub-1" data-x="500" data-y="230" data-speed="700" data-start="1500" data-easing="easeOutBack">Last minute deal
+                    <div class="tp-caption sfb fadeout slider-caption-sub slider-caption-sub-1" data-x="center" data-y="230" data-speed="700" data-start="1500" data-easing="easeOutBack">Caribbean Waterpark Resort
                     </div>
 
-                    <div class="tp-caption sfb fadeout slider-caption slider-caption-1" data-x="center" data-y="280" data-speed="700" data-easing="easeOutBack" data-start="2000">Top discount Paris Hotels
+                    <div class="tp-caption sfb fadeout slider-caption slider-caption-1" data-x="center" data-y="280" data-speed="700" data-easing="easeOutBack" data-start="2000">Feel like at home
                     </div>
 
-                    <a href="#" class="tp-caption sfb fadeout awe-btn awe-btn-style3 awe-btn-slider" data-x="center" data-y="380" data-easing="easeOutBack" data-speed="700" data-start="2200">Details</a>
+                    <a href="{{ route('front.reservation.search') }}" class="tp-caption sfb fadeout awe-btn awe-btn-style3 awe-btn-slider" data-x="center" data-y="380" data-easing="easeOutBack" data-speed="700" data-start="2200">Welcome</a>
                 </li>
 
                 <li data-slotamount="7" data-masterspeed="500" data-title="Slide title 2">
@@ -30,10 +30,10 @@
                 <li data-slotamount="7" data-masterspeed="500" data-title="Slide title 3">
                     <img src="/front/assets/images/bg/3.jpg" data-bgposition="left center" data-duration="14000" data-bgpositionend="right center" alt="">
 
-                    <div class="tp-caption lfl fadeout slider-caption slider-caption-3" data-x="center" data-y="260" data-speed="700" data-easing="easeOutBack" data-start="1500">Gofar
+                    <div class="tp-caption lfl fadeout slider-caption slider-caption-3" data-x="center" data-y="260" data-speed="700" data-easing="easeOutBack" data-start="1500">Relax
                     </div>
 
-                    <div href="#" class="tp-caption lfr fadeout slider-caption-sub slider-caption-sub-3" data-x="center" data-y="365" data-easing="easeOutBack" data-speed="700" data-start="2000">Take you to every corner of the world
+                    <div href="#" class="tp-caption lfr fadeout slider-caption-sub slider-caption-sub-3" data-x="center" data-y="365" data-easing="easeOutBack" data-speed="700" data-start="2000">We will help you appreciate life more
                     </div>
                 </li>
             </ul>
@@ -189,113 +189,100 @@
                                 <a href="#top-rated">Top rated</a>
                             </li>
                         </ul>
-                        
+
                         <div class="sale-flights-tabs__content tabs__content">
                             <!-- Best selling -->
                             <div id="best-selling">
-                                <div class="trip-item">
-                                    <div class="item-media">
-                                        <div class="image-cover">
-                                            <img src="/front/assets/images/trip/2.jpg" alt="">
-                                        </div>
-                                        <div class="trip-icon">
-                                            <img src="/front/assets/images/trip.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="item-body">
-                                        <div class="item-title">
-                                            <h2>
-                                                <a href="#">Spectacular City Views</a>
-                                            </h2>
-                                        </div>
-
-                                        <div class="item-list">
-                                            <ul>
-                                                <li>4 Attractions</li>
-                                                <li>2 days, 1 night</li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="item-footer">
-                                            <div class="item-rate">
-                                                <span>7.5 Good</span>
-                                            </div>
-                                            <div class="item-icon">
-                                                <i class="awe-icon awe-icon-gym"></i>
-                                                <i class="awe-icon awe-icon-car"></i>
-                                                <i class="awe-icon awe-icon-food"></i>
-                                                <i class="awe-icon awe-icon-level"></i>
-                                                <i class="awe-icon awe-icon-wifi"></i>
+                                @foreach($best_selling_items as $item)
+                                    <div class="trip-item">
+                                        <div class="item-media">
+                                            <div class="image-cover">
+                                                <img src="{{ Helper::fileUrl($item->images->first()) }}" alt="img">
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="item-body">
+                                            <div class="item-title">
+                                                <h2>
+                                                    <a href="{{ route('front.items.show', $item) }}">
+                                                        {{ $item->name }}
+                                                    </a>
+                                                </h2>
+                                            </div>
 
-                                    <div class="item-price-more">
-                                        <div class="price">Adult ticket
-                                            <ins>
-                                                <span class="amount">$200</span>
-                                            </ins>
-                                            <del>
-                                                <span class="amount">$200</span>
-                                            </del>
+                                            <div class="item-description">
+                                                {!! Str::limit($item->description, 50) !!}
+                                            </div>
+
+                                            <div class="item-footer">
+                                                <div class="item-rate">
+                                                    <span>
+                                                        {{ $item->order_count }} Customer Usage
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <a href="#" class="awe-btn">Details</a>
+
+                                        <div class="item-price-more">
+                                            <div class="price">One day from
+                                                <ins>
+                                                    <span class="amount">
+                                                        {{ Helper::moneyString($item->price) }}
+                                                    </span>
+                                                </ins>
+                                            </div>
+
+                                            <a href="{{ route('front.items.show', $item) }}" class="awe-btn">Details</a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
                             <!--/. Best selling -->
 
                             <!-- Top rated -->
                             <div id="top-rated">
-                                <div class="trip-item">
-                                    <div class="item-media">
-                                        <div class="image-cover">
-                                            <img src="/front/assets/images/trip/2.jpg" alt="">
-                                        </div>
-                                        <div class="trip-icon">
-                                            <img src="/front/assets/images/trip.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="item-body">
-                                        <div class="item-title">
-                                            <h2>
-                                                <a href="#">Spectacular City Views</a>
-                                            </h2>
-                                        </div>
-
-                                        <div class="item-list">
-                                            <ul>
-                                                <li>4 Attractions</li>
-                                                <li>2 days, 1 night</li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="item-footer">
-                                            <div class="item-rate">
-                                                <span>7.5 Good</span>
-                                            </div>
-                                            <div class="item-icon">
-                                                <i class="awe-icon awe-icon-gym"></i>
-                                                <i class="awe-icon awe-icon-car"></i>
-                                                <i class="awe-icon awe-icon-food"></i>
-                                                <i class="awe-icon awe-icon-level"></i>
-                                                <i class="awe-icon awe-icon-wifi"></i>
+                                @foreach($top_rated_items as $item)
+                                    <div class="trip-item">
+                                        <div class="item-media">
+                                            <div class="image-cover">
+                                                <img src="{{ Helper::fileUrl($item->images->first()) }}" alt="img">
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="item-body">
+                                            <div class="item-title">
+                                                <h2>
+                                                    <a href="{{ route('front.items.show', $item) }}">
+                                                        {{ $item->name }}
+                                                    </a>
+                                                </h2>
+                                            </div>
 
-                                    <div class="item-price-more">
-                                        <div class="price">Adult ticket
-                                            <ins>
-                                                <span class="amount">$200</span>
-                                            </ins>
-                                            <del>
-                                                <span class="amount">$200</span>
-                                            </del>
+                                            <div class="item-description">
+                                                {!! Str::limit($item->description, 50) !!}
+                                            </div>
+
+                                            <div class="item-footer">
+                                                <div class="item-rate">
+                                                    <span>
+                                                        {{ Helper::decimalFormat($item->average_rating, 1) }}
+                                                        {{ ucfirst($item->rating_remark) }}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <a href="#" class="awe-btn">Details</a>
+
+                                        <div class="item-price-more">
+                                            <div class="price">One day from
+                                                <ins>
+                                                    <span class="amount">
+                                                        {{ Helper::moneyString($item->price) }}
+                                                    </span>
+                                                </ins>
+                                            </div>
+
+                                            <a href="{{ route('front.items.show', $item) }}" class="awe-btn">Details</a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
                             <!--/. Top rated -->
                         </div>
@@ -304,13 +291,14 @@
 
                 <div class="col-md-4">
                     <div class="awe-services">
-                        <h2>Why your friends like our services?</h2>
+                        <h2>Why caribbean waterpark?</h2>
                         <ul class="awe-services__list">
                             <li>
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
-                                    <i class="awe-icon awe-icon-arrow-right"></i> 100,000 real deals
-                                    <span>No booking fees . No fake</span>
+                                    <i class="awe-icon awe-icon-arrow-right"></i> 
+                                    Wide array of accomodations 
+                                    <span>{{ $items->total() }} to choose from</span>
                                 </a>
                             </li>
 
@@ -318,7 +306,7 @@
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
                                     <i class="awe-icon awe-icon-arrow-right"></i> 100% trusted reviews
-                                    <span>We verify them in person</span>
+                                    <span>{{ $item_reviews->count() }} customer reviews in total</span>
                                 </a>
                             </li>
 
@@ -326,22 +314,26 @@
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
                                     <i class="awe-icon awe-icon-arrow-right"></i>
-                                    24/7 global support <span>anytime and any where</span>
+                                    Excellent support 
+                                    <span>Our customers are the top priority</span>
                                 </a>
                             </li>
 
                             <li>
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
-                                    <i class="awe-icon awe-icon-arrow-right"></i> 24/7 global support <span>anytime and any where</span>
+                                    <i class="awe-icon awe-icon-arrow-right"></i> 
+                                    Manage your reservation online
+                                    <span>We will contact you back</span>
                                 </a>
                             </li>
 
                             <li>
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
-                                    <i class="awe-icon awe-icon-arrow-right"></i> Manage your bookings online
-                                    <span>anytime and any where</span>
+                                    <i class="awe-icon awe-icon-arrow-right"></i> 
+                                    Variety of payment options 
+                                    <span>We support paypal and cash payments</span>
                                 </a>
                             </li>
                         </ul>

@@ -44,7 +44,6 @@
                             @else
                                 <li><a href="{{ route('front.home') }}">Dashboard</a></li>
                                 <li><a href="{{ route('front.account.profile') }}">Profile</a></li>
-                                <li><a href="{{ route('front.account.password') }}">Password</a></li>
                                 <li><a href="{{ route('front.reservations.index') }}">Reservations</a></li>
                                 <li>
                                     <a href="javascript:void(0);" onclick="event.preventDefault();

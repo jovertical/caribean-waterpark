@@ -52,8 +52,6 @@ class ReservationsController extends Controller
 
     public function search(Request $request)
     {
-        // dd(request()->all());
-        
         $search_parameters = [
             'checkin_date' => $request->input('ci'),
             'checkout_date' => $request->input('co'),

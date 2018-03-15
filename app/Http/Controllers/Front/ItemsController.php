@@ -34,7 +34,7 @@ class ItemsController extends Controller
             $user_reservations = auth()->user()->reservations;
 
             foreach ($user_reservations as $index => $user_reservation) {
-                if (in_array(strtolower($user_reservation->status), ['paid', 'reserved',])) {
+                if (in_array(strtolower($user_reservation->status), ['paid', 'reserved'])) {
                     if ($user_reservation->days->where('entered_at', '!=', null)->count()) {
                         if ($user_reservation->items->contains('item_id', $item->id)) {
                             if (! $item->reviews->contains('user_id', auth()->user()->id)) {
