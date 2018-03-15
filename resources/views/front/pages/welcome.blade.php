@@ -1,7 +1,7 @@
 @extends('front.layouts.main')
 
 @section('content')
-    <section class="hero-section">
+    <section class="hero-section"> 
         <div id="slider-revolution">
             <ul>
                 <li data-slotamount="7" data-masterspeed="500" data-title="Slide title 1">
