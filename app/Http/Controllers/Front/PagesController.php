@@ -11,7 +11,7 @@ class PagesController extends Controller
 {
     public function welcome()
     {
-        $items = Item::where('active', 1)->paginate(5);
+        $items = Item::where('active', 1)->get();
 
         $reservations = Reservation::where('status', 'paid')
                             ->orWhere('status', 'reserved')
@@ -26,6 +26,16 @@ class PagesController extends Controller
         return view('front.pages.welcome', compact([
             'items', 'item_reviews', 'best_selling_items', 'top_rated_items'
         ]));
+    }
+
+    public function contact()
+    {
+        return view('front.pages.contact');
+    }
+
+    public function terms()
+    {
+        return view('front.pages.terms');
     }
 
     protected function bestSellingItems(Collection $reservations)

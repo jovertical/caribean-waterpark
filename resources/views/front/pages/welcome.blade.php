@@ -133,11 +133,11 @@
         <div class="container">
             <div class="destination-grid-content">
                 <div class="section-title">
-                    <h3>About <a href="#">{{ $items->total() }} Accomodations</a> to stay with.</h3>
+                    <h3>About <a href="#">{{ $items->count() }} Accomodations</a> to stay with.</h3>
                 </div>
                 <div class="row">
                     <div class="awe-masonry">
-                        @foreach($items as $index => $item)
+                        @foreach($items->take(Request::get('mc') ?? 5) as $index => $item)
                             <div class="awe-masonry__item">
                                 <a href="#">
                                     <div class="image-wrap image-cover">
@@ -168,9 +168,14 @@
                     </div>
                 </div>
 
-                <div class="more-destination">
-                    <a href="#">More Accomodations</a>
-                </div>
+                @if(count($items->take($mc = Request::get('mc') ?? 5)) >= $mc)
+                    <div class="more-destination">
+                        <a href="{{ route('front.welcome').'?mc='.($mc == null ? 10 : ($mc + 5)) }}">
+                            More Accomodations
+                        </a>
+                    </div>
+                @endif
+
             </div>
         </div>
     </section>
@@ -216,7 +221,7 @@
                                             <div class="item-footer">
                                                 <div class="item-rate">
                                                     <span>
-                                                        {{ $item->order_count }} Customer Usage
+                                                        {{ $item->order_count }} Customer usage
                                                     </span>
                                                 </div>
                                             </div>
@@ -296,9 +301,9 @@
                             <li>
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
-                                    <i class="awe-icon awe-icon-arrow-right"></i> 
-                                    Wide array of accomodations 
-                                    <span>{{ $items->total() }} to choose from</span>
+                                    <i class="awe-icon awe-icon-arrow-right"></i>
+                                    Wide array of accomodations
+                                    <span>{{ $items->count() }} to choose from</span>
                                 </a>
                             </li>
 
@@ -314,7 +319,7 @@
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
                                     <i class="awe-icon awe-icon-arrow-right"></i>
-                                    Excellent support 
+                                    Excellent support
                                     <span>Our customers are the top priority</span>
                                 </a>
                             </li>
@@ -322,7 +327,7 @@
                             <li>
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
-                                    <i class="awe-icon awe-icon-arrow-right"></i> 
+                                    <i class="awe-icon awe-icon-arrow-right"></i>
                                     Manage your reservation online
                                     <span>We will contact you back</span>
                                 </a>
@@ -331,8 +336,8 @@
                             <li>
                                 <a href="#">
                                     <i class="awe-icon awe-icon-check"></i>
-                                    <i class="awe-icon awe-icon-arrow-right"></i> 
-                                    Variety of payment options 
+                                    <i class="awe-icon awe-icon-arrow-right"></i>
+                                    Variety of payment options
                                     <span>We support paypal and cash payments</span>
                                 </a>
                             </li>
