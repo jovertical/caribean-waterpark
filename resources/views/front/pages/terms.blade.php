@@ -14,7 +14,7 @@
                         <p>These terms are not permanent and will change over time.</p>
                     </li>
                     <li>
-                        <p>By using this system the user agees to these terms and conditions.</p>
+                        <p>By using this system the user agrees to these terms and conditions.</p>
                     </li>
                 </ol>
 
@@ -79,7 +79,7 @@
                 <p>{{ config('app.name') }} has the right to deactivate user accounts without the consent of its users. The end user can also do that.</p>
             </div>
         </div>
-    </section>
 
-    <div style="margin-bottom: 500px;"></div>
+        <div style="margin-bottom: 50px;"></div>
+    </section>
 @endsection

@@ -12,7 +12,9 @@
                         </div>
                     </div>
 
-                    <div class="logo"><img src="/front/assets/images/logo-footer.png" alt=""></div>
+                    <div class="logo">
+                        <img src="/front/assets/images/logo-footer.png" alt="">
+                    </div>
                     <div class="widget_content">
                         <p>Sitio Abo, Brgy. Pulong Sampaloc, Doña Remedios Trinidad, Bulakan</p>
                         <p>+1-888-8765-1234</p>
@@ -39,7 +41,7 @@
                     <h3>Services</h3>
                     <ul>
                         <li>
-                            <a href="{{ route('front.items.index') }}">Accomodations</a>
+                            <a href="{{ route('front.reservation.search') }}">Reservation</a>
                         </li>
                         <li>
                             <a href="{{ route('front.items.index') }}">Facilities</a>

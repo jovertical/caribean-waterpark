@@ -60,13 +60,10 @@ class ReservationsController extends Controller
         ];
 
         $filters = [
-            'categories'        => $request->get('c'),
             'rating_stars'      => request(['rs0', 'rs1', 'rs2', 'rs3', 'rs4', 'rs5']),
             'minimum_price'     => $request->get('mnp'),
             'maximum_price'     => $request->get('mxp')
         ];
-
-        $categories = Category::all();
 
         $items = collect([]);
 
@@ -167,22 +164,42 @@ class ReservationsController extends Controller
                                 );
             $selected_items = session()->get('reservation.selected_items');
 
-            return view('front.reservation.search', compact(['categories', 'available_items', 'selected_items']));
+            return view('front.reservation.search', compact(['available_items', 'selected_items']));
         }
 
         $available_items = collect([]);
         $selected_items = collect([]);
 
-        return view('front.reservation.search', compact(['categories', 'available_items', 'selected_items']));
+        return view('front.reservation.search', compact(['available_items', 'selected_items']));
     }
 
     protected function filter(array $items, array $filters)
     {
+        $maximum_price = $filters['maximum_price'];
+        $minimum_price = $filters['minimum_price'];
+        $rating_stars = $filters['rating_stars'];
+
         $items = collect($items);
 
-        if  ($filters['maximum_price'] != null) {
-            $filtered = $items->filter(function($item) use ($filters) {
-                return $item->item->price <= $filters['maximum_price'];
+        if  (($maximum_price != null) AND (is_numeric($maximum_price))) {
+            $filtered = $items->filter(function($item) use ($maximum_price) {
+                return $item->item->price <= $maximum_price;
+            });
+
+            $items = $filtered;
+        }
+
+        if  (($minimum_price != null) AND (is_numeric($minimum_price))) {
+            $filtered = $items->filter(function($item) use ($minimum_price) {
+                return $item->item->price >= $minimum_price;
+            });
+
+            $items = $filtered;
+        }
+
+        if  (($rating_stars != null) AND (is_array($rating_stars))) {
+            $filtered = $items->filter(function($item) use ($rating_stars) {
+                return in_array($item->item->rating_stars, $rating_stars);
             });
 
             $items = $filtered;

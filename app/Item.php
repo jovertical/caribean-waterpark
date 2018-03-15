@@ -87,6 +87,8 @@ class Item extends Model
             return 4;
         } elseif (($average_rating >= 9) AND ($average_rating <= 10)) {
             return 5;
+        } else {
+            return 0;
         }
     }
 

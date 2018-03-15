@@ -16,6 +16,9 @@
                         <li>
                             <a href="#">Reservation</a>
                         </li>
+                        <li>
+                            <a href="{{ route('front.reservation.search') }}">Search</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -110,7 +113,7 @@
         <div class="container">
             <div class="row page-top">
                 <!-- Search result counts -->
-                <div class="col-md-6">
+                <div class="col-md-12 text-right">
                     @if(count($available_items))
                         <p>Showing <strong>{{ $available_items->count() }}</strong> of
                             <strong>{{ $available_items->total() }}</strong> available items.
@@ -118,16 +121,6 @@
                     @endif
                 </div>
                 <!--/. Search result counts -->
-
-                <div class="col-md-6">
-                    <div class="awe-select-wrapper">
-                        <select class="awe-select">
-                            <option>Best Match</option>
-                            <option>Best Rate</option>
-                        </select>
-                        <i class="fa fa-caret-down"></i>
-                    </div>
-                </div>
 
                 <!-- Available items -->
                 <div class="col-md-9 col-md-push-3">
@@ -173,20 +166,6 @@
                                     Request::get('co').'&aq='.Request::input('aq').'&cq='.Request::get('cq')}}">Clear all</a>
                                 </div>
                             </div>
-                            <div class="widget widget_has_radio_checkbox">
-                                <h3>Category</h3>
-                                <ul>
-                                    @foreach($categories as $index => $category)
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" name="c[]" id="c{{ $loop->iteration }}"
-                                                    value="{{ $category->slug }}">
-                                                <i class="awe-icon awe-icon-check"></i> {{ $category->name }}
-                                            </label>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
                             <div class="widget widget_price_filter">
                                 <h3>Price Level</h3>
                                 <div class="price-slider-wrapper">
@@ -199,9 +178,9 @@
                                         <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 100%;"></a>
                                     </div>
                                     <div class="price_slider_amount">
+                                        <input type="hidden" name="mnp" id="mnp">
+                                        <input type="hidden" name="mxp" id="mxp">
                                         <div class="price_label">
-                                            <input type="hidden" name="mnp" id="mnp">
-                                            <input type="hidden" name="mxp" id="mxp">
                                             <span class="from"></span> - <span class="to"></span>
                                         </div>
                                     </div>
@@ -278,7 +257,8 @@
 
                                     <li>
                                         <label>
-                                            <input type="checkbox" name="rs0" id="rs0" value="0">
+                                            <input type="checkbox" name="rs0" id="rs0" value="0"
+                                                {{ Request::get('rs0') == '0' ? 'checked' : '' }}>
                                             <i class="awe-icon awe-icon-check"></i>
                                             <span class="rating">Unrated</span>
                                         </label>
@@ -319,5 +299,19 @@
             selectOtherMonths: !0,
             dayNamesMin:["Sun","Mon","Tue","Wen","Thu","Fri","Sat"]
         });
+
+        $('.price-slider').slider({
+            min: 0,
+            max: {{ $max = $available_items->max('calendar_price') ?? 9999 }},
+            values: [{{ Request::get('mnp') ?? 0 }}, {{ Request::get('mxp') ?? $max }}],
+            slide: function(event, prices) {
+                $("#mnp").val(prices.values[0]);
+                $("#mxp").val(prices.values[1]);
+                $(".from").text("₱" + prices.values[0]);
+                $('.to').text("₱" + prices.values[1]);
+            }
+        });
+        $(".from").text("₱" + {{ Request::get('mnp') ?? 0}});
+        $('.to').text("₱" + {{ Request::get('mxp') ?? $max }});
     </script>
 @endsection
