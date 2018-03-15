@@ -38,7 +38,7 @@
                                     <div class="m-form__control">
                                         <select class="form-control m-bootstrap-select" id="source">
                                             <option value="">All</option>
-                                            <option value="frontend">Customer</option>
+                                            <option value="front">Customer</option>
                                             <option value="root">Staff</option>
                                         </select>
                                     </div>
@@ -392,18 +392,6 @@
 
                 $('select[id=status]').on('change', function() {
                     datatable.search($(this).val().toLowerCase(), 'Status');
-                });
-
-                $('select[id=date]').on('change', function() {
-                    datatable.search($(this).val().toLowerCase(), 'Date');
-                });
-
-                $('input[id=from]').on('change', function() {
-                    datatable.search($(this).val().toLowerCase(), 'Checkin');
-                });
-
-                $('input[id=to]').on('change', function() {
-                    datatable.search($(this).val().toLowerCase(), 'Checkout');
                 });
             };
 

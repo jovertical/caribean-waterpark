@@ -91,9 +91,9 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::post('/{user}/store', 'ReservationsController@store')->name('store');
         });
 
-        Route::prefix('paypal-express')->name('paypal-express.')->group(function() {
-            Route::get('/checkout', 'PaypalController@checkout')->name('checkout');
-            Route::get('/checkout', 'PaypalController@checkout')->name('checkout');
+        Route::prefix('reports')->name('reports.')->group(function() {
+            Route::get('/sales', 'ReportsController@sales')->name('sales');
+            Route::get('/allocation', 'ReportsController@allocation')->name('allocation');
         });
     });
 });

@@ -13,7 +13,7 @@ class SettingsTableSeeder extends Seeder
     public function run()
     {
         $settings = [
-            ['name' => 'days_prior', 'value' => 1],
+            ['name' => 'days_prior', 'value' => 0],
             ['name' => 'minimum_reservation_length', 'value' => 1],
             ['name' => 'maximum_reservation_length', 'value' => 15],
             ['name' => 'tax_rate', 'value' => 12],

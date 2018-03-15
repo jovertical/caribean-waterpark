@@ -13,7 +13,7 @@ class Reservation extends Model
         $user = auth()->check() ? auth()->user() : null;
 
         self::creating(function ($model) use ($user) {
-            $model->source = $user->type = 'superuser' ? 'root' : 'frontend';
+            $model->source = $user->environment;
         });
     }
 
@@ -99,6 +99,11 @@ class Reservation extends Model
     public function getDayCountAttribute()
     {
         return Carbon::parse($this->checkin_date)->diffIndays(Carbon::parse($this->checkout_date)) + 1;
+    }
+
+    public function getNetPayableAttribute()
+    {
+        return $this->price_payable - $this->price_taxable - $this->price_deductable;
     }
 
     public function getPriceLeftPayableAttribute()

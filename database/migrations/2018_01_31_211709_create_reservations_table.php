@@ -27,7 +27,7 @@ class CreateReservationsTable extends Migration
             $table->float('price_partial_payable')->default(0.00);
             $table->float('price_payable')->default(0.00);
             $table->float('price_paid')->default(0.00);
-            $table->enum('source', ['frontend', 'root']);
+            $table->enum('source', ['front', 'root']);
             $table->text('note')->nullable();
 
             $table->integer('created_by')->nullable();

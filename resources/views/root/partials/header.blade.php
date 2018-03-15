@@ -233,7 +233,7 @@
                                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                     <ul class="m-menu__subnav">
                                         <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="#" class="m-menu__link">
+                                            <a href="{{ route('root.reports.sales') }}" class="m-menu__link">
                                                 <i class="m-menu__link-icon flaticon-diagram"></i>
                                                 <span class="m-menu__link-text">Sales</span>
                                             </a>
