@@ -131,9 +131,34 @@ class User extends Authenticatable
         return ucfirst($value);
     }
 
-    public function getEnvironmentAttribute($value)
+    public function getEnvironmentAttribute()
     {
-        return ucfirst(strtolower($this->type) == 'superuser' ? 'root' : 'front');
+        switch (strtolower($this->type)) {
+            case 'superuser':
+                    $environment = 'root';
+                break;
+
+            case 'user':
+                    $environment = 'front';
+                break;
+        }
+        
+        return ucfirst($environment);
+    }
+
+    public function getEnvironmentAliasAttribute()
+    {
+        switch (strtolower($this->environment)) {
+            case 'root':
+                    $alias = 'staff';
+                break;
+
+            case 'front':
+                    $alias = 'customer';
+                break;
+        }
+
+        return ucfirst($alias);
     }
 
     public function getRouteKeyName()

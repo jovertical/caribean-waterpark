@@ -169,28 +169,30 @@
                                     <th>Date</th>
                                     <th>Tax</th>
                                     <th>Discount</th>
-                                    <th>Gross Profit</th>
-                                    <th>Net Profit</th>
+                                    <th>Gross Sale</th>
+                                    <th>Net Sale</th>
                                     <th>Paid</th>
                                     <th>Balance</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($data as $metadata)
-                                    @include('root.reports.sales.sale')
-                                @endforeach
+                                @isset($data['data'])
+                                    @foreach($data['data'] as $metadata)
+                                        @include('root.reports.sales.sale')
+                                    @endforeach
+                                @endisset
                             </tbody>
 
                             <tfoot>
                                 <tr>
                                     <th colspan="4" scope="row">Totals</th>
-                                    <td>{{ Helper::moneyString($totals['price_taxable']) }}</td>
-                                    <td>{{ Helper::moneyString($totals['price_deductable']) }}</td>
-                                    <td>{{ Helper::moneyString($totals['gross_profit']) }}</td>
-                                    <td>{{ Helper::moneyString($totals['net_profit']) }}</td>
-                                    <td>{{ Helper::moneyString($totals['price_paid']) }}</td>
-                                    <td>{{ Helper::moneyString($totals['balance']) }}</td>
+                                    <td>{{ Helper::moneyString($data['totals']['price_taxable']) }}</td>
+                                    <td>{{ Helper::moneyString($data['totals']['price_deductable']) }}</td>
+                                    <td>{{ Helper::moneyString($data['totals']['gross_sale']) }}</td>
+                                    <td>{{ Helper::moneyString($data['totals']['net_sale']) }}</td>
+                                    <td>{{ Helper::moneyString($data['totals']['price_paid']) }}</td>
+                                    <td>{{ Helper::moneyString($data['totals']['balance']) }}</td>
                                 </tr>
                             </tfoot>
                         </table>

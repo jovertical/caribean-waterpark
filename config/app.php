@@ -180,7 +180,8 @@ return [
         // Custom Service Providers
         Intervention\Image\ImageServiceProvider::class,
         Brian2694\Toastr\ToastrServiceProvider::class,
-        // Maatwebsite\Excel\ExcelServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -238,7 +239,8 @@ return [
         'Carbon' => Carbon\Carbon::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Notify' => Brian2694\Toastr\Facades\Toastr::class,
-        // 'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

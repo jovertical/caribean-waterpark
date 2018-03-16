@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Root;
 
 use Helper;
-use Carbon, Notify, Excel;
+use Carbon, Notify, Excel, PDF;
 use App\{Reservation};
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -19,36 +19,36 @@ class ReportsController extends Controller
         $data = [];
 
         foreach ($reservations as $reservation) {
-            array_push($data, [
+            $data['data'][] = [
                 'reference_number' => $reservation->reference_number,
                 'status' => $reservation->status,
                 'status_class' => $reservation->status_class,
-                'source' => $reservation->source,
+                'source' => $reservation->creator->environment_alias,
+                'source_user' => $reservation->creator->full_name,
                 'date'   => $reservation->$date,
                 'price_taxable' => $reservation->price_taxable,
                 'price_deductable' => $reservation->price_deductable,
-                'gross_profit' => $reservation->price_payable,
-                'net_profit' => $reservation->net_payable,
+                'gross_sale' => $reservation->price_payable,
+                'net_sale' => $reservation->net_payable,
                 'price_paid' => $reservation->price_paid,
                 'balance' => $reservation->price_left_payable,
-            ]);
+            ];
         }
 
-        $totals = [
+        $data['totals'] = [
             'price_taxable' => array_sum(array_column($data, 'price_taxable')),
             'price_deductable' => array_sum(array_column($data, 'price_deductable')),
-            'gross_profit' => array_sum(array_column($data, 'gross_profit')),
-            'net_profit' => array_sum(array_column($data, 'net_profit')),
+            'gross_sale' => array_sum(array_column($data, 'gross_sale')),
+            'net_sale' => array_sum(array_column($data, 'net_sale')),
             'price_paid' => array_sum(array_column($data, 'price_paid')),
             'balance' => array_sum(array_column($data, 'balance'))
         ];
 
         session(['root.reports.sales.data' => $data]);
-        session(['root.reports.sales.totals' => $totals]);
 
         $data = Helper::paginate($data, 10);
 
-        return view('root.reports.sales.index', compact(['data', 'totals']));
+        return view('root.reports.sales.index', compact('data'));
     }
 
     protected function filterReservation(Collection $reservations, array $filters)
@@ -104,25 +104,28 @@ class ReportsController extends Controller
 
         try {
             $data = session()->get('root.reports.sales.data');
-            $totals = session()->get('root.reports.sales.totals');
 
             switch ($file_type) {
                 case 'pdf':
-                        $export = $this->exportSalesToPDF($data, $totals, $file_name);
+                        return  $this->exportSalesAsPDF(
+                                    $data, $file_name
+                                );
                     break;
 
                 case 'excel':
-                        return $this->exportSalesToExcel($data, $totals, $file_name);
+                        return  $this->exportSalesAsSpreadsheet(
+                                    $data, $file_name
+                                );
                     break;
 
                 case 'csv':
-                        $export = $this->exportSalesToCsv($data, $totals, $file_name);
+                        return  $this->exportSalesAsSpreadsheet(
+                                    $data, $file_name, 'csv'
+                                );
                     break;
             }
 
-            if (! $export) {
-                Notify::warning('We cannot export this data.', 'Whoops?!');
-            }
+            Notify::warning('We cannot export this data.', 'Whoops?!');
         } catch (Exception $e) {
             Notify::error($e->getMessage(), 'Whooops!');
         }
@@ -130,8 +133,61 @@ class ReportsController extends Controller
         return back();
     }
 
-    protected function exportSalesToExcel(array $data, array $totals, $file_name = 'sales-report')
+    protected function exportSalesAsPDF(array $data, $file_name = 'sales-report')
     {
-        //
+        $pdf = PDF::loadView('root.reports.sales.pdf', ['data' => $data])
+                    ->setPaper('a4', 'landscape')
+                    ->setOptions(['dpi' => 110, 'defaultFont' => 'sans-seriff']);
+
+        return $pdf->download($file_name.'.pdf');
+    }
+
+    protected function exportSalesAsSpreadsheet(
+        array $data,
+        $file_name = 'sales-report',
+        $file_type = 'xls'
+    ) {
+        $export = Excel::create($file_name, function($excel) use ($data) {
+            $excel->sheet('Sheetname', function($sheet) use ($data)  {
+                $sheet->setOrientation('landscape');
+
+                $sheet->row(1, [
+                    'Ref. #', 'Status', 'Source', 'Date', 'Tax', 'Discount',
+                    'Gross Sale', 'Net Sale', 'Paid', 'Balance'
+                ]);
+
+                if (isset($data['data'])) {
+                    foreach($data['data'] as $index => $metadata) {
+                        $sheet->row($index + 2, [
+                            $metadata['reference_number'],
+                            $metadata['status'],
+                            $metadata['source'],
+                            Carbon::parse($metadata['date'])->format('Y-m-d'),
+                            Helper::decimalFormat($metadata['price_taxable']),
+                            Helper::decimalFormat($metadata['price_deductable']),
+                            Helper::decimalFormat($metadata['gross_sale']),
+                            Helper::decimalFormat($metadata['net_sale']),
+                            Helper::decimalFormat($metadata['price_paid']),
+                            Helper::decimalFormat($metadata['balance'])
+                        ]);
+                    }
+                }
+
+                $sheet->row(count($data) + 1, [
+                    'totals',
+                    '',
+                    '',
+                    '',
+                    Helper::decimalFormat($data['totals']['price_taxable']),
+                    Helper::decimalFormat($data['totals']['price_deductable']),
+                    Helper::decimalFormat($data['totals']['gross_sale']),
+                    Helper::decimalFormat($data['totals']['net_sale']),
+                    Helper::decimalFormat($data['totals']['price_paid']),
+                    Helper::decimalFormat($data['totals']['balance'])
+                ]);
+            });
+        })->export($file_type);
+
+        return $export;
     }
 }
