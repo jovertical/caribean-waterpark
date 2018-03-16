@@ -94,8 +94,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
         Route::prefix('reports')->name('reports.')->group(function() {
             Route::get('/sales', 'ReportsController@sales')->name('sales');
             Route::post('/sales', 'ReportsController@exportSales');
-            Route::get('/allocation', 'ReportsController@allocation')->name('allocation');
-            Route::post('/allocation', 'ReportsController@exportAllocation');
+            Route::get('/allocations', 'ReportsController@allocations')->name('allocations');
+            Route::post('/allocations', 'ReportsController@exportAllocations');
         });
     });
 });

@@ -13,4 +13,9 @@ class ReservationItem extends Model
     {
         return $this->belongsTo(Item::class, 'item_id');
     }
+
+    public function getNetPayableAttribute()
+    {
+        return $this->price_payable - $this->price_taxable - $this->price_deductable;
+    }
 }

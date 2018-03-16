@@ -233,23 +233,20 @@
                                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                     <ul class="m-menu__subnav">
                                         <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="{{ route('root.reports.sales') }}" class="m-menu__link">
+                                            <a href="{{ route('root.reports.sales').'?src=&rd=&ds=0&from='.
+                                                Carbon::now()->format('Y-m-d').'&to='.Carbon::now()->format('Y-m-d') }}"
+                                                    class="m-menu__link">
                                                 <i class="m-menu__link-icon flaticon-diagram"></i>
                                                 <span class="m-menu__link-text">Sales</span>
                                             </a>
                                         </li>
 
                                         <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="#" class="m-menu__link">
+                                            <a href="{{ route('root.reports.allocations').'?src=&rd=&ds=0&from='.
+                                                Carbon::now()->format('Y-m-d').'&to='.Carbon::now()->format('Y-m-d') }}"
+                                                    class="m-menu__link">
                                                 <i class="m-menu__link-icon flaticon-pie-chart"></i>
-                                                <span class="m-menu__link-text">Occupancy</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="#" class="m-menu__link">
-                                                <i class="m-menu__link-icon flaticon-graphic-2"></i>
-                                                <span class="m-menu__link-text">Monthly Reservation</span>
+                                                <span class="m-menu__link-text">Allocation &amp; Occupancy</span>
                                             </a>
                                         </li>
 

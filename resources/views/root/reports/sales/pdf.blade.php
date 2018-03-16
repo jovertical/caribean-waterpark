@@ -38,33 +38,31 @@
             </thead>
 
             <tbody>
-                @isset($data['data'])
-                    @foreach($data['data'] as $metadata)
-                        <tr>
-                            <th scope="row">{{ $metadata['reference_number'] }}</th>
-                            <td>{{ $metadata['status'] }}</td>
-                            <td>{{ $metadata['source'] }}</td>
-                            <td>{{ Carbon::parse($metadata['date'])->toFormattedDateString() }}</td>
-                            <td>{{ Helper::decimalFormat($metadata['price_taxable']) }}</td>
-                            <td>{{ Helper::decimalFormat($metadata['price_deductable']) }}</td>
-                            <td>{{ Helper::decimalFormat($metadata['gross_sale']) }}</td>
-                            <td>{{ Helper::decimalFormat($metadata['net_sale']) }}</td>
-                            <td>{{ Helper::decimalFormat($metadata['price_paid']) }}</td>
-                            <td>{{ Helper::decimalFormat($metadata['balance']) }}</td>
-                        </tr>
-                    @endforeach
-                @endisset
+                @foreach($data as $metadata)
+                    <tr>
+                        <th scope="row">{{ $metadata['reference_number'] }}</th>
+                        <td>{{ $metadata['status'] }}</td>
+                        <td>{{ $metadata['source'] }}</td>
+                        <td>{{ Carbon::parse($metadata['date'])->toFormattedDateString() }}</td>
+                        <td>{{ Helper::decimalFormat($metadata['price_taxable']) }}</td>
+                        <td>{{ Helper::decimalFormat($metadata['price_deductable']) }}</td>
+                        <td>{{ Helper::decimalFormat($metadata['gross_sale']) }}</td>
+                        <td>{{ Helper::decimalFormat($metadata['net_sale']) }}</td>
+                        <td>{{ Helper::decimalFormat($metadata['price_paid']) }}</td>
+                        <td>{{ Helper::decimalFormat($metadata['balance']) }}</td>
+                    </tr>
+                @endforeach
             </tbody>
 
             <tfoot>
                 <tr>
                     <th colspan="4" scope="row">Totals</th>
-                    <td>{{ Helper::decimalFormat($data['totals']['price_taxable']) }}</td>
-                    <td>{{ Helper::decimalFormat($data['totals']['price_deductable']) }}</td>
-                    <td>{{ Helper::decimalFormat($data['totals']['gross_sale']) }}</td>
-                    <td>{{ Helper::decimalFormat($data['totals']['net_sale']) }}</td>
-                    <td>{{ Helper::decimalFormat($data['totals']['price_paid']) }}</td>
-                    <td>{{ Helper::decimalFormat($data['totals']['balance']) }}</td>
+                    <td>{{ Helper::decimalFormat($totals['price_taxable']) }}</td>
+                    <td>{{ Helper::decimalFormat($totals['price_deductable']) }}</td>
+                    <td>{{ Helper::decimalFormat($totals['gross_sale']) }}</td>
+                    <td>{{ Helper::decimalFormat($totals['net_sale']) }}</td>
+                    <td>{{ Helper::decimalFormat($totals['price_paid']) }}</td>
+                    <td>{{ Helper::decimalFormat($totals['balance']) }}</td>
                 </tr>
             </tfoot>
         </table>

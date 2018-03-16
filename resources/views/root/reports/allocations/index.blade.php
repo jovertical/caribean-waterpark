@@ -2,12 +2,12 @@
 
 @section('sidebar')
     @component('root.components.sidebar')
-        <!-- Export -->
         @if(count($data))
+            <!-- Export -->
             <li class="m-menu__item" aria-haspopup="true">
                 <a href="javascript:void(0);" class="m-menu__link export"
                     data-form="#export"
-                    data-action="{{ route('root.reports.sales') }}"
+                    data-action="{{ route('root.reports.allocations') }}"
                     data-toggle="modal"
                     data-target="#exportConfirmation"
                 >
@@ -17,8 +17,8 @@
                     </span>
                 </a>
             </li>
+            <!--/. Export -->
         @endif
-        <!--/. Export -->
     @endcomponent
 @endsection
 
@@ -27,14 +27,14 @@
         <div class="m-portlet__head">
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
-                    <h3 class="m-portlet__head-text">Sales Report</h3>
+                    <h3 class="m-portlet__head-text">Allocation &amp; Occupancy Report</h3>
                 </div>
             </div>
         </div>
 
         <div class="m-portlet__body m--margin-bottom-20">
             <!-- Filters -->
-            <form method="GET" action="{{ route('root.reports.sales') }}" class="m-form m-form--label-align-right m--margin-bottom-30">
+            <form method="GET" action="{{ route('root.reports.allocations') }}" class="m-form m-form--label-align-right m--margin-bottom-30">
                 <div class="row align-items-center mb-md-2">
                     <div class="col-xl-8 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
@@ -165,35 +165,34 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Ref. #</th>
-                                    <th>Status</th>
-                                    <th>Source</th>
-                                    <th>Date</th>
-                                    <th>Tax</th>
-                                    <th>Discount</th>
-                                    <th>Gross Sale</th>
-                                    <th>Net Sale</th>
-                                    <th>Paid</th>
-                                    <th>Balance</th>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Occupied</th>
+                                    <th>Unoccupied</th>
+                                    <th>Inactive</th>
+                                    <th>Avg. Occupancy</th>
+                                    <th>Daily Sales</th>
+                                    <th>Net Sales</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 @foreach($data as $metadata)
-                                    @include('root.reports.sales.sale')
+                                    @include('root.reports.allocations.allocation')
                                 @endforeach
                             </tbody>
 
                             <tfoot>
                                 @if(count($totals))
                                     <tr>
-                                        <th colspan="4" scope="row">Totals</th>
-                                        <td>{{ Helper::moneyString($totals['price_taxable']) }}</td>
-                                        <td>{{ Helper::moneyString($totals['price_deductable']) }}</td>
-                                        <td>{{ Helper::moneyString($totals['gross_sale']) }}</td>
-                                        <td>{{ Helper::moneyString($totals['net_sale']) }}</td>
-                                        <td>{{ Helper::moneyString($totals['price_paid']) }}</td>
-                                        <td>{{ Helper::moneyString($totals['balance']) }}</td>
+                                        <th scope="row">Totals</th>
+                                        <td>{{ $totals['quantity'] }}</td>
+                                        <td>{{ $totals['occupied'] }}</td>
+                                        <td>{{ $totals['unoccupied'] }}</td>
+                                        <td>{{ $totals['inactive'] }}</td>
+                                        <td>{{ Helper::decimalFormat($totals['average_occupancy']) }}%</td>
+                                        <td>{{ Helper::moneyString($totals['daily_sales']) }}</td>
+                                        <td>{{ Helper::moneyString($totals['net_sales']) }}</td>
                                     </tr>
                                 @endif
                             </tfoot>
@@ -218,14 +217,14 @@
         @endslot
 
         @slot('title')
-            Export Sales Report
+            Export Allocation &amp; Occupancy Report
         @endslot
 
         @slot('content_position')
             left
         @endslot
 
-        <!-- Update Reservation to Reserved Form -->
+        <!-- Export Form -->
         <form method="POST" action="" id="export">
             {{ csrf_field() }}
 
@@ -234,7 +233,7 @@
                 <label class="form-control-label">File name: </label>
 
                 <input type="text" name="file_name" id="file_name" class="form-control m-input"
-                    value="Sales Report({{ Request::get('from').' - '.Request::get('to') }})">
+                    value="Allocation & Report({{ Request::get('from').' - '.Request::get('to') }})">
             </div>
             <!--/. File name -->
 
@@ -250,12 +249,14 @@
             </div>
             <!--/. File type -->
         </form>
+        <!--/. Export Form -->
+
     @endcomponent
 @endsection
 
 @section('scripts')
     <script>
-        var sales = function () {
+        var allocations = function () {
             var selectsInit = function () {
                 var reservation_date = $('select[id=rd]');
                 var date_scope = $('select[id=ds]');
@@ -338,7 +339,7 @@
         }();
 
         $(document).ready(function() {
-            sales.init();
+            allocations.init();
 
             // export.
             $('.export').on('click', function(e) {

@@ -184,12 +184,16 @@ trait ItemCalendarProcesses
         $items = array_values($reservation_items);
 
         for($i = 0; $i < count($items); $i++) {
-            $count =    ItemCalendar::where('item_id', $items[$i]->item->id)
-                            ->whereBetween('date', [$checkin_date, $checkout_date])
-                            ->where('quantity', '<=', $items[$i]->quantity)
-                            ->count();
+            $item_calendar =    ItemCalendar::where('item_id', $items[$i]->item->id)
+                                    ->whereBetween('date', [$checkin_date, $checkout_date]);
 
-            if ($count != 0) {
+            /**
+             * Calendar quantity plus the requested quantity.
+             * @var int
+             */
+            $quantity = $item_calendar->sum('quantity') + $items[$i]->quantity;
+
+            if ($items[$i]->item->quantity < $quantity) {
                 return false;
             }
         }
