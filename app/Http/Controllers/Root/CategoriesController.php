@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\{Category};
+use App\Notifications\{ResourceCreated, ResourceUpdated, ResourceDeleted};
+use App\{Category, User};
 use ImageUploader;
 use File, URL;
 use Carbon, Image, Notify;
@@ -11,6 +12,13 @@ use App\Http\Controllers\Controller;
 
 class CategoriesController extends Controller
 {
+    protected $superusers;
+
+    public function __construct()
+    {
+        $this->superusers = User::where('type', 'superuser')->get();
+    }
+
     public function index()
     {
         $categories = Category::all();
@@ -37,6 +45,14 @@ class CategoriesController extends Controller
             $category->description  = $request->input('description');
 
             if ($category->save()) {
+                $this->superusers->each(function($notifiable) use ($category) {
+                    $notifiable->notify(
+                        new ResourceCreated(
+                            auth()->user(), $category, route('root.categories.edit', $category)
+                        )
+                    );
+                });
+
                 Notify::success('Category created.', 'Success!');
 
                 return redirect()->route('root.categories.image', $category);
@@ -68,6 +84,14 @@ class CategoriesController extends Controller
             $category->description  = $request->input('description');
 
             if ($category->save()) {
+                $this->superusers->each(function($notifiable) use ($category) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $category, route('root.categories.edit', $category)
+                        )
+                    );
+                });
+
                 Notify::success('Category updated.', 'Success!');
 
                 return redirect()->route('root.categories.index');
@@ -86,6 +110,14 @@ class CategoriesController extends Controller
     {
         try {
             if ($category->delete()) {
+                $this->superusers->each(function($notifiable) use ($category) {
+                    $notifiable->notify(
+                        new ResourceDeleted(
+                            auth()->user(), $category, route('root.categories.index')
+                        )
+                    );
+                });
+
                 Notify::success('Category deleted.', 'Success!');
 
                 return redirect()->back();
@@ -108,9 +140,17 @@ class CategoriesController extends Controller
             $category->active = $active;
 
             if ($category->save()) {
-                $category->items->map(function($item) use ($active) {
-                    $item->active = $active;
-                    $item->save();
+                $category->categorys->map(function($category) use ($active) {
+                    $category->active = $active;
+                    $category->save();
+                });
+
+                $this->superusers->each(function($notifiable) use ($category) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $category, route('root.categories.edit', $category)
+                        )
+                    );
                 });
 
                 Notify::success('Category toggled.', 'Success!');

@@ -80,11 +80,26 @@
         <script>
             $(document).ready(function() {
                 $('body').fadeIn('slow');
+
+                $('a[id=read_notification]').on('click', function(e) {
+                    var action = $(this).data('action');
+                    var id = $(this).data('id');
+
+                    $.ajax({
+                        type: 'PATCH',
+                        url: action,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            id: id
+                        }
+                    });
+                });
             });
         </script>
 
         <!-- Page specific scripts -->
         @yield('scripts')
-
     </body>
 </html>

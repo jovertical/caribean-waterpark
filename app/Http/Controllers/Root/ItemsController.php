@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\{Category, Item};
+use App\Notifications\{ResourceCreated, ResourceUpdated, ResourceDeleted};
+use App\{Category, Item, User};
 use ImageUploader;
 use Storage, File, URL;
 use Carbon, Image, Notify;
@@ -11,6 +12,13 @@ use App\Http\Controllers\Controller;
 
 class ItemsController extends Controller
 {
+    protected $superusers;
+
+    public function __construct()
+    {
+        $this->superusers = User::where('type', 'superuser')->get();
+    }
+
     public function index()
     {
         $categories = Category::all();
@@ -46,6 +54,14 @@ class ItemsController extends Controller
             $item->quantity     = $request->input('quantity');
 
             if ($item->save()) {
+                $this->superusers->each(function($notifiable) use ($item) {
+                    $notifiable->notify(
+                        new ResourceCreated(
+                            auth()->user(), $item, route('root.items.edit', $item)
+                        )
+                    );
+                });
+
                 Notify::success('Item created.', 'Success!');
 
                 return redirect()->route('root.items.image', $item);
@@ -93,6 +109,14 @@ class ItemsController extends Controller
             $item->quantity     = $request->input('quantity');
 
             if ($item->save()) {
+                $this->superusers->each(function($notifiable) use ($item) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $item, route('root.items.edit', $item)
+                        )
+                    );
+                });
+
                 Notify::success('Item updated.', 'Success!');
 
                 return redirect()->route('root.items.index');
@@ -110,6 +134,14 @@ class ItemsController extends Controller
     {
         try {
             if ($item->delete()) {
+                $this->superusers->each(function($notifiable) use ($item) {
+                    $notifiable->notify(
+                        new ResourceDeleted(
+                            auth()->user(), $item, route('root.items.index')
+                        )
+                    );
+                });
+
                 Notify::success('Item deleted.', 'Success!');
 
                 return back();
@@ -131,6 +163,14 @@ class ItemsController extends Controller
 
             if ($item->save()) {
                 Notify::success('Item toggled.', 'Success!');
+
+                $this->superusers->each(function($notifiable) use ($item) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $item, route('root.items.edit', $item)
+                        )
+                    );
+                });
 
                 return back();
             }
@@ -193,7 +233,7 @@ class ItemsController extends Controller
         try {
             if ($item->images()->count() < 5) {
                 $upload = ImageUploader::upload($request->file('image'), "items/{$item->id}");
-                
+
                 $item->images()->create([
                     'count'             => $item->images->count() + 1,
                     'file_path'         => $upload['file_path'],

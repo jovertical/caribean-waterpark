@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\Notifications\LoginCredential;
+use App\Notifications\{LoginCredential, ResourceCreated, ResourceUpdated, ResourceDeleted};
 use App\{User};
 use Helper, ImageUploader;
 use Storage, File, Str, URL;
@@ -12,6 +12,13 @@ use App\Http\Controllers\Controller;
 
 class UsersController extends Controller
 {
+    protected $superusers;
+
+    public function __construct()
+    {
+        $this->superusers = User::where('type', 'superuser')->get();
+    }
+
     public function index()
     {
         $users = User::where('type', 'user')->get()->all();
@@ -58,6 +65,14 @@ class UsersController extends Controller
             if ($user->save()) {
                 $user->notify(new LoginCredential($username, $password));
 
+                $this->superusers->each(function($notifiable) use ($user) {
+                    $notifiable->notify(
+                        new ResourceCreated(
+                            auth()->user(), $user, route('root.users.edit', $user)
+                        )
+                    );
+                });
+
                 Notify::success('User created.', 'Success!');
 
                 return redirect()->route('root.users.image', $user);
@@ -100,6 +115,14 @@ class UsersController extends Controller
             $user->phone_number    = $request->input('phone_number');
 
             if ($user->save()) {
+                $this->superusers->each(function($notifiable) use ($user) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $user, route('root.users.edit', $user)
+                        )
+                    );
+                });
+
                 Notify::success('User updated.', 'Success!');
 
                 return redirect()->route('root.users.index');
@@ -119,6 +142,14 @@ class UsersController extends Controller
             $user->active = $user->active ? false : true;
 
             if ($user->save()) {
+                $this->superusers->each(function($notifiable) use ($user) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $user, route('root.users.edit', $user)
+                        )
+                    );
+                });
+
                 Notify::success('User toggled.', 'Success!');
 
                 return back();

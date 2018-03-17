@@ -97,5 +97,15 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::get('/allocations', 'ReportsController@allocations')->name('allocations');
             Route::post('/allocations', 'ReportsController@exportAllocations');
         });
+
+        Route::patch('/notification/{user}', function(\App\User $user) {
+            $user->unreadNotifications->find(request('id'))->markAsRead();
+        })->name('notification.read');
+
+        Route::patch('/notifications/{user}', function(\App\User $user) {
+            $user->unreadNotifications->markAsRead();
+
+            return back();
+        })->name('notifications.read');
     });
 });

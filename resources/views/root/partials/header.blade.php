@@ -40,6 +40,7 @@
                     <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                         <div class="m-stack__item m-topbar__nav-wrapper">
                             <ul class="m-topbar__nav m-nav m-nav--inline">
+                                <!-- Profile -->
                                 <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
                                     <a href="#" class="m-nav__link m-dropdown__toggle">
                                         <span class="m-topbar__userpic m--hide">
@@ -114,6 +115,134 @@
                                         </div>
                                     </div>
                                 </li>
+                                <!--/. Profile -->
+
+                                <!-- Notifications -->
+                                <li class="m-nav__item m-topbar__quick-actions m-topbar__quick-actions--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click" data-dropdown-persistent="true">
+                                    <a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
+                                        @if(Auth::user()->unreadNotifications()->count())
+                                            <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger">
+                                            </span>
+                                        @endif
+
+                                        <span class="m-nav__link-icon">
+                                            <span class="m-nav__link-icon-wrapper">
+                                                <i class="flaticon-music-2"></i>
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <div class="m-dropdown__wrapper">
+                                        <span class="m-dropdown__arrow m-dropdown__arrow--right"></span>
+                                        <div class="m-dropdown__inner">
+                                            <div class="m-dropdown__header m--align-center"
+                                                style="background: url(/root/assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
+                                                <span class="m-dropdown__header-title">
+                                                    {{ Auth::user()->unreadNotifications->count() }}
+                                                </span>
+                                                <span class="m-dropdown__header-subtitle">New Notification(s)</span>
+                                            </div>
+                                            <div class="m-dropdown__body">
+                                                <div class="m-dropdown__content">
+                                                    <div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200">
+                                                        <div class="m-list-timeline m-list-timeline--skin-light">
+                                                            <div class="m-list-timeline__items">
+                                                                @foreach(Auth::user()->unreadNotifications as $notification)
+                                                                    <div class="m-list-timeline__item">
+                                                                        <span class="m-list-timeline__badge"></span>
+                                                                        <a href="{{ $notification->data['redirect_to'] }}"
+                                                                            id="read_notification"
+                                                                            data-action="{{ route(
+                                                                                'root.notification.read', Auth::user()
+                                                                            ) }}"
+                                                                            data-id="{{ $notification->id }}"
+                                                                            class="m-list-timeline__text">
+                                                                            <span>{{ $notification->data['subject'] }}</span>
+
+                                                                            @if($notification->data['has_badge'])
+                                                                                <span class="m-badge m-badge--wide
+                                                                                m-badge--{{ $notification->data['badge']['class'] }}">
+                                                                                    {{ $notification->data['badge']['text'] }}
+                                                                                </span>
+                                                                            @endif
+                                                                        </a>
+                                                                        <span class="m-list-timeline__time">
+                                                                            {{ $notification->created_at->diffForHumans() }}
+                                                                        </span>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="py-2 text-center">
+                                                        <a href="javascript:vod(0);" class="m-link m--font-bold"
+                                                            onclick="event.preventDefault();
+                                                                document.getElementById('form-notifications.read').submit();">
+                                                                    Mark all as read</a>
+                                                        <form method="POST" action="{{
+                                                            route('root.notifications.read', Auth::user()) }}"
+                                                                id="form-notifications.read">
+                                                            @method('PATCH')
+                                                            @csrf
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!--/. Notifications -->
+
+                                <!-- Quick Actions -->
+                                <li class="m-nav__item m-topbar__quick-actions m-topbar__quick-actions--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push m-dropdown--mobile-full-width m-dropdown--skin-light"  data-dropdown-toggle="click">
+                                    <a href="#" class="m-nav__link m-dropdown__toggle">
+                                        <span class="m-nav__link-badge m-badge m-badge--dot m-badge--info m--hide"></span>
+                                        <span class="m-nav__link-icon">
+                                            <span class="m-nav__link-icon-wrapper">
+                                                <i class="flaticon-share"></i>
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <div class="m-dropdown__wrapper">
+                                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                        <div class="m-dropdown__inner">
+                                            <div class="m-dropdown__header m--align-center"
+                                                style="background: url(/root/assets/app/media/img/misc/quick_actions_bg.jpg); background-size: cover;">
+                                                <span class="m-dropdown__header-title">Quick Actions</span>
+                                                <span class="m-dropdown__header-subtitle">Shortcuts</span>
+                                            </div>
+                                            <div class="m-dropdown__body m-dropdown__body--paddingless">
+                                                <div class="m-dropdown__content">
+                                                    <div class="m-scrollable" data-scrollable="false" data-max-height="380" data-mobile-max-height="200">
+                                                        <div class="m-nav-grid m-nav-grid--skin-light">
+                                                            <div class="m-nav-grid__row">
+                                                                <a href="#" class="m-nav-grid__item">
+                                                                    <i class="m-nav-grid__icon flaticon-time"></i>
+                                                                    <span class="m-nav-grid__text">Add New Event</span>
+                                                                </a>
+                                                                <a href="{{ route('root.reservation.search') }}" class="m-nav-grid__item">
+                                                                    <i class="m-nav-grid__icon flaticon-time"></i>
+                                                                    <span class="m-nav-grid__text">Create Reservation</span>
+                                                                </a>
+                                                            </div>
+                                                            <div class="m-nav-grid__row">
+                                                                <a href="#" class="m-nav-grid__item">
+                                                                    <i class="m-nav-grid__icon flaticon-folder"></i>
+                                                                    <span class="m-nav-grid__text">Create New Task</span>
+                                                                </a>
+                                                                <a href="#" class="m-nav-grid__item">
+                                                                    <i class="m-nav-grid__icon flaticon-clipboard"></i>
+                                                                    <span class="m-nav-grid__text">Completed Tasks</span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!--/. Quick Actions -->
                             </ul>
                         </div>
                     </div>

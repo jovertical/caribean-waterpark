@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\Notifications\LoginCredential;
+use App\Notifications\{LoginCredential, ResourceCreated, ResourceUpdated, ResourceDeleted};
 use App\{User};
 use Helper, ImageUploader;
 use Storage, File, Str, URL;
@@ -12,6 +12,13 @@ use App\Http\Controllers\Controller;
 
 class SuperusersController extends Controller
 {
+    protected $superusers;
+
+    public function __construct()
+    {
+        $this->superusers = User::where('type', 'superuser')->get();
+    }
+
     public function index()
     {
         $superusers = User::where('type', 'superuser')->get()->all();
@@ -58,6 +65,14 @@ class SuperusersController extends Controller
             if ($superuser->save()) {
                 $superuser->notify(new LoginCredential($username, $password));
 
+                $this->superusers->each(function($notifiable) use ($superuser) {
+                    $notifiable->notify(
+                        new ResourceCreated(
+                            auth()->user(), $superuser, route('root.superusers.edit', $superuser)
+                        )
+                    );
+                });
+
                 Notify::success('Superuser created.', 'Success!');
 
                 return redirect()->route('root.superusers.image', $superuser);
@@ -102,6 +117,14 @@ class SuperusersController extends Controller
             if ($superuser->save()) {
                 Notify::success('Superuser updated.', 'Success!');
 
+                $this->superusers->each(function($notifiable) use ($superuser) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $superuser, route('root.superusers.edit', $superuser)
+                        )
+                    );
+                });
+
                 return redirect()->route('root.superusers.index');
             }
 
@@ -120,6 +143,14 @@ class SuperusersController extends Controller
 
             if ($superuser->save()) {
                 Notify::success('Superuser toggled.', 'Success!');
+
+                $this->superusers->each(function($notifiable) use ($superuser) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $superuser, route('root.superusers.edit', $superuser)
+                        )
+                    );
+                });
 
                 return back();
             }
