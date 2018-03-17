@@ -39,7 +39,12 @@
 
         <!-- Print -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="javascript:void(0);" class="m-menu__link">
+            <a href="javascript:void(0);" class="m-menu__link export"
+                data-form="#export"
+                data-action="{{ route('root.reservations.export', $reservation) }}"
+                data-toggle="modal"
+                data-target="#exportConfirmation"
+            >
                 <i class="m-menu__link-icon la la-print"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-text">Print</span>
@@ -480,7 +485,35 @@
         </form>
     @endcomponent
     <!--/. Reservation Day to Entered Modal -->
+    
+    <!-- Export Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            exportConfirmation
+        @endslot
 
+        @slot('title')
+            Export Invoice
+        @endslot
+
+        @slot('content_position')
+            left
+        @endslot
+
+        <!-- Export -->
+        <form method="POST" action="" id="export">
+            {{ csrf_field() }}
+
+            <!-- File name -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">File name: </label>
+
+                <input type="text" name="file_name" id="file_name" class="form-control m-input"
+                    value="Invoice #{{ $reservation->name }}">
+            </div>
+            <!--/. File name -->
+        </form>
+    @endcomponent
 @endsection
 
 @section('scripts')
@@ -730,6 +763,24 @@
             });
             //. -------------------------- Add payment modal --------------------------------------//
 
+
+            // export.
+            $('.export').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. export.
 
             $('.modal').on('hidden.bs.modal', function(e) {
                 // re-enable disabled .btn-confirm buttons

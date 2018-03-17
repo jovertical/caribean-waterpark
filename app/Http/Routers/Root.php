@@ -74,6 +74,7 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::get('/', 'ReservationsController@index')->name('index');
             Route::patch('/{reservation}/update', 'ReservationsController@update')->name('update');
             Route::get('/{reservation}', 'ReservationsController@show')->name('show');
+            Route::post('/{reservation}/export', 'ReservationsController@export')->name('export');
             Route::get('/{reservation}/transactions', 'ReservationsController@transactions')->name('transactions.index');
             Route::post('/{reservation}/transactions', 'ReservationsController@storeTransaction')->name('transactions.store');
             Route::get('/{reservation}/days', 'ReservationsController@days')->name('days.index');

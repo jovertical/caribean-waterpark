@@ -6,7 +6,7 @@ use App\Notifications\{ResourceCreated, ResourceUpdated, WelcomeMessage, LoginCr
 use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Setting, Helper;
-use Carbon, Notify;
+use Carbon, Notify, PDF;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -765,5 +765,14 @@ class ReservationsController extends Controller
         }
 
         return back();
+    }
+
+    public function export(Request $request, Reservation $reservation)
+    {
+        $pdf = PDF::loadView('root.reservations.pdf', compact('reservation'))
+                    ->setPaper('a4', 'landscape')
+                    ->setOptions(['dpi' => 110, 'defaultFont' => 'sans-seriff']);
+
+        return $pdf->download($request->input('file_name').'.pdf');
     }
 }
