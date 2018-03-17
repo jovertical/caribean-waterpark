@@ -453,7 +453,7 @@ class ReservationsController extends Controller
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
         $rates = ['adult' => 200, 'children' => 120];
         $item_costs = session()->get('reservation.item_costs');
-        $reference_number = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
+        $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
 
         try {
             if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
@@ -466,7 +466,7 @@ class ReservationsController extends Controller
             }
 
             // create a new reservation.
-            $reservation =  $user->createReservation($reference_number, $checkin_date, $checkout_date, $item_costs);
+            $reservation =  $user->createReservation($name, $checkin_date, $checkout_date, $item_costs);
 
             // store reservation items.
             $this->storeReservationItems($reservation, $items, $item_costs);

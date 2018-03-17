@@ -17,7 +17,7 @@ class CreateReservationsTable extends Migration
             $table->increments('id');
             $table->string('slug')->unique();
             $table->integer('user_id');
-            $table->string('reference_number');
+            $table->string('name')->unique();
             $table->date('checkin_date');
             $table->date('checkout_date');
             $table->enum('status', ['pending', 'reserved', 'paid', 'cancelled', 'waiting', 'void'])->default('pending');

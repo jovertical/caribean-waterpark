@@ -1,7 +1,7 @@
 <tr>
     <td>{{ $index + 1 }}</td>
     <td>{{ $reservation->source }}</td>
-    <td>{{ $reservation->reference_number }}</td>
+    <td>{{ $reservation->name }}</td>
     <td data-image="{{ URL::to("{$reservation->user->file_directory}/thumbnails/{$reservation->user->file_name}") }}">
         {{ $reservation->user->full_name }}
     </td>

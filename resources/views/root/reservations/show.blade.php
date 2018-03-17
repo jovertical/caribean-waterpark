@@ -211,7 +211,7 @@
                                 <div class="m-invoice__item">
                                     <span class="m-invoice__subtitle">REFERENCE NO.</span>
                                     <span class="m-invoice__text">
-                                        {{ $reservation->reference_number }}
+                                        {{ $reservation->name }}
                                     </span>
                                 </div>
                                 <div class="m-invoice__item">

@@ -31,7 +31,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{ $reservation->reference_number }}</td>
+                                            <td>{{ $reservation->name }}</td>
                                             <td>{{ Carbon::parse($reservation->checkin_date)->toFormattedDateString() }}</td>
                                             <td>{{ Carbon::parse($reservation->checkout_date)->toFormattedDateString() }}</td>
                                             <td>{{ Helper::moneyString($reservation->price_paid) }}</td>

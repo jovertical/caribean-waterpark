@@ -40,7 +40,7 @@
                                         @foreach($reservations as $index => $reservation)
                                             <tr>
                                                 <td>
-                                                    <span>{{ $reservation->reference_number }}</span>
+                                                    <span>{{ $reservation->name }}</span>
                                                 </td>
                                                 <td>
                                                     <span>{{ $reservation->checkin_date }}</span>

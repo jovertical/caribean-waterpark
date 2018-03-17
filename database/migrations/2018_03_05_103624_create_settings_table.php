@@ -15,7 +15,7 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->string('name')->unique()->index();
-            $table->integer('value');
+            $table->string('value');
             $table->integer('updated_by')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

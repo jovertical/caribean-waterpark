@@ -1,7 +1,7 @@
 <footer id="footer-page">
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="widget widget_contact_info">
                     <div class="widget_background">
                         <div class="widget_background__half">
@@ -34,9 +34,7 @@
                         <p>Set 1 km from buses at Baliuag Transit Sub-Terminal, this relaxed, pirate-themed resort is 6 km from events and displays at Bustos Heritage Park and 8 km from cultural attraction Museo ng Baliuag.</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-2">
                 <div class="widget widget_categories">
                     <h3>Services</h3>
                     <ul>
@@ -48,9 +46,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>
 
-            <div class="col-md-2">
                 <div class="widget widget_recent_entries">
                     <h3>Useful links</h3>
                     <ul>
@@ -64,15 +60,46 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-6">
+                <div class="widget">
+                    <h3>Operational Hours &amp; Entrance Rates</h3>
+
+                    <div class="widget_content">
+                        <table>
+                            <thead>
+                                <th width="25%">Day</th>
+                                <th width="30%">Day hours</th>
+                                <th width="30%">Night hours</th>
+                                <th width="14%">Adults</th>
+                                <th width="14%">Childrens</th>
+                            </thead>
+                            <tbody>
+                                @foreach($calendar_days as $index => $calendar_day)
+                                    @if($calendar_day['active'])
+                                        <tr>
+                                            <td>{{ $calendar_day['day'] }}</td>
+                                            <td>{{ Carbon::parse($calendar_day['day_opening_time'])->format('h:i A').' - '.
+                                                    Carbon::parse($calendar_day['day_closing_time'])->format('h:i A') }}</td>
+                                            <td>{{ Carbon::parse($calendar_day['night_opening_time'])->format('h:i A').' - '.
+                                                    Carbon::parse($calendar_day['night_closing_time'])->format('h:i A') }}</td>
+                                            <td>{{ Helper::moneyString($calendar_day['adult_rate']) }}</td>
+                                            <td>{{ Helper::moneyString($calendar_day['children_rate']) }}</td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="widget widget_follow_us">
                     <div class="widget_content">
-                        <p>For Special booking request, please call</p>
+                        <p>For special reservation request, please call</p>
                         <span class="phone">099-099-000</span>
                         <div class="awe-social">
-                            <a href="#"><i class="fa fa-twitter"></i></a> 
-                            <a href="#"><i class="fa fa-pinterest"></i></a> 
-                            <a href="#"><i class="fa fa-facebook"></i></a> 
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-youtube-play"></i></a>
                         </div>
                     </div>

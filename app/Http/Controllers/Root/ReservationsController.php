@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Root;
 
-use App\Notifications\{WelcomeMessage, LoginCredential};
+use App\Notifications\{ResourceCreated, ResourceUpdated, WelcomeMessage, LoginCredential};
 use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Setting, Helper;
@@ -35,11 +35,17 @@ class ReservationsController extends Controller
     protected $reservation_errors = [];
 
     /**
+     * @var User
+     */
+    protected $superusers;
+
+    /**
      * @param Setting $setting Injected instance of the Setting Service.
      */
     public function __construct(Setting $setting)
     {
         $this->reservation_settings = $setting->reservation();
+        $this->superusers = User::where('type', 'superuser')->get();
     }
 
     /**
@@ -333,9 +339,13 @@ class ReservationsController extends Controller
     {
         $users = User::where('type', 'user')->where('active', 1)->get()->all();
 
-        return view('root.reservation.user', [
-            'users' => $users
-        ]);
+        if (session()->has('reservation')) {
+            return view('root.reservation.user', [
+                'users' => $users
+            ]);
+        }
+
+        return redirect()->route('root.reservation.cart.index');
     }
 
     /**
@@ -407,7 +417,7 @@ class ReservationsController extends Controller
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
         $rates = ['adult' => 200, 'children' => 120];
         $item_costs = session()->get('reservation.item_costs');
-        $reference_number = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
+        $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
 
         try {
             if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
@@ -417,7 +427,7 @@ class ReservationsController extends Controller
             }
 
             // create a new reservation.
-            $reservation =  $user->createReservation($reference_number, $checkin_date, $checkout_date, $item_costs);
+            $reservation =  $user->createReservation($name, $checkin_date, $checkout_date, $item_costs);
 
             // store reservation items.
             $this->storeReservationItems($reservation, $items, $item_costs);
@@ -427,6 +437,15 @@ class ReservationsController extends Controller
 
             // clear reservation data from the session.
             session()->pull('reservation');
+
+            // notify superusers
+            $this->superusers->each(function($notifiable) use ($reservation) {
+                $notifiable->notify(
+                    new ResourceCreated(
+                        auth()->user(), $reservation, route('root.reservations.show', $reservation)
+                    )
+                );
+            });
 
             Notify::success('Reservation created.', 'Success!');
 
@@ -486,6 +505,15 @@ class ReservationsController extends Controller
             }
 
             if ($reservation->save()) {
+                // notify superusers
+                $this->superusers->each(function($notifiable) use ($item) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $item, route('root.reservations.show', $item)
+                        )
+                    );
+                });
+
                 Notify::success('Reservation updated.', 'Success!');
             }
         } catch (Exception $e) {
@@ -634,6 +662,15 @@ class ReservationsController extends Controller
             }
 
             if ($reservation->save()) {
+                // notify superusers
+                $this->superusers->each(function($notifiable) use ($reservation) {
+                    $notifiable->notify(
+                        new ResourceUpdated(
+                            auth()->user(), $reservation, route('root.reservations.show', $reservation)
+                        )
+                    );
+                });
+
                 Notify::success('Transaction completed.', 'Success!');
 
                 return back();
