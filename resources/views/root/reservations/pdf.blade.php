@@ -8,10 +8,10 @@
         <title>{{ config('app.name') }}</title>
 
         <!-- Vendor bundle -->
-        <link href="{{ public_path('/root/assets/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('/root/assets/vendors/base/vendors.bundle.css') }}" type="text/css" media="all" />
 
         <!-- Demo 2 bundle -->
-        <link href="{{ public_path('/root/assets/demo/demo2/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('/root/assets/demo/demo2/base/style.bundle.css') }}" type="text/css" media="all" />
     </head>
 
     <body>
