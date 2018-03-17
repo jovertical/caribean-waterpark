@@ -18,8 +18,6 @@ class CreateCouponsTable extends Migration
             $table->string('slug')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->enum('applicable_type', ['per_item', 'per_reservation']);
-            $table->enum('deductable_type', ['percent', 'amount']);
             $table->float('amount_deductable');
             $table->date('valid_from');
             $table->date('valid_until');

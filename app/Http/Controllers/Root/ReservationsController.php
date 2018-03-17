@@ -417,7 +417,7 @@ class ReservationsController extends Controller
         $checkout_date = session()->get('reservation.checkout_date');
         $adult_quantity = session()->get('reservation.adult_quantity');
         $children_quantity = session()->get('reservation.children_quantity');
-        $calendar_day = $this->calendar_settings['calendar_days'][Carbon::now()->dayOfWeek-1];
+        $calendar_day = $this->calendar_settings['calendar_days'][Carbon::now()->dayOfWeek];
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
         $rates = ['adult' => $calendar_day['adult_rate'], 'children' => $calendar_day['children_rate']];
         $item_costs = session()->get('reservation.item_costs');
