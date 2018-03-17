@@ -30,69 +30,69 @@ class Setting
             'calendar_days' => [
                 [
                     'day' => 'Monday',
-                    'active' => $this->table()->where('name', 'monday')->first()->value,
+                    'active' => (boolean) $this->table()->where('name', 'monday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'monday_day_opening_time')->first()->value,
                     'day_closing_time' => $this->table()->where('name', 'monday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'monday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'monday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'monday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'monday_children_rate')->first()->value
+                    'adult_rate' => (float) $this->table()->where('name', 'monday_adult_rate')->first()->value,
+                    'children_rate' => (float) $this->table()->where('name', 'monday_children_rate')->first()->value
                 ],
 
                 [
                     'day' => 'Tuesday',
-                    'active' => $this->table()->where('name', 'tuesday')->first()->value,
+                    'active' => (boolean) $this->table()->where('name', 'tuesday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'tuesday_day_opening_time')->first()->value,
                     'day_closing_time' => $this->table()->where('name', 'tuesday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'tuesday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'tuesday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'tuesday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'tuesday_children_rate')->first()->value
+                    'adult_rate' =>  (float) $this->table()->where('name', 'tuesday_adult_rate')->first()->value,
+                    'children_rate' => (float) $this->table()->where('name', 'tuesday_children_rate')->first()->value
                 ],
 
                 [
                     'day' => 'Wednesday',
-                    'active' => $this->table()->where('name', 'wednesday')->first()->value,
+                    'active' => (boolean) $this->table()->where('name', 'wednesday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'wednesday_day_opening_time')->first()->value,
                     'day_closing_time' => $this->table()->where('name', 'wednesday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'wednesday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'wednesday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'wednesday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'wednesday_children_rate')->first()->value
+                    'adult_rate' => (float) $this->table()->where('name', 'wednesday_adult_rate')->first()->value,
+                    'children_rate' => (float) $this->table()->where('name', 'wednesday_children_rate')->first()->value
                 ],
 
                 [
                     'day' => 'Thursday',
                     'active' => 1,
-                    'active' => $this->table()->where('name', 'thursday')->first()->value,
+                    'active' => (boolean) $this->table()->where('name', 'thursday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'thursday_day_opening_time')->first()->value,
                     'day_closing_time' => $this->table()->where('name', 'thursday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'thursday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'thursday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'thursday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'thursday_children_rate')->first()->value
+                    'adult_rate' => (float)  $this->table()->where('name', 'thursday_adult_rate')->first()->value,
+                    'children_rate' => (float)  $this->table()->where('name', 'thursday_children_rate')->first()->value
                 ],
 
                 [
                     'day' => 'Friday',
-                    'active' => $this->table()->where('name', 'monday')->first()->value,
+                    'active' => (boolean) $this->table()->where('name', 'monday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'friday_day_opening_time')->first()->value,
                     'day_closing_time' => $this->table()->where('name', 'friday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'friday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'friday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'friday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'friday_children_rate')->first()->value
+                    'adult_rate' => (float) $this->table()->where('name', 'friday_adult_rate')->first()->value,
+                    'children_rate' => (float) $this->table()->where('name', 'friday_children_rate')->first()->value
                 ],
 
                 [
                     'day' => 'Saturday',
-                    'active' => $this->table()->where('name', 'saturday')->first()->value,
+                    'active' => (boolean) $this->table()->where('name', 'saturday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'saturday_day_opening_time')->first()->value,
                     'day_closing_time' => $this->table()->where('name', 'saturday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'saturday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'saturday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'saturday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'saturday_children_rate')->first()->value
+                    'adult_rate' => (float) $this->table()->where('name', 'saturday_adult_rate')->first()->value,
+                    'children_rate' => (float) $this->table()->where('name', 'saturday_children_rate')->first()->value
                 ],
 
                 [
@@ -102,8 +102,8 @@ class Setting
                     'day_closing_time' => $this->table()->where('name', 'sunday_day_closing_time')->first()->value,
                     'night_opening_time' => $this->table()->where('name', 'sunday_night_opening_time')->first()->value,
                     'night_closing_time' => $this->table()->where('name', 'sunday_night_closing_time')->first()->value,
-                    'adult_rate' => $this->table()->where('name', 'sunday_adult_rate')->first()->value,
-                    'children_rate' => $this->table()->where('name', 'sunday_children_rate')->first()->value
+                    'adult_rate' => (float)  $this->table()->where('name', 'sunday_adult_rate')->first()->value,
+                    'children_rate' => (float)  $this->table()->where('name', 'sunday_children_rate')->first()->value
                 ]
             ]
         ];

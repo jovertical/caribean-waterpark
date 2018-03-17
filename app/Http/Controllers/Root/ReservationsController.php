@@ -22,6 +22,8 @@ class ReservationsController extends Controller
      */
     use ReservationProcesses;
 
+    protected $calendar_settings;
+
     /**
      * Array of reservation settings.
      * @var array
@@ -44,6 +46,7 @@ class ReservationsController extends Controller
      */
     public function __construct(Setting $setting)
     {
+        $this->calendar_settings = $setting->calendar();
         $this->reservation_settings = $setting->reservation();
         $this->superusers = User::where('type', 'superuser')->get();
     }
@@ -414,8 +417,9 @@ class ReservationsController extends Controller
         $checkout_date = session()->get('reservation.checkout_date');
         $adult_quantity = session()->get('reservation.adult_quantity');
         $children_quantity = session()->get('reservation.children_quantity');
+        $calendar_day = $this->calendar_settings['calendar_days'][Carbon::now()->dayOfWeek-1];
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
-        $rates = ['adult' => 200, 'children' => 120];
+        $rates = ['adult' => $calendar_day['adult_rate'], 'children' => $calendar_day['children_rate']];
         $item_costs = session()->get('reservation.item_costs');
         $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
 
@@ -442,7 +446,13 @@ class ReservationsController extends Controller
             $this->superusers->each(function($notifiable) use ($reservation) {
                 $notifiable->notify(
                     new ResourceCreated(
-                        auth()->user(), $reservation, route('root.reservations.show', $reservation)
+                        auth()->user(),
+                        $reservation,
+                        route('root.reservations.show', $reservation),
+                        [
+                            'text' => 'Pending',
+                            'class' => 'warning'
+                        ]
                     )
                 );
             });
@@ -506,10 +516,16 @@ class ReservationsController extends Controller
 
             if ($reservation->save()) {
                 // notify superusers
-                $this->superusers->each(function($notifiable) use ($item) {
+                $this->superusers->each(function($notifiable) use ($reservation) {
                     $notifiable->notify(
                         new ResourceUpdated(
-                            auth()->user(), $item, route('root.reservations.show', $item)
+                            auth()->user(),
+                            $reservation,
+                            route('root.reservations.show', $reservation),
+                            [
+                                'text' => $reservation->status,
+                                'class' => $reservation->status_class
+                            ]
                         )
                     );
                 });
@@ -666,7 +682,13 @@ class ReservationsController extends Controller
                 $this->superusers->each(function($notifiable) use ($reservation) {
                     $notifiable->notify(
                         new ResourceUpdated(
-                            auth()->user(), $reservation, route('root.reservations.show', $reservation)
+                            auth()->user(),
+                            $reservation,
+                            route('root.reservations.show', $reservation),
+                            [
+                                'text' => $reservation->status,
+                                'class' => $reservation->status_class
+                            ]
                         )
                     );
                 });

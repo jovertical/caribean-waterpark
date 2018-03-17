@@ -17,16 +17,19 @@ class ResourceUpdated extends Notification
 
     protected $redirect_to;
 
+    protected $badge;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user, $resource, $redirect_to)
+    public function __construct($user, $resource, $redirect_to, $badge = []) 
     {
         $this->user = $user;
         $this->resource = $resource;
         $this->redirect_to = $redirect_to;
+        $this->badge = $badge;
     }
 
     /**
@@ -65,7 +68,11 @@ class ResourceUpdated extends Notification
         return [
             'subject' => $this->user->full_name.' has updated the '.class_basename($this->resource).': '.$this->resource->name,
             'redirect_to' => url($this->redirect_to),
-            'has_badge' => false
+            'has_badge' => count($this->badge) ? 1 : 0,
+            'badge' => [
+                'text' => isset($this->badge['text']) ? $this->badge['text'] : '',
+                'class' => isset($this->badge['class']) ? $this->badge['class'] : ''
+            ]
         ];
     }
 }

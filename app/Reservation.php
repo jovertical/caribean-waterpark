@@ -158,6 +158,8 @@ class Reservation extends Model
 
     public function getStatusClassAttribute()
     {
+        $status_class = '';
+        
         switch (strtolower($this->status)) {
             case 'pending':
                     $status_class = 'warning';

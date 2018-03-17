@@ -165,8 +165,8 @@
         <div class="col-lg-8">
             <!-- Search result count -->
             @if(count($available_items))
-                <p class="text-right">
-                    Your search found <span class="m--font-boldest">{{ count($available_items) }}</span> items.
+                <p class="text-right">Showing <span class="m--font-bolder">{{ $available_items->count() }}</span> of
+                    <span class="m--font-boldest">{{ $available_items->total() }}</span> available items.
                 </p>
             @endif
             <!--/. Search result count -->
