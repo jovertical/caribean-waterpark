@@ -28,6 +28,10 @@
                     <a href="{{ route('root.items.image', $item) }}" class="dropdown-item">
                         <i class="la la-image"></i> Image
                     </a>
+
+                    <a href="{{ route('root.items.calendar', $item) }}" class="dropdown-item">
+                        <i class="la la-calendar"></i>Calendar
+                    </a>
                 </div>
             </div>
 

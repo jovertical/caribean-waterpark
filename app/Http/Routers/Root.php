@@ -60,6 +60,7 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::post('/{item}/image/upload', 'ItemsController@uploadImage')->name('image.upload');
             Route::get('/{item}/image/uploaded', 'ItemsController@uploadedImage')->name('image.uploaded');
             Route::delete('/{item}/image/destroy', 'ItemsController@destroyImage')->name('image.destroy');
+            Route::get('/{item}/calendar', 'ItemsController@calendar')->name('calendar');
         });
 
         Route::resource('coupons', 'CouponsController');
@@ -77,6 +78,8 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
             Route::post('/{reservation}/export', 'ReservationsController@export')->name('export');
             Route::get('/{reservation}/transactions', 'ReservationsController@transactions')->name('transactions.index');
             Route::post('/{reservation}/transactions', 'ReservationsController@storeTransaction')->name('transactions.store');
+            Route::post('/{reservation}/transactions/export','ReservationsController@exportTransactions')
+                ->name('transactions.export');
             Route::get('/{reservation}/days', 'ReservationsController@days')->name('days.index');
             Route::patch('/days/{reservation_day}/update', 'ReservationsController@updateDay')->name('days.update');
         });

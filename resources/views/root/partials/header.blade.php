@@ -335,15 +335,6 @@
                                             </a>
                                         </li>
                                         <!--/. Reservations -->
-
-                                        <!-- Item Calendar -->
-                                        <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="{{ route('root.reservations.index') }}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-calendar-3"></i>
-                                                <span class="m-menu__link-text">Item Calendar</span>
-                                            </a>
-                                        </li>
-                                        <!--/. Item Calendar -->
                                     </ul>
                                 </div>
                             </li>

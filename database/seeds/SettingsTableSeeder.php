@@ -21,7 +21,7 @@ class SettingsTableSeeder extends Seeder
             ['name' => 'partial_payment_rate', 'value' => 10],
             ['name' => 'allow_refund', 'value' => 0],
             ['name' => 'days_refundable', 'value' => 1],
-            ['name' => 'refundable_rate', 'value' => 10],
+            ['name' => 'refundable_rate', 'value' => 90],
 
             /* Calendar settings */
             ['name' => 'monday', 'value' => 1],

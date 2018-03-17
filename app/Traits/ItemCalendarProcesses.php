@@ -23,18 +23,18 @@ trait ItemCalendarProcesses
             ];
         }
 
+        $price_partial_payable = $price_payable / max($reservation_settings['partial_payment_rate'], 1); 
         $price_taxable = array_sum(array_column(array_column($items, 'costs'), 'price_taxable'));
         $price_subpayable = array_sum(array_column(array_column($items, 'costs'), 'price_subpayable'));
         $price_deductable = 0.00;
         $price_payable = $price_subpayable - $price_deductable;
-        $price_partial_payable = $price_payable / $reservation_settings['partial_payment_rate']; 
 
         return [
+            'price_partial_payable' => $price_partial_payable,
             'price_taxable'         => $price_taxable,
             'price_subpayable'      => $price_subpayable,
             'price_deductable'      => $price_deductable,
             'price_payable'         => $price_payable,
-            'price_partial_payable' => $price_partial_payable,
         ];
     }
 

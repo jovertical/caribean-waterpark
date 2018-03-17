@@ -169,7 +169,7 @@ class ReportsController extends Controller
     protected function getAllocationsData(array $filters)
     {
         $reservations = $this->filterReservation(
-                            Reservation::get(),
+                            Reservation::whereIn('status', ['paid', 'reserved'])->get(),
                             $filters
                         );
 

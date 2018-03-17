@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Root;
 
 use App\Notifications\{ResourceCreated, ResourceUpdated, ResourceDeleted};
-use App\{Category, Item, User};
+use App\{Category, Item, ItemCalendar, User};
 use ImageUploader;
 use Storage, File, URL;
 use Carbon, Image, Notify;
@@ -277,4 +277,22 @@ class ItemsController extends Controller
         return response()->json('File not deleted.');
     }
 
+    public function calendar(Request $request, Item $item)
+    {
+        $item_calendar = ItemCalendar::where('item_id', $item->id)->get();
+
+        $item_calendar->each(function($calendar_day) {
+            $occupancy_rate = $calendar_day->quantity / max($calendar_day->item->quantity, 1) * 100;
+
+            if ($occupancy_rate >= 50) {
+                $calendar_day->class = 'success';
+            } elseif (($occupancy_rate >= 25) AND ($occupancy_rate < 50)) {
+                $calendar_day->class = 'warning';
+            } elseif ($occupancy_rate < 25) {
+                $calendar_day->class = 'danger';
+            }
+        });
+
+        return view('root.items.calendar', compact(['item', 'item_calendar']));
+    }
 }

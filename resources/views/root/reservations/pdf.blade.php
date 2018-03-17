@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Type" content="text/html">
-        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
 
         <title>{{ config('app.name') }}</title>
 
         <!-- Vendor bundle -->
-        <link href="{{ asset('/root/assets/vendors/base/vendors.bundle.css') }}" type="text/css" media="all" />
+        <link href="/root/assets/vendors/base/vendors.bundle.css" type="text/css" rel="stylesheet">
 
         <!-- Demo 2 bundle -->
-        <link href="{{ asset('/root/assets/demo/demo2/base/style.bundle.css') }}" type="text/css" media="all" />
+        <link href="/root/assets/demo/demo2/base/style.bundle.css" type="text/css" rel="stylesheet">
     </head>
 
     <body>
@@ -26,9 +24,6 @@
                         <div class="m-invoice__logo">
                             <a href="javascript:void(0);">
                                 <h1>INVOICE</h1>
-                            </a>
-                            <a href="javascript:void(0);">
-                                <img src="/root/assets/app/media/img/misc/invoice_logo.png" style="width: 200px;">
                             </a>
                         </div>
                         <span class="m-invoice__desc">

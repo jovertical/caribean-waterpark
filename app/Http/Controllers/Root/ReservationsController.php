@@ -6,7 +6,7 @@ use App\Notifications\{ResourceCreated, ResourceUpdated, WelcomeMessage, LoginCr
 use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Setting, Helper;
-use Carbon, Notify, PDF;
+use Carbon, Notify, Excel, PDF;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -612,69 +612,86 @@ class ReservationsController extends Controller
 
     public function transactions(Reservation $reservation)
     {
-        $reservation_transactions = $reservation->transactions;
-
-        return view('root.reservation_transactions.index', [
-            'reservation_transactions' => $reservation_transactions
-        ]);
+        return view('root.reservation_transactions.index', compact('reservation'));
     }
 
     public function storeTransaction(Request $request, Reservation $reservation)
     {
         $this->validate($request, [
-            'transaction_type' => 'required|string',
-            'payment_mode' => 'required|string'
+            'transaction_type' => 'required|string'
         ]);
 
         $type = strtolower($request->input('transaction_type'));
         $payment_mode = strtolower($request->input('payment_mode'));
-        $amount = strtolower($request->input('payment_mode')) == 'full' ? $reservation->price_left_payable :
-                        $reservation->price_partial_payable;
-        $status = $payment_mode == 'full' ? 'paid' : 'reserved';
-
-        $checkin_date = $reservation->checkin_date;
-        $checkout_date = $reservation->checkout_date;
-        $items = $reservation->items->all();
 
         try {
-            // check if the status request is not the same as the reservation status.
-            if (strtolower($reservation->status) == $status) {
-                array_push($this->reservation_errors, 'Status is already '.$status);
-            }
+            switch ($type) {
+                case 'payment':
+                    $amount = strtolower($request->input('payment_mode')) == 'full' ?
+                                $reservation->price_left_payable : $reservation->price_partial_payable;
+                    $status = $payment_mode == 'full' ? 'paid' : 'reserved';
 
-            // check if reservation items are not valid.
-            if (! in_array(strtolower($reservation->status), ['paid', 'reserved'])) {
-                if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
-                    array_push($this->reservation_errors, 'The available items in the calendar is not enough, transaction cancelled');
-                }
-            }
+                    $checkin_date = $reservation->checkin_date;
+                    $checkout_date = $reservation->checkout_date;
+                    $items = $reservation->items->all();
 
-            if (count($this->reservation_errors)) {
-                Notify::warning($this->reservation_errors[0].'. Please try again.', 'Whooops?');
+                    // check if the status request is not the same as the reservation status.
+                    if (strtolower($reservation->status) == $status) {
+                        array_push($this->reservation_errors, 'Status is already '.$status);
+                    }
 
-                return back();
-            }
+                    // check if reservation items are not valid.
+                    if (! in_array(strtolower($reservation->status), ['paid', 'reserved'])) {
+                        if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
+                            array_push($this->reservation_errors, 'The available items in the calendar is not enough, transaction cancelled');
+                        }
+                    }
 
-            // create reservation transaction.
-            $transaction =  $reservation->createReservationTransaction($type, 'cash', $amount);
+                    if (count($this->reservation_errors)) {
+                        Notify::warning($this->reservation_errors[0].'. Please try again.', 'Whooops?');
 
-            if ($transaction) {
-                if (in_array(strtolower($reservation->status), ['pending'])) {
-                    $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
-                }
+                        return back();
+                    }
 
-                $reservation->status = $status;
+                    // create reservation transaction.
+                    $transaction =  $reservation->createReservationTransaction($type, 'cash', $amount);
 
-                // notify customer.
-                if ($request->has('notify_user')) {
+                    if ($transaction) {
+                        if (in_array(strtolower($reservation->status), ['pending'])) {
+                            $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+                        }
 
-                }
+                        $reservation->status = $status;
 
-                if ($payment_mode == 'full') {
-                    $reservation->price_paid += $reservation->price_left_payable;
-                } else {
-                    $reservation->price_paid += $reservation->price_partial_payable;
-                }
+                        // notify customer.
+                        if ($request->has('notify_user')) {
+
+                        }
+
+                        $reservation->price_paid += $amount;
+                        // compute refundable.
+                        $refundable =   $reservation->price_paid * (max(
+                                            $this->reservation_settings['refundable_rate'], 1
+                                        ) / 100);
+                        $reservation->price_refundable = $refundable;
+                    }
+                break;
+
+                case 'refund':
+                    $amount = $reservation->price_refundable;
+
+                    // create reservation transaction.
+                    $transaction = $reservation->createReservationTransaction($type, 'cash', $amount);
+
+                    if ($transaction) {
+                        // notify customer.
+                        if ($request->has('notify_user')) {
+
+                        }
+
+                        $reservation->price_paid -= $amount;
+                    }
+                break;
             }
 
             if ($reservation->save()) {
@@ -704,6 +721,76 @@ class ReservationsController extends Controller
         }
 
         return back();
+    }
+
+    public function exportTransactions(Request $request, Reservation $reservation)
+    {
+        $file_type = strtolower($request->input('file_type'));
+        $file_name = $request->input('file_name');
+
+        try {
+            $transactions = $reservation->transactions->all();
+
+            switch ($file_type) {
+                case 'pdf':
+                        return  $this->exportTransactionsAsPDF(
+                                    $transactions, $file_name
+                                );
+                    break;
+
+                case 'excel':
+                        return  $this->exportTransactionsAsSpreadsheet(
+                                    $transactions, $file_name
+                                );
+                    break;
+
+                case 'csv':
+                        return  $this->exportTransactionsAsSpreadsheet(
+                                    $transactions, $file_name, 'csv'
+                                );
+                    break;
+            }
+
+            Notify::warning('We cannot export this data.', 'Whoops?!');
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Whooops!');
+        }
+
+        return back();
+    }
+
+    protected function exportTransactionsAsPDF(array $data, $file_name = 'transactions')
+    {
+        $pdf = PDF::loadView('root.reservation_transactions.pdf', compact('data'))
+                    ->setPaper('a4', 'landscape')
+                    ->setOptions(['dpi' => 110, 'defaultFont' => 'sans-seriff']);
+
+        return $pdf->download($file_name.'.pdf');
+    }
+
+    protected function exportTransactionsAsSpreadsheet(
+        array $data,
+        $file_name = 'transactions',
+        $file_type = 'xls'
+    ) {
+        $export = Excel::create($file_name, function($excel) use ($data) {
+            $excel->sheet('Sheetname', function($sheet) use ($data)  {
+                $sheet->setOrientation('landscape');
+
+                $sheet->row(1, ['#', 'Type', 'Mode', 'Amount']);
+
+                foreach($data as $index => $metadata) {
+                    $sheet->row($index + 2, [
+                        $index + 1,
+                        $metadata->type,
+                        $metadata->mode,
+                        Helper::decimalFormat($metadata->amount)
+                    ]);
+                }
+            });
+        })->export($file_type);
+
+        return $export;
     }
 
     /**

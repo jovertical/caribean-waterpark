@@ -21,10 +21,11 @@ class CreateReservationsTable extends Migration
             $table->date('checkin_date');
             $table->date('checkout_date');
             $table->enum('status', ['pending', 'reserved', 'paid', 'cancelled', 'waiting', 'void'])->default('pending');
+            $table->float('price_partial_payable')->default(0.00);
+            $table->float('price_refundable')->default(0.00);
             $table->float('price_taxable')->default(0.00);
             $table->float('price_subpayable')->default(0.00);
             $table->float('price_deductable')->default(0.00);
-            $table->float('price_partial_payable')->default(0.00);
             $table->float('price_payable')->default(0.00);
             $table->float('price_paid')->default(0.00);
             $table->enum('source', ['front', 'root']);

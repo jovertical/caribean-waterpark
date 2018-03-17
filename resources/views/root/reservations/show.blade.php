@@ -20,22 +20,44 @@
         <!--/. Transactions -->
 
         <!-- Add payment -->
-        @if(! $reservation->fully_paid)
-            <li class="m-menu__item" aria-haspopup="true">
-                <a href="javascript:void(0);" class="m-menu__link add-payment"
-                    data-form="#addPayment"
-                    data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
-                    data-toggle="modal"
-                    data-target="#addPaymentConfirmation"
-                >
-                    <i class="m-menu__link-icon la la-money"></i>
-                    <span class="m-menu__link-title">
-                        <span class="m-menu__link-text">Add payment</span>
-                    </span>
-                </a>
-            </li>
+        @if(in_array(strtolower($reservation->status), ['pending', 'reserved']))
+            @if(! $reservation->fully_paid)
+                <li class="m-menu__item" aria-haspopup="true">
+                    <a href="javascript:void(0);" class="m-menu__link add-payment"
+                        data-form="#addPayment"
+                        data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
+                        data-toggle="modal"
+                        data-target="#addPaymentConfirmation"
+                    >
+                        <i class="m-menu__link-icon la la-money"></i>
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-text">Add payment</span>
+                        </span>
+                    </a>
+                </li>
+            @endif
         @endif
         <!--/. Add payment -->
+
+        <!-- Refund -->
+        @if(in_array(strtolower($reservation->status), ['cancelled']))
+            @if($reservation->refundable)
+                <li class="m-menu__item" aria-haspopup="true">
+                    <a href="javascript:void(0);" class="m-menu__link refund"
+                        data-form="#refund"
+                        data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
+                        data-toggle="modal"
+                        data-target="#refundConfirmation"
+                    >
+                        <i class="m-menu__link-icon la la-money"></i>
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-text">Refund</span>
+                        </span>
+                    </a>
+                </li>
+            @endif
+        @endif
+        <!--/. Refund -->
 
         <!-- Print -->
         <li class="m-menu__item" aria-haspopup="true">
@@ -357,6 +379,54 @@
     @endcomponent
     <!--/. Add Payment Modal -->
 
+    <!-- Refund Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            refundConfirmation
+        @endslot
+        @slot('title')
+            Refund
+        @endslot
+        @slot('height')
+            200
+        @endslot
+        @slot('content_position')
+            left
+        @endslot
+        @slot('scrollable')
+            false
+        @endslot
+
+        <form method="POST" action="" class="m-form m-form--fit" id="refund">
+            {{ csrf_field() }}
+
+            <!-- Transaction type -->
+            <input type="hidden" name="transaction_type" id="transaction_type" value="refund">
+
+            <!-- Transaction amount -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">Amount: </label>
+
+                <input type="text" id="transaction_amount" class="form-control m-input"
+                    value="{{ Helper::moneyString($reservation->price_refundable) }}" readonly>
+            </div>
+            <!--/. Transaction amount -->
+
+            <!-- Notify user -->
+            <div class="m-form__group form-group">
+                <div class="m-checkbox-list">
+                    <label class="m-checkbox">
+                        <input type="checkbox" name="notify_user" id="notify_user" checked>
+                            Notify customer
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <!--/. Notify user -->
+        </form>
+    @endcomponent
+    <!--/. Refund Modal -->
+
     <!-- Update Reservation to Paid Modal -->
     @component('root.components.modal')
         @slot('name')
@@ -514,6 +584,7 @@
             <!--/. File name -->
         </form>
     @endcomponent
+    <!--/. Export Modal -->
 @endsection
 
 @section('scripts')
@@ -763,6 +834,23 @@
             });
             //. -------------------------- Add payment modal --------------------------------------//
 
+            // -------------------------- Refund modal --------------------------------------//
+            $('.refund').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. -------------------------- Refund modal --------------------------------------//
 
             // export.
             $('.export').on('click', function(e) {

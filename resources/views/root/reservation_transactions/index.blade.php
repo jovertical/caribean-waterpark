@@ -4,7 +4,12 @@
     @component('root.components.sidebar')
         <!-- Print -->
         <li class="m-menu__item" aria-haspopup="true">
-            <a href="javascript:void(0);" class="m-menu__link">
+            <a href="javascript:void(0);" class="m-menu__link export"
+                data-form="#export"
+                data-action="{{ route('root.reservations.transactions.export', $reservation) }}"
+                data-toggle="modal"
+                data-target="#exportConfirmation"
+            >
                 <i class="m-menu__link-icon la la-print"></i>
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-text">Print</span>
@@ -41,8 +46,8 @@
                                     <div class="m-form__control">
                                         <select class="form-control m-bootstrap-select" id="type">
                                             <option value="">All</option>
-                                            <option value="payment">Payment</option>
-                                            <option value="refund">Refund</option>
+                                            <option value="1">Payment</option>
+                                            <option value="2">Refund</option>
                                         </select>
                                     </div>
                                 </div>
@@ -95,7 +100,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach($reservation_transactions as $index => $reservation_transaction)
+                    @foreach($reservation->transactions as $index => $reservation_transaction)
                         @include('root.reservation_transactions.reservation_transaction')
                     @endforeach
                 </tbody>
@@ -103,6 +108,48 @@
         </div>
     </div>
     <!--end::Portlet-->
+
+    <!-- Export Modal -->
+    @component('root.components.modal')
+        @slot('name')
+            exportConfirmation
+        @endslot
+
+        @slot('title')
+            Export Transactions
+        @endslot
+
+        @slot('content_position')
+            left
+        @endslot
+
+        <!-- Export -->
+        <form method="POST" action="" id="export">
+            {{ csrf_field() }}
+
+            <!-- File name -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">File name: </label>
+
+                <input type="text" name="file_name" id="file_name" class="form-control m-input"
+                    value="Reservation #{{ $reservation->name }} Transactions">
+            </div>
+            <!--/. File name -->
+
+            <!-- File type -->
+            <div class="m-form__group form-group">
+                <label class="form-control-label">File type: </label>
+
+                <select name="file_type" id="file_type" class="form-control m-bootstrap-select">
+                    <option value="pdf">PDF</option>
+                    <option value="excel">Excel</option>
+                    <option value="csv">CSV</option>
+                </select>
+            </div>
+            <!--/. File type -->
+        </form>
+    @endcomponent
+    <!--/. Export Modal -->
 @endsection
 
 @section('scripts')
@@ -181,6 +228,24 @@
 
         $(document).ready(function() {
             reservation_transactions.init();
+
+            // export.
+            $('.export').on('click', function(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var form = $(link.data('form'));
+                var action = link.data('action');
+                var modal = $(link.data('target'));
+
+                // assign action to hidden form action attribute.
+                form.attr({action: action});
+
+                modal.modal({ backdrop: 'static', keyboard: false}).on('click', '#btn-confirm', function() {
+                    form.submit();
+                });
+            });
+            //. export.
         });
     </script>
 @endsection

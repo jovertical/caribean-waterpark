@@ -120,6 +120,11 @@ class Reservation extends Model
         return $this->price_left_payable == 0 ? true : false;
     }
 
+    public function getRefundableAttribute()
+    {
+        return $this->transactions->where('type', 'refund')->count() == 1 ? 1 : 0;
+    }
+
     public function setStatusAttribute($value)
     {
         $this->attributes['status'] = strtolower($value);
