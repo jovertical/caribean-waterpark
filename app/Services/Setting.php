@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class Setting
 {
-    public function reservation()
+    public function reservation($key = null)
     {
         $settings = [
             'days_prior' => $this->table()->where('name', 'days_prior')->first()->value,
@@ -19,9 +19,15 @@ class Setting
             'refundable_rate' => $this->table()->where('name', 'refundable_rate')->first()->value
         ];
 
-        return array_map(function($setting) {
+        $settings = array_map(function($setting) {
             return (int) $setting;
         }, $settings);
+
+        if ($key != null) {
+            return $settings[$key];
+        }
+
+        return $settings;
     }
 
     public function calendar()

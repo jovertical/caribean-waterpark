@@ -733,7 +733,7 @@
                 var input_confirmation = $('.input_confirmation');
                 var reservation = {
                     'user' : link.data('reservation-user'),
-                    'refundable' : link.data('reservation-refundable') ? '' : 'not'
+                    'refundable' : link.data('reservation-refundable')
                 };
 
                 // assign action to hidden form action attribute.
@@ -753,15 +753,18 @@
                     $('.btn-confirm').attr('disabled', false);
                 }
 
+                var refundable_text = reservation.refundable ?
+                                        '<span class="m--font-success">refundable</span>' :
+                                            '<span class="m--font-danger">not refundable</span>';
+
                 // set modal text.
                 $('#reservation-to-cancelled-modal-text').html(
                     '<p>You are setting ' +
                         '<span class="m--font-boldest">' + reservation.user + "</span>'s " +
                         'reservation to <span class="m--font-danger">' + status + '</span>. ' +
                         'Please be noted that this action will make the reservation inactive. ' +
-                        'This reservation is <span class="m--font-boldest m--font-danger">' +
-                        reservation.refundable + ' refundable. </span>' +
-                        'Please enter the highlighted black text to proceed.' +
+                        'This reservation is ' + refundable_text +
+                        '. Please enter the highlighted black text to proceed.' +
                     '</p>'
                 );
 
@@ -858,14 +861,15 @@
                 var reservation = {
                     refundable: link.data('reservation-refundable'),
                 }
-                var refundable = reservation.refundable ? 'refundable' : 'not refundable';
+                var refundable_text = reservation.refundable ?
+                                        '<span class="m--font-success">refundable</span>' :
+                                            '<span class="m--font-danger">not refundable</span>';
 
                 // set modal text.
                 $('#add-payment-modal-text').html(
                     '<p class="text-center">' +
                         'You are adding a payment for this reservation. ' +
-                        'Please note that this reservation is ' +
-                        '<span class="m--font-danger">'+ refundable + '.</span>' +
+                        'Please note that this reservation is ' + refundable_text +
                     '</p>'
                 );
 

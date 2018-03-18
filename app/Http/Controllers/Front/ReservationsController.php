@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Notifications\{WelcomeMessage, LoginCredential};
 use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
-use Setting, Helper, PaypalExpress;
+use Helper, PaypalExpress;
 use Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -41,12 +41,11 @@ class ReservationsController extends Controller
     protected $paypal_express;
 
     /**
-     * @param Setting $setting Injected instance of the Setting Service.
      * @param PaypalExpress $paypal_express Injected instance of the PaypalExpress Service.
      */
-    public function __construct(Setting $setting, PaypalExpress $paypal_express)
+    public function __construct(PaypalExpress $paypal_express)
     {
-        $this->reservation_settings = $setting->reservation();
+        $this->reservation_settings = app('Setting')->reservation();
         $this->paypal_express = $paypal_express;
     }
 

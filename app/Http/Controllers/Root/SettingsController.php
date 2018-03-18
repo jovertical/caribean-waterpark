@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Root;
 
-use Setting;
 use Carbon, Notify;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -10,18 +9,15 @@ use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller
 {
-        /**
+    /**
      * Array of reservation settings.
      * @var array
      */
     protected $reservation_settings;
 
-    /**
-     * @param Settings $settings Injected instance of the settings service.
-     */
-    public function __construct(Setting $setting)
+    public function __construct()
     {
-        $this->reservation_settings = $setting->reservation();
+        $this->reservation_settings = app('Setting')->reservation();
     }
 
     public function index()

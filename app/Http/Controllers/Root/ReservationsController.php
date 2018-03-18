@@ -45,13 +45,10 @@ class ReservationsController extends Controller
      */
     protected $superusers;
 
-    /**
-     * @param Setting $setting Injected instance of the Setting Service.
-     */
-    public function __construct(Setting $setting)
+    public function __construct()
     {
-        $this->calendar_settings = $setting->calendar();
-        $this->reservation_settings = $setting->reservation();
+        $this->calendar_settings = app('Setting')->calendar();
+        $this->reservation_settings = app('Setting')->reservation();
         $this->superusers = User::where('type', 'superuser')->get();
     }
 
@@ -514,20 +511,30 @@ class ReservationsController extends Controller
                         $this->removeItemsInCalendar($items, $checkin_date, $checkout_date);
                     }
 
-                    $reservation->status = 'cancelled';
-
-                    // send message if not refundable.
-                    if (! $reservation->refundable) {
-                        session()->flash('message',  [
-                            'type' => 'danger',
-                            'content' => '
-                                This reservation is not refundable because it is
-                                <span class="m--font-boldest">'.
-                                $reservation->days_refundable.' days late</span>
-                                of the set refundable day(s) prior the check-in date.
-                            '
-                        ]);
+                    if (strtolower($reservation->status) != 'pending') {
+                        // send message if not refundable.
+                        if (! $reservation->refundable) {
+                            session()->flash('message',  [
+                                'type' => 'danger',
+                                'content' => '
+                                    This reservation is not refundable because it is
+                                    <span class="m--font-boldest">'.
+                                    $reservation->days_refundable.' days late</span>
+                                    of the set refundable day(s) prior the check-in date.
+                                '
+                            ]);
+                        } else {
+                            session()->flash('message',  [
+                                'type' => 'success',
+                                'content' => '
+                                    This reservation is refundable. The system calculated an amount of '.
+                                    Helper::moneyString($reservation->price_refundable).' refundable.
+                                '
+                            ]);
+                        }
                     }
+
+                    $reservation->status = 'cancelled';
                 break;
             }
 

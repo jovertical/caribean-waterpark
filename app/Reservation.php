@@ -98,7 +98,7 @@ class Reservation extends Model
 
     public function getDayCountAttribute()
     {
-        return Carbon::parse($this->checkin_date)->diffIndays(Carbon::parse($this->checkout_date)) + 1;
+        return Carbon::parse($this->checkin_date)->diffInDays(Carbon::parse($this->checkout_date)) + 1;
     }
 
     public function getNetPayableAttribute()
@@ -134,13 +134,26 @@ class Reservation extends Model
         $days_prior = Carbon::parse($this->checkin_date)->addDays(1)
                         ->diffInDays(Carbon::now());
 
-        $payment_transactions = $this->transactions->filter(function($t) {
-                                    return strtolower($t->type) == 'payment';
+        $payment_transactions = $this->transactions->filter(function($rt) {
+                                    return strtolower($rt->type) == 'payment';
                                 });
 
-        $refund_transactions =  $this->transactions->filter(function($t) {
-                                    return strtolower($t->type) == 'refund';
+        $refund_transactions =  $this->transactions->filter(function($rt) {
+                                    return strtolower($rt->type) == 'refund';
                                 });
+
+        if (strtolower($this->status) == 'pending') {
+            $reservation_settings = app('Setting')->reservation();
+
+            // check if refund is enabled.
+            if ($reservation_settings['allow_refund']) {
+                if ($days_prior >= $reservation_settings['days_refundable']) {
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
 
         if (($this->days_refundable != null) AND ($days_prior >= $this->days_refundable)) {
             if ($payment_transactions->count()) {
