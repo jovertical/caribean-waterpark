@@ -29,6 +29,16 @@ class Setting
         return [
             'calendar_days' => [
                 [
+                    'day' => 'Sunday',
+                    'active' => $this->table()->where('name', 'sunday')->first()->value,
+                    'day_opening_time' => $this->table()->where('name', 'sunday_day_opening_time')->first()->value,
+                    'day_closing_time' => $this->table()->where('name', 'sunday_day_closing_time')->first()->value,
+                    'night_opening_time' => $this->table()->where('name', 'sunday_night_opening_time')->first()->value,
+                    'night_closing_time' => $this->table()->where('name', 'sunday_night_closing_time')->first()->value,
+                    'adult_rate' => (float)  $this->table()->where('name', 'sunday_adult_rate')->first()->value,
+                    'children_rate' => (float)  $this->table()->where('name', 'sunday_children_rate')->first()->value
+                ],
+                [
                     'day' => 'Monday',
                     'active' => (boolean) $this->table()->where('name', 'monday')->first()->value,
                     'day_opening_time' => $this->table()->where('name', 'monday_day_opening_time')->first()->value,
@@ -95,16 +105,7 @@ class Setting
                     'children_rate' => (float) $this->table()->where('name', 'saturday_children_rate')->first()->value
                 ],
 
-                [
-                    'day' => 'Sunday',
-                    'active' => $this->table()->where('name', 'sunday')->first()->value,
-                    'day_opening_time' => $this->table()->where('name', 'sunday_day_opening_time')->first()->value,
-                    'day_closing_time' => $this->table()->where('name', 'sunday_day_closing_time')->first()->value,
-                    'night_opening_time' => $this->table()->where('name', 'sunday_night_opening_time')->first()->value,
-                    'night_closing_time' => $this->table()->where('name', 'sunday_night_closing_time')->first()->value,
-                    'adult_rate' => (float)  $this->table()->where('name', 'sunday_adult_rate')->first()->value,
-                    'children_rate' => (float)  $this->table()->where('name', 'sunday_children_rate')->first()->value
-                ]
+
             ]
         ];
     }
