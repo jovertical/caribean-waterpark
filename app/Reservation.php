@@ -120,9 +120,41 @@ class Reservation extends Model
         return $this->price_left_payable == 0 ? true : false;
     }
 
+    public function getRefundableStatusesAttribute()
+    {
+        return ['cancelled'];
+    }
+
+    /**
+     * Determine if reservation is refundable
+     * @return boolean
+     */
     public function getRefundableAttribute()
     {
-        return $this->transactions->where('type', 'refund')->count() == 1 ? 1 : 0;
+        $days_prior = Carbon::parse($this->checkin_date)->addDays(1)
+                        ->diffInDays(Carbon::now());
+
+        $payment_transactions = $this->transactions->filter(function($t) {
+                                    return strtolower($t->type) == 'payment';
+                                });
+
+        $refund_transactions =  $this->transactions->filter(function($t) {
+                                    return strtolower($t->type) == 'refund';
+                                });
+
+        if (($this->days_refundable != null) AND ($days_prior >= $this->days_refundable)) {
+            if ($payment_transactions->count()) {
+                if (in_array(strtolower($this->status), $this->refundable_statuses)) {
+                    return $refund_transactions->count() == 0 ? 1 : 0;
+                }
+
+                return $refund_transactions->count() == 0 ? 1 : 0;
+            }
+
+            return 1;
+        }
+
+        return 0;
     }
 
     public function setStatusAttribute($value)
@@ -164,7 +196,7 @@ class Reservation extends Model
     public function getStatusClassAttribute()
     {
         $status_class = '';
-        
+
         switch (strtolower($this->status)) {
             case 'pending':
                     $status_class = 'warning';

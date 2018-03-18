@@ -22,6 +22,10 @@ class ReservationsController extends Controller
      */
     use ReservationProcesses;
 
+    /**
+     * Array of calendar settings.
+     * @var array
+     */
     protected $calendar_settings;
 
     /**
@@ -511,6 +515,19 @@ class ReservationsController extends Controller
                     }
 
                     $reservation->status = 'cancelled';
+
+                    // send message if not refundable.
+                    if (! $reservation->refundable) {
+                        session()->flash('message',  [
+                            'type' => 'danger',
+                            'content' => '
+                                This reservation is not refundable because it is
+                                <span class="m--font-boldest">'.
+                                $reservation->days_refundable.' days late</span>
+                                of the set refundable day(s) prior the check-in date.
+                            '
+                        ]);
+                    }
                 break;
             }
 
@@ -669,7 +686,9 @@ class ReservationsController extends Controller
                         }
 
                         $reservation->price_paid += $amount;
-                        // compute refundable.
+                        // save the days_refundable from settings;
+                        $reservation->days_refundable = $this->reservation_settings['days_refundable'];
+                        // save price_refundable.
                         $refundable =   $reservation->price_paid * (max(
                                             $this->reservation_settings['refundable_rate'], 1
                                         ) / 100);

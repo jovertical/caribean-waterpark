@@ -2,6 +2,18 @@
 
 @section('sidebar')
     @component('root.components.sidebar')
+        @if (Session::has('message'))
+            @slot('message')
+                @slot('message_type')
+                    {{ Session::get('message.type') }}
+                @endslot
+
+                @slot('message_content')
+                    {!! Session::get('message.content') !!}
+                @endslot
+            @endslot
+        @endif
+
         <!-- Transactions -->
         <li class="m-menu__item" aria-haspopup="true">
             <a href="{{ route('root.reservations.transactions.index', $reservation) }}" class="m-menu__link">
@@ -28,6 +40,7 @@
                         data-action="{{ route('root.reservations.transactions.store', $reservation) }}"
                         data-toggle="modal"
                         data-target="#addPaymentConfirmation"
+                        data-reservation-refundable="{{ $reservation->refundable }}"
                     >
                         <i class="m-menu__link-icon la la-money"></i>
                         <span class="m-menu__link-title">
@@ -40,7 +53,7 @@
         <!--/. Add payment -->
 
         <!-- Refund -->
-        @if(in_array(strtolower($reservation->status), ['cancelled']))
+        @if(in_array(strtolower($reservation->status), $reservation->refundable_statuses))
             @if($reservation->refundable)
                 <li class="m-menu__item" aria-haspopup="true">
                     <a href="javascript:void(0);" class="m-menu__link refund"
@@ -199,6 +212,7 @@
                                                                     data-target="#updateReservationToCancelledConfirmation"
                                                                     data-status="cancelled"
                                                                     data-reservation-user="{{ $reservation->user->titled_full_name }}"
+                                                                    data-reservation-refundable="{{ $reservation->refundable }}"
                                                                     title="Set to cancelled">
                                                                     <span class="m-nav__link-text">Set to
                                                                         <strong class="m--font-danger">Cancelled</strong>
@@ -329,6 +343,8 @@
             false
         @endslot
 
+        <div id="add-payment-modal-text"></div>
+
         <form method="POST" action="" class="m-form m-form--fit" id="addPayment">
             {{ csrf_field() }}
 
@@ -433,6 +449,10 @@
             updateReservationToPaidConfirmation
         @endslot
 
+        @slot('title')
+            Status Update
+        @endslot
+
         <div id="reservation-to-paid-modal-text"></div>
 
         <!-- Update Reservation to Paid Form -->
@@ -459,6 +479,10 @@
             updateReservationToReservedConfirmation
         @endslot
 
+        @slot('title')
+            Status Update
+        @endslot
+
         <div id="reservation-to-reserved-modal-text"></div>
 
         <!-- Update Reservation to Reserved Form -->
@@ -482,6 +506,10 @@
     @component('root.components.modal')
         @slot('name')
             updateReservationToCancelledConfirmation
+        @endslot
+
+        @slot('title')
+            Status Update
         @endslot
 
         <div id="reservation-to-cancelled-modal-text"></div>
@@ -555,7 +583,7 @@
         </form>
     @endcomponent
     <!--/. Reservation Day to Entered Modal -->
-    
+
     <!-- Export Modal -->
     @component('root.components.modal')
         @slot('name')
@@ -704,7 +732,8 @@
                 var status = link.data('status');
                 var input_confirmation = $('.input_confirmation');
                 var reservation = {
-                    'user' : link.data('reservation-user')
+                    'user' : link.data('reservation-user'),
+                    'refundable' : link.data('reservation-refundable') ? '' : 'not'
                 };
 
                 // assign action to hidden form action attribute.
@@ -730,6 +759,8 @@
                         '<span class="m--font-boldest">' + reservation.user + "</span>'s " +
                         'reservation to <span class="m--font-danger">' + status + '</span>. ' +
                         'Please be noted that this action will make the reservation inactive. ' +
+                        'This reservation is <span class="m--font-boldest m--font-danger">' +
+                        reservation.refundable + ' refundable. </span>' +
                         'Please enter the highlighted black text to proceed.' +
                     '</p>'
                 );
@@ -824,6 +855,19 @@
                 var form = $(link.data('form'));
                 var action = link.data('action');
                 var modal = $(link.data('target'));
+                var reservation = {
+                    refundable: link.data('reservation-refundable'),
+                }
+                var refundable = reservation.refundable ? 'refundable' : 'not refundable';
+
+                // set modal text.
+                $('#add-payment-modal-text').html(
+                    '<p class="text-center">' +
+                        'You are adding a payment for this reservation. ' +
+                        'Please note that this reservation is ' +
+                        '<span class="m--font-danger">'+ refundable + '.</span>' +
+                    '</p>'
+                );
 
                 // assign action to hidden form action attribute.
                 form.attr({action: action});

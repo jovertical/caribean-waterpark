@@ -30,9 +30,11 @@ class AppServiceProvider extends ServiceProvider
                 $minimum_reservation_date = Carbon::now()->addDays($days_prior)->format('Y-m-d');
                 $maximum_reservation_date = Carbon::parse($minimum_reservation_date)
                                                 ->addDays($max_length)->format('Y-m-d');
-                $reservation_settings = array_merge($reservation_settings, compact([
-                    'minimum_reservation_date', 'maximum_reservation_date'
-                ]));
+                $reservation_settings = array_merge(
+                    $reservation_settings, compact([
+                        'minimum_reservation_date', 'maximum_reservation_date'
+                    ])
+                );
 
                 $view->with(array_merge($calendar_settings, $reservation_settings));
             });

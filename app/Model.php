@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Setting;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
