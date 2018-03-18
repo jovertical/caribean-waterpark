@@ -14,7 +14,7 @@
         #meta td { text-align: right;  }
         #meta td.meta-head { text-align: left; background: #eee; }
         #meta td textarea { width: 100%; height: 20px; text-align: right; }
-        table {  
+        table {   
         border-collapse: collapse;
         width: 100%;
         }
