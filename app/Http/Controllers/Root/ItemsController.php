@@ -285,11 +285,11 @@ class ItemsController extends Controller
             $occupancy_rate = $calendar_day->quantity / max($calendar_day->item->quantity, 1) * 100;
 
             if ($occupancy_rate >= 50) {
-                $calendar_day->class = 'success';
+                $calendar_day->class = 'danger';
             } elseif (($occupancy_rate >= 25) AND ($occupancy_rate < 50)) {
                 $calendar_day->class = 'warning';
             } elseif ($occupancy_rate < 25) {
-                $calendar_day->class = 'danger';
+                $calendar_day->class = 'success';
             }
         });
 

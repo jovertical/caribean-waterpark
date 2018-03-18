@@ -5,7 +5,7 @@ namespace App\Traits;
 use Carbon;
 use App\ItemCalendar;
 
-trait ItemCalendarProcesses 
+trait ItemCalendarProcesses
 {
     public function computeItemCosts(array $reservation_settings, array $items, float $deductable = null)
     {
@@ -23,18 +23,28 @@ trait ItemCalendarProcesses
             ];
         }
 
-        $price_partial_payable = $price_payable / max($reservation_settings['partial_payment_rate'], 1); 
-        $price_taxable = array_sum(array_column(array_column($items, 'costs'), 'price_taxable'));
-        $price_subpayable = array_sum(array_column(array_column($items, 'costs'), 'price_subpayable'));
-        $price_deductable = 0.00;
-        $price_payable = $price_subpayable - $price_deductable;
+        if (count($items)) {
+            $price_partial_payable = $price_payable / max($reservation_settings['partial_payment_rate'], 1);
+            $price_taxable = array_sum(array_column(array_column($items, 'costs'), 'price_taxable'));
+            $price_subpayable = array_sum(array_column(array_column($items, 'costs'), 'price_subpayable'));
+            $price_deductable = 0.00;
+            $price_payable = $price_subpayable - $price_deductable;
+
+            return [
+                'price_partial_payable' => $price_partial_payable,
+                'price_taxable'         => $price_taxable,
+                'price_subpayable'      => $price_subpayable,
+                'price_deductable'      => $price_deductable,
+                'price_payable'         => $price_payable,
+            ];
+        }
 
         return [
-            'price_partial_payable' => $price_partial_payable,
-            'price_taxable'         => $price_taxable,
-            'price_subpayable'      => $price_subpayable,
-            'price_deductable'      => $price_deductable,
-            'price_payable'         => $price_payable,
+            'price_partial_payable' => 0.00,
+            'price_taxable'         => 0.00,
+            'price_subpayable'      => 0.00,
+            'price_deductable'      => 0.00,
+            'price_payable'         => 0.00
         ];
     }
 
@@ -125,7 +135,9 @@ trait ItemCalendarProcesses
             $date = $checkin_date;
 
             while ($date <= $checkout_date) {
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $items[$i]->id)->first();
+                $item_calendar = ItemCalendar::where('date', $date)
+                                    ->where('item_id', $items[$i]->id)
+                                    ->first();
 
                 ItemCalendar::UpdateOrCreate([
                     'item_id' => $items[$i]->item->id,
@@ -135,7 +147,9 @@ trait ItemCalendarProcesses
                     'date' =>  $date
                 ])->save();
 
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $items[$i]->item->id)->first();
+                $item_calendar = ItemCalendar::where('date', $date)
+                                    ->where('item_id', $items[$i]->item->id)
+                                    ->first();
                 $item_calendar->quantity += $items[$i]->quantity;
                 $item_calendar->save();
 
@@ -157,7 +171,9 @@ trait ItemCalendarProcesses
             $date = $checkin_date;
 
             while ($date <= $checkout_date) {
-                $item_calendar = ItemCalendar::where('date', $date)->where('item_id', $item->item->id)->first();
+                $item_calendar = ItemCalendar::where('date', $date)
+                                    ->where('item_id', $item->item->id)
+                                    ->first();
 
                 // Update item calendar.
                 $item_calendar->quantity -= $item->quantity;
@@ -191,7 +207,7 @@ trait ItemCalendarProcesses
              * Calendar quantity plus the requested quantity.
              * @var int
              */
-            $quantity = $item_calendar->sum('quantity') + $items[$i]->quantity;
+            $quantity = $item_calendar->max('quantity') + $items[$i]->quantity;
 
             if ($items[$i]->item->quantity < $quantity) {
                 return false;

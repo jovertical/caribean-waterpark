@@ -428,6 +428,9 @@ class ReservationsController extends Controller
             if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
                 Notify::warning('The available items in the calendar is not enough. Please try again.', 'Whooops!?');
 
+                // clear reservation data from the session.
+                session()->pull('reservation');
+
                 return back();
             }
 
@@ -693,13 +696,26 @@ class ReservationsController extends Controller
                         }
 
                         $reservation->price_paid += $amount;
-                        // save the days_refundable from settings;
-                        $reservation->days_refundable = $this->reservation_settings['days_refundable'];
-                        // save price_refundable.
-                        $refundable =   $reservation->price_paid * (max(
-                                            $this->reservation_settings['refundable_rate'], 1
-                                        ) / 100);
-                        $reservation->price_refundable = $refundable;
+
+                        if ($this->reservation_settings['allow_refund']) {
+                            // save the days_refundable from settings;
+                            $reservation->days_refundable = $this->reservation_settings['days_refundable'];
+                            // save price_refundable.
+                            $refundable =   $reservation->price_paid * (max(
+                                                $this->reservation_settings['refundable_rate'], 1
+                                            ) / 100);
+                            $reservation->price_refundable = $refundable;
+                        } else {
+                            session()->flash('message',  [
+                                'type' => 'danger',
+                                'content' => '
+                                    This reservation is not refundable because
+                                    <span class="m--font-bolder">refund</span>
+                                    is not enabled in your <a href="'.route('root.settings.index').
+                                    '" class="m-link m--font-boldest">Settings</a></span>
+                                '
+                            ]);
+                        }
                     }
                 break;
 
