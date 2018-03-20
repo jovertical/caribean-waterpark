@@ -33,7 +33,7 @@ class ReportsController extends Controller
         if (count($reservations)) {
             foreach ($reservations as $reservation) {
                 $data[] = [
-                    'reference_number' => $reservation->reference_number,
+                    'name' => $reservation->name,
                     'status' => $reservation->status,
                     'status_class' => $reservation->status_class,
                     'source' => $reservation->creator->environment_alias,
@@ -126,7 +126,7 @@ class ReportsController extends Controller
 
                 foreach($data as $index => $metadata) {
                     $sheet->row($index + 2, [
-                        $metadata['reference_number'],
+                        $metadata['name'],
                         $metadata['status'],
                         $metadata['source'],
                         Carbon::parse($metadata['date'])->format('Y-m-d'),

@@ -1,5 +1,5 @@
 <tr>
-    <th scope="row" width="10%;">{{ $metadata['reference_number'] }}</th>
+    <th scope="row" width="10%;">{{ $metadata['name'] }}</th>
     <td>
         <span class="m-badge m-badge--wide m-badge--{{ $metadata['status_class'] }}">
             <span class="text-white">{{ $metadata['status'] }}</span>

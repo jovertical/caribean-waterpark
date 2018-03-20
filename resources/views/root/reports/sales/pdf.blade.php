@@ -40,7 +40,7 @@
             <tbody>
                 @foreach($data as $metadata)
                     <tr>
-                        <th scope="row">{{ $metadata['reference_number'] }}</th>
+                        <th scope="row">{{ $metadata['name'] }}</th>
                         <td>{{ $metadata['status'] }}</td>
                         <td>{{ $metadata['source'] }}</td>
                         <td>{{ Carbon::parse($metadata['date'])->toFormattedDateString() }}</td>

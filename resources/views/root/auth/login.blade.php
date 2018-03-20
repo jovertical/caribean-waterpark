@@ -20,7 +20,7 @@
 
                         <!-- Username -->
                         <div class="form-group m-form__group {{ $errors->has('name') ? 'has-danger' : '' }}">
-                            <input type="text" name="name" id="name" class="form-control m-input" placeholder="Username or email" autocomplete="off" value="{{ old('name') }}">
+                            <input type="text" name="name" id="name" class="form-control m-input" placeholder="Username or email" autocomplete="off" value="{{ old('name') ?? 'jovert123' }}">
 
                             <div class="form-control-feedback">{{ $errors->first('name') }}</div>
                         </div>
@@ -28,7 +28,7 @@
 
                         <!-- Password -->
                         <div class="form-group m-form__group {{ $errors->has('password') ? 'has-danger' : '' }}">
-                            <input type="password" name="password" id="password" class="form-control m-input m-login__form-input--last" placeholder="Password">
+                            <input type="password" name="password" id="password" class="form-control m-input m-login__form-input--last" placeholder="Password" value="secret">
 
                             <div class="form-control-feedback">{{ $errors->first('password') }}</div>
                         </div>
