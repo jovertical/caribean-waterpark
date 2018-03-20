@@ -65,6 +65,7 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
 
         Route::resource('coupons', 'CouponsController');
         Route::prefix('coupons')->name('coupons.')->group(function() {
+            Route::patch('/{coupon}/toggle', 'CouponsController@toggle')->name('toggle');
             Route::get('/{coupon}/image', 'CouponsController@selectImage')->name('image');
             Route::post('/{coupon}/image/upload', 'CouponsController@uploadImage')->name('image.upload');
             Route::get('/{coupon}/image/uploaded', 'CouponsController@uploadedImage')->name('image.uploaded');
