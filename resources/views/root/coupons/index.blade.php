@@ -60,8 +60,8 @@
                     </div>
 
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-                        <a href="{{ route('root.categories.create') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-                            <span><i class="la la-plus"></i><span>New category</span></span>
+                        <a href="{{ route('root.coupons.create') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <span><i class="la la-plus"></i><span>New coupon</span></span>
                         </a>
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
                     </div>
@@ -85,7 +85,7 @@
 
                 <tbody>
                     @foreach($coupons as $index => $coupon)
-                        @include('root.categories.category')
+                        @include('root.coupons.coupon')
                     @endforeach
                 </tbody>
             </table>
@@ -96,12 +96,12 @@
     <!--/. Portlet -->
 
     <!-- Edit Form -->
-    <form method="GET" action="" id="editCategory" style="display: none;">
+    <form method="GET" action="" id="editCoupon" style="display: none;">
         {{ method_field('PUT') }}
     </form>
 
     <!-- Destroy Form -->
-    <form method="POST" action="" id="destroyCategory" style="display: none;">
+    <form method="POST" action="" id="destroyCoupon" style="display: none;">
         {{ method_field('DELETE') }}
         {{ csrf_field() }}
     </form>
@@ -109,14 +109,14 @@
     <!-- Destroy Modal -->
     @component('root.components.modal')
         @slot('name')
-            destroyCategoryConfirmation
+            destroyCouponConfirmation
         @endslot
 
-        You are deleting this category. Doing so will also delete the items under it. You can't undo this action!
+        You are deleting this coupon. Doing so will also delete the items under it. You can't undo this action!
     @endcomponent
 
     <!-- Toggle Form -->
-    <form method="POST" action="" id="toggleCategory" style="display: none;">
+    <form method="POST" action="" id="toggleCoupon" style="display: none;">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
     </form>
@@ -124,10 +124,10 @@
     <!-- Toggle Modal -->
     @component('root.components.modal')
         @slot('name')
-            toggleCategoryConfirmation
+            toggleCouponConfirmation
         @endslot
 
-        You are toggling this category. This will affect the status of items under it.
+        You are toggling this coupon. This will affect the status of items under it.
     @endcomponent
 @endsection
 
@@ -136,7 +136,7 @@
         var categories = function() {
             //== Private functions
 
-            // category initializer
+            // coupon initializer
             var categoriesInit = function() {
 
                 var datatable = $('table[id=table]').mDatatable({
@@ -212,7 +212,7 @@
             categories.init();
 
             // edit
-            $('.edit-category').on('click', function(e) {
+            $('.edit-coupon').on('click', function(e) {
                 e.preventDefault();
 
                 var link = $(this);
@@ -226,7 +226,7 @@
             });
 
             // delete confirmation
-            $('.destroy-category').on('click', function(e) {
+            $('.destroy-coupon').on('click', function(e) {
                 e.preventDefault();
 
                 var link = $(this);
@@ -243,7 +243,7 @@
             });
 
             // toggle
-            $('.toggle-category').on('click', function(e) {
+            $('.toggle-coupon').on('click', function(e) {
                 e.preventDefault();
 
                 var link = $(this);

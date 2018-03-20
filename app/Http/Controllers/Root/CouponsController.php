@@ -26,5 +26,11 @@ class CouponsController extends Controller
         return view('root.coupons.index', ['coupons' => $coupon]);
     }
 
+    public function create()
+    {
+        return view('root.coupons.create');
+    }
+
+
     
 }
