@@ -183,11 +183,40 @@
                 });
             }
             //. summernote
+            // dates
+            var datesInit = function () {
+                $('input[id=from]').datepicker({
+                    format: 'yyyy-mm-dd',
+                    orientation: "bottom left",
+                    todayBtn: "linked",
+                    clearBtn: true,
+                    todayHighlight: true,
+                    templates: {
+                        leftArrow: '<i class="la la-angle-left"></i>',
+                        rightArrow: '<i class="la la-angle-right"></i>'
+                    }
+                });
+
+                $('input[id=to]').datepicker({
+                    format: 'yyyy-mm-dd',
+                    orientation: "bottom left",
+                    todayBtn: "linked",
+                    clearBtn: true,
+                    todayHighlight: true,
+                    templates: {
+                        leftArrow: '<i class="la la-angle-left"></i>',
+                        rightArrow: '<i class="la la-angle-right"></i>'
+                    }
+                });
+            }
+            //. dates
+
 
             return {
                 init: function() {
                     formValidationInit();
                     summernoteInit();
+                    datesInit();
                 }
             };
         }();

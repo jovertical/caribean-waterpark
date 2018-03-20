@@ -80,6 +80,8 @@
                         <th>Amount Deducted</th>
                         <th>Valid From</th>
                         <th>Valid Until</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
