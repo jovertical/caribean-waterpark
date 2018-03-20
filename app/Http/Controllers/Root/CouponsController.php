@@ -151,7 +151,7 @@ class CouponsController extends Controller
             $coupon->active = $active;
 
             if ($coupon->save()) {
-                $coupon->coupon->map(function($category) use ($active) {
+                $coupon->coupon->map(function($coupon) use ($active) {
                     $coupon->active = $active;
                     $coupon->save();
                 });
@@ -176,7 +176,88 @@ class CouponsController extends Controller
 
         return redirect()->back();
     }
+    public function selectImage(Coupon $coupon)
+    {
+        try {
+            if ($coupon != null) {
+                return view('root.coupons.image', ['coupons' => $coupon]);
+            }
 
+            Notify::warning('Cannot find coupon', 'Ooops?');
+
+        } catch (Exception $e) {
+            Notify::error($e->getMessage(), 'Ooops!');
+        }
+
+        return redirect()->back();
+    }
+
+    public function uploadedImage(Request $request, Coupon $coupon)
+    {
+        $thumbs_directory = $coupon->file_directory.'/thumbnails';
+
+        if (File::exists($thumbs_directory.'/'.$coupon->file_name)) {
+            $file_path = $thumbs_directory.'/'.$coupon->file_name;
+
+            $images = [
+                [
+                    'directory' => URL::to($thumbs_directory),
+                    'name'      => File::name($file_path).'.'.File::extension($file_path),
+                    'size'      => File::size($file_path)
+                ]
+            ];
+
+            return response()->json(['images' => $images]);
+        }
+
+        return response()->json('No image.');
+    }
+
+    public function uploadImage(Request $request, Coupon $coupon)
+    {
+        try {
+            $upload = ImageUploader::upload($request->file('image'), "categories/{$coupon->id}");
+
+            $coupon->file_path = $upload['file_path'];
+            $coupon->file_directory = $upload['file_directory'];
+            $coupon->file_name = $upload['file_name'];
+
+            if ($coupon->save()) {
+                return response()->json($upload);
+            }
+        } catch(Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json('File not uploaded.');
+    }
+
+    public function destroyImage(Request $request, Coupon $coupon)
+    {
+       try {
+            $file_name = $request->input('file_name');
+
+            if (File::exists($coupon->file_directory.'/'.$file_name)) {
+                File::delete($coupon->file_directory.'/'.$file_name);
+            }
+
+            if (File::exists($coupon->file_directory.'/thumbnails/'.$file_name)) {
+                File::delete($coupon->file_directory.'/thumbnails/'.$file_name);
+            }
+
+            $coupon->file_path = null;
+            $coupon->file_directory = null;
+            $coupon->file_name = null;
+
+            if ($coupon->save()) {
+                return response()->json('File deleted.');
+            }
+        } catch(Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json('File not deleted.');
+    }
 
     
 }
