@@ -72,7 +72,7 @@ class SettingsController extends Controller
                 'value' => $request->has('allow_refund') ? 1 : 0,
                 'updated_by' => auth()->user()->id,
                 'updated_at' => Carbon::now()
-            ]); 
+            ]);
 
             if ($request->has('allow_refund')) {
                 DB::table('settings')->where('name', 'days_refundable')->update([
