@@ -52,55 +52,6 @@
                         <div class="product-descriptions">
                             <p>{!! $item->description !!}</p>
                         </div>
-                        <div class="property-highlights">
-                            <h3>Property highlights</h3>
-                            <div class="property-highlights__content">
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-unlock"></i>
-                                    <span>Room service</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-beds"></i>
-                                    <span>Bunkbed available</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-beds"></i>
-                                    <span>Bunkbed available</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-laundry"></i>
-                                    <span>Laundry</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-shower"></i>
-                                    <span>Shower</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-shower"></i>
-                                    <span>Shower</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-pool"></i>
-                                    <span>Outside Pool</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-meal"></i>
-                                    <span>Room meal service</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-meal"></i>
-                                    <span>Room meal service</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-key"></i>
-                                    <span>High security</span>
-                                </div>
-                                <div class="item">
-                                    <i class="awe-icon awe-icon-tv"></i>
-                                    <span>TV in room</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -158,46 +109,14 @@
                         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
                             <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="false">
                                 <a href="#tabs-1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">
-                                    Facilities
-                                </a>
-                            </li>
-
-                            <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false">
-                                <a href="#tabs-2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-2">
                                     Review &amp; rating
                                 </a>
                             </li>
                         </ul>
 
                         <div class="product-tabs__content">
-                            <!-- Facilities & Freebies -->
-                            <div id="tabs-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
-                                <table class="facilities-freebies-table">
-                                    <tbody>
-                                        <tr>
-                                            <th>
-                                                <p>View</p>
-                                            </th>
-                                            <td>
-                                                <p>City view <em>Beach ( link or gallery)</em></p>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th>
-                                                <p>Activities</p>
-                                            </th>
-                                            <td>
-                                                <p>Billiards</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!--/. Facilities & Freebies -->
-
                             <!-- Review & Rating -->
-                            <div id="tabs-2" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
+                            <div id="tabs-1" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
                                 <div id="reviews">
                                     <div class="rating-info">
                                         <div class="average-rating-review {{ $item->rating_remark }}">
@@ -396,6 +315,13 @@
                                             @endif
                                         @endguest
                                     </div>
+
+                                    <!-- Message -->
+                                    @if (Session::has('message'))
+                                        @component('front.components.alert')
+                                            {!! Session::get('message.content') !!}
+                                        @endcomponent
+                                    @endif
 
                                     <div id="comments">
                                         <ol class="commentlist">

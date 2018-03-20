@@ -711,7 +711,7 @@ class ReservationsController extends Controller
                                 'content' => '
                                     This reservation is not refundable because
                                     <span class="m--font-bolder">refund</span>
-                                    is not enabled in your <a href="'.route('root.settings.index').
+                                    is not enabled in the <a href="'.route('root.settings.index').
                                     '" class="m-link m--font-boldest">Settings</a></span>
                                 '
                             ]);
