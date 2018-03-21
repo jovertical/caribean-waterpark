@@ -443,8 +443,6 @@ class ReservationsController extends Controller
      */
     public function store(Request $request)
     {
-        
-
         $user = auth()->user();
         $items = session()->get('reservation.selected_items');
         $checkin_date = session()->get('reservation.checkin_date');
@@ -466,9 +464,7 @@ class ReservationsController extends Controller
                 return back();
             }
 
-            $reservation = Reservation::where('name', $name)->first();
-
-            if ($reservation == null) {
+            if (session()->has('reservation')) {
                 // create a new reservation.
                 $reservation =  $user->createReservation($name, $checkin_date, $checkout_date, $item_costs);
 
@@ -477,17 +473,17 @@ class ReservationsController extends Controller
 
                 // store reservation days.
                 $this->storeReservationDays($reservation, $guests, $rates);
-
-                // If payment mode is paypal_express, redirect.
-                if (strtolower($request->input('payment_mode')) == 'paypal_express') {
-                    return $this->paypalRedirect($reservation);
-                }
-
-                // clear reservation data from the session.
-                session()->pull('reservation');
-
-                return redirect()->route('front.reservation.review', $reservation);
             }
+
+            // If payment mode is paypal_express, redirect.
+            if (strtolower($request->input('payment_mode')) == 'paypal_express') {
+                return $this->paypalRedirect($reservation);
+            }
+
+            // clear reservation data from the session.
+            session()->pull('reservation');
+
+            return redirect()->route('front.reservation.review', $reservation);
         } catch(Exception $e) {
             session()->flash('message', [
                 'type' => 'error',
