@@ -71,7 +71,7 @@
                                 <th width="30%">Day hours</th>
                                 <th width="30%">Night hours</th>
                                 <th width="14%">Adults</th>
-                                <th width="14%">Childrens</th>
+                                <th width="14%">Children</th>
                             </thead>
                             <tbody>
                                 @foreach($calendar_days as $index => $calendar_day)
