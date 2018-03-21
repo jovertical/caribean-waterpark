@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon;
 use Illuminate\Support\Facades\Storage;
 use Srmklive\PayPal\Services\ExpressCheckout;
 
@@ -48,10 +49,13 @@ class PaypalExpress
     {
         $items = collect([]);
 
-        $reservation->items->each(function($item) use ($items) {
+        $reservation->items->each(function($item) use ($reservation, $items) {
+            $days = Carbon::parse($reservation->checkin_date)
+                        ->diffInDays(Carbon::parse($reservation->checkout_date)) + 1;
+
             $items->push([
                 'name' => $item->item->name,
-                'price' => $item->price_payable,
+                'price' => $item->price_original * $days,
                 'qty' => $item->quantity
             ]);
         });
@@ -59,7 +63,7 @@ class PaypalExpress
         $item_totals = 0;
 
         foreach ($items as $item) {
-            $item_totals += $item['price'];
+            $item_totals += $item['price'] * $item['qty'];
         }
 
         return [
