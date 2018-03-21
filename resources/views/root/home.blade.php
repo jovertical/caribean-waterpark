@@ -289,9 +289,11 @@
                 picker.on('click', function(e) {
                     $('.ranges ul').children().eq(0).attr('class', '');
                     $('.ranges ul').children().eq({{ Request::input('selected') }}).attr('class', 'active');
+                    $('.ranges ul').children().eq(6).addClass('d-none');
+                    $('.applyBtn, .cancelBtn').css({display: 'none'});
                 });
 
-                $('.applyBtn, .ranges').on('click', function(e) {
+                $('.ranges').on('click', function(e) {
                     window.location.href='?from=' + dates.from + '&to=' + dates.to + '&selected=' + dates.selected;
                 });
             });

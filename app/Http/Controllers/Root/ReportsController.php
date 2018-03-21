@@ -205,7 +205,7 @@ class ReportsController extends Controller
                             $data[$repeated_index]['occupied'] += $occupied;
                             $data[$repeated_index]['unoccupied'] -= $occupied;
                             $data[$repeated_index]['average_occupancy'] =
-                                (($occupied+=$occupied) / max($quantity, 1)) * 100;
+                                ($data[$repeated_index]['occupied'] / max($quantity, 1)) * 100;
                             $data[$repeated_index]['daily_sales'] += $daily_sales;
                             $data[$repeated_index]['net_sales'] += $net_sales;
 
