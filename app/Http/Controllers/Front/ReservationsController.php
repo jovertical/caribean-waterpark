@@ -475,17 +475,17 @@ class ReservationsController extends Controller
 
                 // store reservation days.
                 $this->storeReservationDays($reservation, $guests, $rates);
+
+                // If payment mode is paypal_express, redirect.
+                if (strtolower($request->input('payment_mode')) == 'paypal_express') {
+                    return $this->paypalRedirect($reservation);
+                }
+
+                // clear reservation data from the session.
+                session()->pull('reservation');
+
+                return redirect()->route('front.reservation.review', $reservation);
             }
-
-            // If payment mode is paypal_express, redirect.
-            if (strtolower($request->input('payment_mode')) == 'paypal_express') {
-                return $this->paypalRedirect($reservation);
-            }
-
-            // clear reservation data from the session.
-            session()->pull('reservation');
-
-            return redirect()->route('front.reservation.review', $reservation);
         } catch(Exception $e) {
             session()->flash('message', [
                 'type' => 'error',

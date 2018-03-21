@@ -17,10 +17,10 @@
                     </div>
                     <div class="widget_content">
                         <p>Sitio Abo, Brgy. Pulong Sampaloc, Doña Remedios Trinidad, Bulakan</p>
-                        <p>+1-888-8765-1234</p>
+                        <p>{{ $company_phone_number }}</p>
                         <a href="#">
                             <span class="__cf_email__" data-cfemail="13707c7d6772706753747c7572613d707c7e">
-                                {{ config('mail.from.address') }}
+                                {{ $company_email }}
                             </span>
                         </a>
                     </div>
@@ -95,12 +95,10 @@
                 <div class="widget widget_follow_us">
                     <div class="widget_content">
                         <p>For special reservation request, please call</p>
-                        <span class="phone">099-099-000</span>
+                        <span class="phone">{{ $company_phone_number }}</span>
                         <div class="awe-social">
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-youtube-play"></i></a>
+                            <a href="{{ url($company_facebook_url) }}"><i class="fa fa-facebook"></i></a>
+                            <a href="{{ url($company_twitter_url) }}"><i class="fa fa-twitter"></i></a>
                         </div>
                     </div>
                 </div>

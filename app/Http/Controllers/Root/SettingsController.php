@@ -9,6 +9,11 @@ use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller
 {
+    /**
+     * Array of company settings.
+     * @var array
+     */
+    protected $company_settings;
 
     /**
      * Array of calendar settings.
@@ -24,13 +29,18 @@ class SettingsController extends Controller
 
     public function __construct()
     {
+        $this->company_settings = app('Setting')->company();
         $this->calendar_settings = app('Setting')->calendar();
         $this->reservation_settings = app('Setting')->reservation();
     }
 
     public function index()
     {
-        $settings = array_merge($this->calendar_settings, $this->reservation_settings);
+        $settings = array_merge(
+                        $this->company_settings,
+                        $this->calendar_settings,
+                        $this->reservation_settings
+                    );
 
         return view('root.settings.index', compact('settings'));
     }
@@ -64,7 +74,7 @@ class SettingsController extends Controller
                 'value' => $request->input('maximum_reservation_length'),
                 'updated_by' => auth()->user()->id,
                 'updated_at' => Carbon::now()
-            ]);         
+            ]);
 
             DB::table('settings')->where('name', 'partial_payment_rate')->update([
                 'value' => $request->input('partial_payment_rate'),
@@ -108,6 +118,6 @@ class SettingsController extends Controller
 
     public function updateCompany(Request $request)
     {
-        
+
     }
 }

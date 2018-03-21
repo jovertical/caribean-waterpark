@@ -402,7 +402,7 @@
                             <div class="call-to-book">
                                 <i class="awe-icon awe-icon-phone"></i>
                                 <em>Call to reserve</em>
-                                <span>+1-888-8765-1234</span>
+                                <span>{{ $company_phone_number }}</span>
                             </div>
 
                             <!-- Reservation info -->

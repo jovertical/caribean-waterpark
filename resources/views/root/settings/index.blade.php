@@ -47,8 +47,8 @@
 
                             <div class="col-lg-6">
                                 <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
-                                    'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{
-                                        old('name') }}">
+                                    'form-control-danger' :'' }}" placeholder="Please enter a company name" 
+                                        value="{{ old('name') ?? $settings['company_name'] }}">
 
                                 <div id="name-error" class="form-control-feedback">
                                     <span class="m--font-danger">{{ $errors->first('name') }}</span>
@@ -67,8 +67,7 @@
 
                             <div class="col-lg-6">
                                 <input type="text" name="email" id="email" class="form-control m-input
-                                    {{ $errors->has('email') ? 'form-control-danger' :'' }}" placeholder="Please enter an email"
-                                        value="{{ old('email') }}">
+                                    {{ $errors->has('email') ? 'form-control-danger' :'' }}" placeholder="Please enter a company email" value="{{ old('email') ?? $settings['company_email'] }}">
 
                                 @if ($errors->has('email'))
                                     <div id="email-error" class="form-control-feedback">
@@ -97,12 +96,15 @@
 
                                     <input type="text" name="phone_number" id="phone_number" class="form-control m-input
                                         {{ $errors->has('phone_number') ? 'form-control-danger' :'' }}"
-                                            placeholder="Please enter phone number" value="{{ old('phone_number') }}">
+                                            placeholder="Please enter phone number" value="{{ old('phone_number') ?? 
+                                                $settings['company_phone_number'] }}">
                                 </div>
 
                                 @if ($errors->has('phone_number'))
                                     <div id="phone_number-error" class="form-control-feedback">
-                                        <span class="m--font-danger">{{ $errors->first('phone_number') }}</span>
+                                        <span class="m--font-danger">
+                                            {{ $errors->first('phone_number') }}
+                                        </span>
                                     </div>
                                 @endif
 
@@ -127,10 +129,12 @@
 
                             <div class="col-lg-6">
                                 <input type="text" name="facebook_url" id="facebook_url" class="form-control m-input {{ $errors->has('facebook_url') ? 'form-control-danger' :'' }}" placeholder="Please enter your facebook link" 
-                                        value="{{ old('facebook_url') }}">
+                                        value="{{ old('twitter_url') ?? $settings['company_facebook_url'] }}">
 
                                 <div id="facebook_url-error" class="form-control-feedback">
-                                    <span class="m--font-danger">{{ $errors->first('facebook_url') }}</span>
+                                    <span class="m--font-danger">
+                                        {{ $errors->first('facebook_url') }}
+                                    </span>
                                 </div>
 
                                 <span class="m-form__help"></span>
@@ -146,7 +150,7 @@
 
                             <div class="col-lg-6">
                                 <input type="text" name="twitter_url" id="twitter_url" class="form-control m-input {{ $errors->has('twitter_url') ? 'form-control-danger' :'' }}" placeholder="Please enter your twitter link" 
-                                        value="{{ old('twitter_url') }}">
+                                        value="{{ old('twitter_url') ?? $settings['company_twitter_url']  }}">
 
                                 <div id="twitter_url-error" class="form-control-feedback">
                                     <span class="m--font-danger">{{ $errors->first('twitter_url') }}</span>

@@ -9,7 +9,7 @@
                         <div class="title">
                             <h1 class="text-uppercase">CHECKOUT</h1>
                         </div>
-                        <span class="phone">Support Call: +1-888-8765-1234</span>
+                        <span class="phone">Support Call: {{ $company_phone_number }}</span>
                     </div>
                 </div>
 

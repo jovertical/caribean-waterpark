@@ -6,6 +6,23 @@ use Illuminate\Support\Facades\DB;
 
 class Setting
 {
+    public function company($key = null)
+    {
+        $settings = [
+            'company_name' => $this->table()->where('name', 'name')->first()->value,
+            'company_email' => $this->table()->where('name', 'email')->first()->value,
+            'company_phone_number' => $this->table()->where('name', 'phone_number')->first()->value,
+            'company_facebook_url' => $this->table()->where('name', 'facebook_url')->first()->value,
+            'company_twitter_url' => $this->table()->where('name', 'twitter_url')->first()->value,
+        ];
+
+        if ($key != null) {
+            return $settings[$key];
+        }
+
+        return $settings;
+    }
+
     public function reservation($key = null)
     {
         $settings = [

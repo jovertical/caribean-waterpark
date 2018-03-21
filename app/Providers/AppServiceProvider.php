@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
             $settings = app(Setting::class);
 
             view()->composer('*', function($view) use ($settings) {
+                $company_settings = $settings->company();
                 $calendar_settings = $settings->calendar();
                 $reservation_settings = $settings->reservation();
 
@@ -36,7 +37,9 @@ class AppServiceProvider extends ServiceProvider
                     ])
                 );
 
-                $view->with(array_merge($calendar_settings, $reservation_settings));
+                $view->with(array_merge(
+                    $company_settings, $calendar_settings, $reservation_settings)
+                );
             });
         }
     }
