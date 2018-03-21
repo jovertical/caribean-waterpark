@@ -422,7 +422,7 @@ class ReservationsController extends Controller
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
         $rates = ['adult' => $calendar_day['adult_rate'], 'children' => $calendar_day['children_rate']];
         $item_costs = session()->get('reservation.item_costs');
-        $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
+        $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(mt_rand(100000, 999999));
 
         try {
             if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {

@@ -443,6 +443,8 @@ class ReservationsController extends Controller
      */
     public function store(Request $request)
     {
+        
+
         $user = auth()->user();
         $items = session()->get('reservation.selected_items');
         $checkin_date = session()->get('reservation.checkin_date');
@@ -452,7 +454,7 @@ class ReservationsController extends Controller
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
         $rates = ['adult' => 200, 'children' => 120];
         $item_costs = session()->get('reservation.item_costs');
-        $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(Reservation::count()+1);
+        $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(mt_rand(100000, 999999));
 
         try {
             if (! $this->reservationItemsValid($items, $checkin_date, $checkout_date)) {
