@@ -140,9 +140,9 @@ class CategoriesController extends Controller
             $category->active = $active;
 
             if ($category->save()) {
-                $category->categorys->map(function($category) use ($active) {
-                    $category->active = $active;
-                    $category->save();
+                $category->items->map(function($item) use ($active) {
+                    $item->active = $active;
+                    $item->save();
                 });
 
                 $this->superusers->each(function($notifiable) use ($category) {

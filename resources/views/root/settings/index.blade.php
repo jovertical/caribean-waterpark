@@ -5,170 +5,244 @@
 @endsection
 
 @section('content')
-    <div class="m-portlet">
+    <div class="m-portlet m-portlet--full-height m-portlet--tabs">
         <div class="m-portlet__head">
-            <div class="m-portlet__head-caption">
-                <div class="m-portlet__head-title">
-                    <h3 class="m-portlet__head-text">
-                        Reservation
-                    </h3>
-                </div>
+            <div class="m-portlet__head-tools">
+                <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
+                    <li class="nav-item m-tabs__item">
+                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#calendar_tab" role="tab" aria-selected="false">
+                            <i class="flaticon-share m--hide"></i>
+                            Calendar
+                        </a>
+                    </li>
+                    <li class="nav-item m-tabs__item">
+                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#reservation_tab" role="tab" aria-selected="false">
+                            Reservation
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <form method="POST" action="{{ route('root.settings.update') }}" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" id="form-settings-update">
-            {{ csrf_field() }}
-            {{ method_field('PATCH') }}
-
-            <div class="m-portlet__body">
-                <!-- Days prior -->
-                <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Days prior: </label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <select name="days_prior" id="days_prior" class="form-control m-bootstrap-select">
-                            <option value="0" selected>0</option>
-                            <option value="1" {{ $settings['days_prior'] == '1' ? 'selected' : '' }}>1</option>
-                            <option value="2" {{ $settings['days_prior'] == '2' ? 'selected' : '' }}>2</option>
-                            <option value="3" {{ $settings['days_prior'] == '3' ? 'selected' : '' }}>3</option>
-                            <option value="4" {{ $settings['days_prior'] == '4' ? 'selected' : '' }}>4</option>
-                            <option value="5" {{ $settings['days_prior'] == '5' ? 'selected' : '' }}>5</option>
-                            <option value="6" {{ $settings['days_prior'] == '6' ? 'selected' : '' }}>6</option>
-                            <option value="7" {{ $settings['days_prior'] == '7' ? 'selected' : '' }}>7</option>
-                            <option value="8" {{ $settings['days_prior'] == '8' ? 'selected' : '' }}>8</option>
-                            <option value="9" {{ $settings['days_prior'] == '9' ? 'selected' : '' }}>9</option>
-                        </select>
-
-                        <span class="m-form__help">Allowed number of days prior to today.</span>
-                    </div>
-                </div>
-                <!--/. Days prior -->
-
-                <!-- Minimum reservation length -->
-                <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Minimum length: </label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <div class="m-ion-range-slider">
-                            <input type="number" name="minimum_reservation_length" id="minimum_reservation_length"
-                                class="form-control m-input" value="{{ $settings['minimum_reservation_length'] }}">
-                        </div>
-                        <span class="m-form__help">Minimum number of days for a reservation.</span>
-                    </div>
-                </div>
-                <!--/. Minimum reservation length -->
-
-                <!-- Maximum reservation length -->
-                <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Maximum length: </label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <div class="m-ion-range-slider">
-                            <input type="number" name="maximum_reservation_length" id="maximum_reservation_length" 
-                                class="form-control m-input" value="{{ $settings['maximum_reservation_length'] }}">
-                        </div>
-                        <span class="m-form__help">Maximum number of days for a reservation.</span>
-                    </div>
-                </div>
-                <!--/. Maximum reservation length -->
-
-                <!-- Partial payment rate -->
-                <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Partial payment rate: </label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <div class="m-ion-range-slider">
-                            <input type="hidden" name="partial_payment_rate" id="partial_payment_rate" data-min-value="1" 
-                                data-max-value="100" disabled="disabled" value="{{ $settings['partial_payment_rate'] }}">
-                        </div>
-                        <span class="m-form__help">Partial payment rate required for a reservation to be reserved.</span>
-                    </div>
-                </div>
-                <!--/. Partial payment rate -->
-
-                <!-- Tax rate -->
-                <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Tax rate: </label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <div class="m-ion-range-slider">
-                            <input type="hidden" name="tax_rate" id="tax_rate" data-min-value="1" 
-                                data-max-value="100" disabled="disabled" value="{{ $settings['tax_rate'] }}">
-                        </div>
-                        <span class="m-form__help">Applied tax rate to each items. (inclusive)</span>
-                    </div>
-                </div>
-                <!--/. Tax rate -->
-
-                <!-- Refunds -->
-                <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Refunds: </label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <span id="allow_refund_icon" class="m-switch m-switch--lg m-switch--icon
-                            {{ $settings['allow_refund'] ? ' m-switch--success' : ' m-switch--danger' }}  ">
-                            <label>
-                                <input type="checkbox" name="allow_refund" id="allow_refund" 
-                                    {{ $settings['allow_refund'] ? 'checked="checked"' : '' }}">
-                                <span></span>
-                            </label>
-                        </span>
-                        <span class="m-form__help"></span>
-                    </div>
-                </div>
-                <!--/. Refunds -->
-                
-                <!-- Allow refund block -->
-                <div id="allow_refund_block" style="display: {{ $settings['allow_refund'] ? '' : 'none' }};">
-                    <!-- Days refundable -->
-                    <div class="form-group m-form__group row">
-                        <label class="col-form-label col-lg-3 col-sm-12">Days refundable: </label>
-                        <div class="col-lg-4 col-md-9 col-sm-12">
-                            <select name="days_refundable" id="days_refundable" class="form-control m-bootstrap-select">
-                                <option value="0" selected>0</option>
-                                <option value="1" {{ $settings['days_refundable'] == '1' ? 'selected' : '' }}>1</option>
-                                <option value="2" {{ $settings['days_refundable'] == '2' ? 'selected' : '' }}>2</option>
-                                <option value="3" {{ $settings['days_refundable'] == '3' ? 'selected' : '' }}>3</option>
-                                <option value="4" {{ $settings['days_refundable'] == '4' ? 'selected' : '' }}>4</option>
-                                <option value="5" {{ $settings['days_refundable'] == '5' ? 'selected' : '' }}>5</option>
-                                <option value="6" {{ $settings['days_refundable'] == '6' ? 'selected' : '' }}>6</option>
-                                <option value="7" {{ $settings['days_refundable'] == '7' ? 'selected' : '' }}>7</option>
-                                <option value="8" {{ $settings['days_refundable'] == '8' ? 'selected' : '' }}>8</option>
-                                <option value="9" {{ $settings['days_refundable'] == '9' ? 'selected' : '' }}>9</option>
-                            </select>
-
-                            <span class="m-form__help">
-                                Allowed number of days prior to the reservation checkin date for requested refunds.
-                            </span>
-                        </div>
-                    </div>
-                    <!--/. Days refundable -->
-
-                    <!-- Refundable rate -->
-                    <div class="form-group m-form__group row">
-                        <label class="col-form-label col-lg-3 col-sm-12">Refundable rate: </label>
-                        <div class="col-lg-4 col-md-9 col-sm-12">
-                            <div class="m-ion-range-slider">
-                                <input type="hidden" name="refundable_rate" id="refundable_rate" 
-                                    data-min-value="1" data-max-value="100" value="{{ $settings['refundable_rate'] }}"
-                                        disabled="disabled">
+        <!-- Tab content -->
+        <div class="tab-content">
+            <!-- Calendar Tab -->
+            <div class="tab-pane active" id="calendar_tab">
+                <form method="POST" action="{{ route('root.settings.calendar.update') }}" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" id="form-settings-calendar-update">
+                    @method('PATCH')
+                    @csrf
+                    
+                    <div class="m-portlet__body">
+                        <!-- Monday -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Monday: </label>
+                            
+                            <!-- Active -->
+                            <div class="col-lg-2 col-md-9 col-sm-12">
+                                <span id="allow_refund_icon" class="m-switch m-switch--lg m-switch--icon
+                                    {{ $settings['allow_refund'] ? ' m-switch--success' : ' m-switch--danger' }}  ">
+                                    <label>
+                                        <input type="checkbox" name="allow_refund" id="allow_refund"
+                                            {{ $settings['allow_refund'] ? 'checked="checked"' : '' }}">
+                                        <span></span>
+                                    </label>
+                                </span>
+                                <span class="m-form__help"></span>
                             </div>
-                            <span class="m-form__help">Returnable rate of a cancelled reservation.</span>
-                        </div>
-                    </div>
-                    <!--/. Refundable rate -->
-                </div>
-                <!--/. Allow refund block -->
+                            <!--/. Active -->
 
-                <!-- Bottom -->
-                <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
-                    <div class="m-form__actions m-form__actions--solid">
-                        <div class="row">
-                            <div class="col-lg-2"></div>
-                            <div class="col-lg-6">
-                                <button type="submit" id="submit" class="btn btn-brand">Update</button>
-                                <a href="{{ URL::previous() }}" class="btn btn-secondary">Cancel</a>
+                            <!-- Adult Rate -->
+                            <div class="col-lg-2 col-md-9 col-sm-12">
+                                <input type="text" name="adult_rate" id="adult_rate" class="form-control m-input" value="">
+                                <span class="m-form__help">Adult rate</span>
+                            </div>
+                            <!--/. Adult Rate -->
+
+                            <!-- Children Rate -->
+                            <div class="col-lg-2 col-md-9 col-sm-12">
+                                <input type="text" name="children_rate" id="children_rate" class="form-control m-input" value="">
+                                <span class="m-form__help">Children rate</span>
+                            </div>
+                            <!--/. Children Rate -->
+                        </div>
+                        <!--/. Monday -->
+
+                        <!-- Bottom -->
+                        <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions--solid">
+                                <div class="row">
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-6">
+                                        <button type="submit" id="submit" class="btn btn-brand">Update</button>
+                                        <a href="{{ URL::previous() }}" class="btn btn-secondary">Cancel</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!--/. Bottom -->
                     </div>
-                </div>
-                <!--/. Bottom -->
+                </form>
             </div>
-        </form>
+            <!--/. Calendar Tab -->
+
+            <!-- Reservation Tab -->
+            <div class="tab-pane" id="reservation_tab">
+                <form method="POST" action="{{ route('root.settings.reservation.update') }}" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" id="form-settings-reservation-update">
+                    @method('PATCH')
+                    @csrf
+
+                    <div class="m-portlet__body">
+                        <!-- Days prior -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Days prior: </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <select name="days_prior" id="days_prior" class="form-control m-bootstrap-select">
+                                    <option value="0" selected>0</option>
+                                    <option value="1" {{ $settings['days_prior'] == '1' ? 'selected' : '' }}>1</option>
+                                    <option value="2" {{ $settings['days_prior'] == '2' ? 'selected' : '' }}>2</option>
+                                    <option value="3" {{ $settings['days_prior'] == '3' ? 'selected' : '' }}>3</option>
+                                    <option value="4" {{ $settings['days_prior'] == '4' ? 'selected' : '' }}>4</option>
+                                    <option value="5" {{ $settings['days_prior'] == '5' ? 'selected' : '' }}>5</option>
+                                    <option value="6" {{ $settings['days_prior'] == '6' ? 'selected' : '' }}>6</option>
+                                    <option value="7" {{ $settings['days_prior'] == '7' ? 'selected' : '' }}>7</option>
+                                    <option value="8" {{ $settings['days_prior'] == '8' ? 'selected' : '' }}>8</option>
+                                    <option value="9" {{ $settings['days_prior'] == '9' ? 'selected' : '' }}>9</option>
+                                </select>
+
+                                <span class="m-form__help">Allowed number of days prior to today.</span>
+                            </div>
+                        </div>
+                        <!--/. Days prior -->
+
+                        <!-- Minimum reservation length -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Minimum length: </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <div class="m-ion-range-slider">
+                                    <input type="number" name="minimum_reservation_length" id="minimum_reservation_length"
+                                        class="form-control m-input" value="{{ $settings['minimum_reservation_length'] }}">
+                                </div>
+                                <span class="m-form__help">Minimum number of days for a reservation.</span>
+                            </div>
+                        </div>
+                        <!--/. Minimum reservation length -->
+
+                        <!-- Maximum reservation length -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Maximum length: </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <div class="m-ion-range-slider">
+                                    <input type="number" name="maximum_reservation_length" id="maximum_reservation_length"
+                                        class="form-control m-input" value="{{ $settings['maximum_reservation_length'] }}">
+                                </div>
+                                <span class="m-form__help">Maximum number of days for a reservation.</span>
+                            </div>
+                        </div>
+                        <!--/. Maximum reservation length -->
+
+                        <!-- Partial payment rate -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Partial payment rate: </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <div class="m-ion-range-slider">
+                                    <input type="hidden" name="partial_payment_rate" id="partial_payment_rate" data-min-value="1"
+                                        data-max-value="100" disabled="disabled" value="{{ $settings['partial_payment_rate'] }}">
+                                </div>
+                                <span class="m-form__help">Partial payment rate required for a reservation to be reserved.</span>
+                            </div>
+                        </div>
+                        <!--/. Partial payment rate -->
+
+                        <!-- Tax rate -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Tax rate: </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <div class="m-ion-range-slider">
+                                    <input type="hidden" name="tax_rate" id="tax_rate" data-min-value="1"
+                                        data-max-value="100" disabled="disabled" value="{{ $settings['tax_rate'] }}">
+                                </div>
+                                <span class="m-form__help">Applied tax rate to each items. (inclusive)</span>
+                            </div>
+                        </div>
+                        <!--/. Tax rate -->
+
+                        <!-- Refunds -->
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Refunds: </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <span id="allow_refund_icon" class="m-switch m-switch--lg m-switch--icon
+                                    {{ $settings['allow_refund'] ? ' m-switch--success' : ' m-switch--danger' }}  ">
+                                    <label>
+                                        <input type="checkbox" name="allow_refund" id="allow_refund"
+                                            {{ $settings['allow_refund'] ? 'checked="checked"' : '' }}">
+                                        <span></span>
+                                    </label>
+                                </span>
+                                <span class="m-form__help"></span>
+                            </div>
+                        </div>
+                        <!--/. Refunds -->
+
+                        <!-- Allow refund block -->
+                        <div id="allow_refund_block" style="display: {{ $settings['allow_refund'] ? '' : 'none' }};">
+                            <!-- Days refundable -->
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-3 col-sm-12">Days refundable: </label>
+                                <div class="col-lg-4 col-md-9 col-sm-12">
+                                    <select name="days_refundable" id="days_refundable" class="form-control m-bootstrap-select">
+                                        <option value="0" selected>0</option>
+                                        <option value="1" {{ $settings['days_refundable'] == '1' ? 'selected' : '' }}>1</option>
+                                        <option value="2" {{ $settings['days_refundable'] == '2' ? 'selected' : '' }}>2</option>
+                                        <option value="3" {{ $settings['days_refundable'] == '3' ? 'selected' : '' }}>3</option>
+                                        <option value="4" {{ $settings['days_refundable'] == '4' ? 'selected' : '' }}>4</option>
+                                        <option value="5" {{ $settings['days_refundable'] == '5' ? 'selected' : '' }}>5</option>
+                                        <option value="6" {{ $settings['days_refundable'] == '6' ? 'selected' : '' }}>6</option>
+                                        <option value="7" {{ $settings['days_refundable'] == '7' ? 'selected' : '' }}>7</option>
+                                        <option value="8" {{ $settings['days_refundable'] == '8' ? 'selected' : '' }}>8</option>
+                                        <option value="9" {{ $settings['days_refundable'] == '9' ? 'selected' : '' }}>9</option>
+                                    </select>
+
+                                    <span class="m-form__help">
+                                        Allowed number of days prior to the reservation checkin date for requested refunds.
+                                    </span>
+                                </div>
+                            </div>
+                            <!--/. Days refundable -->
+
+                            <!-- Refundable rate -->
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-3 col-sm-12">Refundable rate: </label>
+                                <div class="col-lg-4 col-md-9 col-sm-12">
+                                    <div class="m-ion-range-slider">
+                                        <input type="hidden" name="refundable_rate" id="refundable_rate"
+                                            data-min-value="1" data-max-value="100" value="{{ $settings['refundable_rate'] }}"
+                                                disabled="disabled">
+                                    </div>
+                                    <span class="m-form__help">Returnable rate of a cancelled reservation.</span>
+                                </div>
+                            </div>
+                            <!--/. Refundable rate -->
+                        </div>
+                        <!--/. Allow refund block -->
+
+                        <!-- Bottom -->
+                        <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions--solid">
+                                <div class="row">
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-6">
+                                        <button type="submit" id="submit" class="btn btn-brand">Update</button>
+                                        <a href="{{ URL::previous() }}" class="btn btn-secondary">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/. Bottom -->
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--/. Tab content -->
     </div>
 @endsection
 

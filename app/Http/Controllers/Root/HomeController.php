@@ -22,7 +22,7 @@ class HomeController extends Controller
         $active_users = User::where('type', 'user')->whereBetween('created_at', [$from, $to])->get();
         $item_reviews = ItemReview::get();
         $active_item_reviews = ItemReview::whereBetween('created_at', [$from, $to])->get();
-        $reservations = Reservation::whereIn('status', ['paid', 'reserved'])->get();
+        $reservations = Reservation::get();
         $reservations_taxable = $reservations->sum('price_taxable');
         $active_reservations =  Reservation::whereBetween('created_at', [$from, $to])
                                     ->whereIn('status', ['paid', 'reserved'])->get();

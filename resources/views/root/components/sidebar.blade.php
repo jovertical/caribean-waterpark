@@ -25,17 +25,6 @@
                 </a>
             </li>
 
-            <!-- Bookmark -->
-            <li class="m-menu__item" aria-haspopup="true">
-                <a href="javascript:void(0);" class="m-menu__link">
-                    <i class="m-menu__link-icon la la-bookmark"></i>
-                    <span class="m-menu__link-title">
-                        <span class="m-menu__link-text">Bookmark</span>
-                    </span>
-                </a>
-            </li>
-            <!--/. Bookmark -->
-
             {{ $slot }}
         </ul>
     </div>

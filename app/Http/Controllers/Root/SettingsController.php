@@ -25,7 +25,7 @@ class SettingsController extends Controller
         return view('root.settings.index', ['settings' => $this->reservation_settings]);
     }
 
-    public function update(Request $request)
+    public function updateReservation(Request $request)
     {
         $this->validate($request, [
             'days_prior' => 'required|integer',
@@ -94,5 +94,10 @@ class SettingsController extends Controller
         }
 
         return back();
+    }
+
+    public function updateCalendar(Request $request)
+    {
+        
     }
 }

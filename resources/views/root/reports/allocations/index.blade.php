@@ -228,6 +228,11 @@
         <form method="POST" action="" id="export">
             {{ csrf_field() }}
 
+            <input type="hidden" name="src" value="{{ Request::get('src') }}">
+            <input type="hidden" name="rd" value="{{ Request::get('rd') }}">
+            <input type="hidden" name="from" value="{{ Request::get('from') }}">
+            <input type="hidden" name="to" value="{{ Request::get('to') }}">
+
             <!-- File name -->
             <div class="m-form__group form-group">
                 <label class="form-control-label">File name: </label>
