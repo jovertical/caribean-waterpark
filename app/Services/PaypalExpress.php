@@ -51,7 +51,7 @@ class PaypalExpress
         $reservation->items->each(function($item) use ($items) {
             $items->push([
                 'name' => $item->item->name,
-                'price' => $item->price_original,
+                'price' => $item->price_payable,
                 'qty' => $item->quantity
             ]);
         });
@@ -59,7 +59,7 @@ class PaypalExpress
         $item_totals = 0;
 
         foreach ($items as $item) {
-            $item_totals += $item['price'] * $item['qty'];
+            $item_totals += $item['price'];
         }
 
         return [

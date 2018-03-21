@@ -9,6 +9,13 @@ use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller
 {
+
+    /**
+     * Array of calendar settings.
+     * @var array
+     */
+    protected $calendar_settings;
+
     /**
      * Array of reservation settings.
      * @var array
@@ -17,12 +24,15 @@ class SettingsController extends Controller
 
     public function __construct()
     {
+        $this->calendar_settings = app('Setting')->calendar();
         $this->reservation_settings = app('Setting')->reservation();
     }
 
     public function index()
     {
-        return view('root.settings.index', ['settings' => $this->reservation_settings]);
+        $settings = array_merge($this->calendar_settings, $this->reservation_settings);
+
+        return view('root.settings.index', compact('settings'));
     }
 
     public function updateReservation(Request $request)
@@ -96,7 +106,7 @@ class SettingsController extends Controller
         return back();
     }
 
-    public function updateCalendar(Request $request)
+    public function updateCompany(Request $request)
     {
         
     }

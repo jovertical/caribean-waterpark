@@ -13,6 +13,13 @@ class SettingsTableSeeder extends Seeder
     public function run()
     {
         $settings = [
+            /* Company settings */
+            ['name' => 'name', 'value' => 'Caribbean-waterpark'],
+            ['name' => 'email', 'value' => 'caribbeanwaterpark@yahoo.com'],
+            ['name' => 'phone_number', 'value' => '(+63) 9754539538'],
+            ['name' => 'facebook_url', 'value' => 'https://www.facebook.com/carrebianwavesresort'],
+            ['name' => 'twitter_url', 'value' => ''],
+
             /* Reservation settings */
             ['name' => 'days_prior', 'value' => 0],
             ['name' => 'minimum_reservation_length', 'value' => 1],

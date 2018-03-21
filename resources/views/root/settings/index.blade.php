@@ -10,9 +10,9 @@
             <div class="m-portlet__head-tools">
                 <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
                     <li class="nav-item m-tabs__item">
-                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#calendar_tab" role="tab" aria-selected="false">
+                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#company_tab" role="tab" aria-selected="false">
                             <i class="flaticon-share m--hide"></i>
-                            Calendar
+                            Company
                         </a>
                     </li>
                     <li class="nav-item m-tabs__item">
@@ -26,46 +26,136 @@
 
         <!-- Tab content -->
         <div class="tab-content">
-            <!-- Calendar Tab -->
-            <div class="tab-pane active" id="calendar_tab">
-                <form method="POST" action="{{ route('root.settings.calendar.update') }}" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" id="form-settings-calendar-update">
+            <!-- Company Tab -->
+            <div class="tab-pane active" id="company_tab">
+                <form method="POST" action="{{ route('root.settings.company.update') }}" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" id="form-company-settings-update">
                     @method('PATCH')
                     @csrf
-                    
+
                     <div class="m-portlet__body">
-                        <!-- Monday -->
                         <div class="form-group m-form__group row">
-                            <label class="col-form-label col-lg-3 col-sm-12">Monday: </label>
-                            
-                            <!-- Active -->
-                            <div class="col-lg-2 col-md-9 col-sm-12">
-                                <span id="allow_refund_icon" class="m-switch m-switch--lg m-switch--icon
-                                    {{ $settings['allow_refund'] ? ' m-switch--success' : ' m-switch--danger' }}  ">
-                                    <label>
-                                        <input type="checkbox" name="allow_refund" id="allow_refund"
-                                            {{ $settings['allow_refund'] ? 'checked="checked"' : '' }}">
-                                        <span></span>
-                                    </label>
+                            <div class="col-10 ml-auto">
+                                <h3 class="m-form__section">1. Profile</h3>
+                            </div>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="form-group m-form__group row {{ $errors->has('name') ? 'has-danger' : '' }}" required>
+                            <label for="name" class="col-lg-2 col-form-label">
+                                Name <span class="m--font-danger">*</span>
+                            </label>
+
+                            <div class="col-lg-6">
+                                <input type="text" name="name" id="name" class="form-control m-input {{ $errors->has('name') ?
+                                    'form-control-danger' :'' }}" placeholder="Please enter a name" value="{{
+                                        old('name') }}">
+
+                                <div id="name-error" class="form-control-feedback">
+                                    <span class="m--font-danger">{{ $errors->first('name') }}</span>
+                                </div>
+
+                                <span class="m-form__help">The name of the company.</span>
+                            </div>
+                        </div>
+                        <!--/. Name -->
+
+                        <!-- Email -->
+                        <div class="form-group m-form__group row {{ $errors->has('email') ? 'has-danger' : '' }}">
+                            <label for="email" class="col-lg-2 col-form-label">
+                                Email <span class="m--font-danger">*</span>
+                            </label>
+
+                            <div class="col-lg-6">
+                                <input type="text" name="email" id="email" class="form-control m-input
+                                    {{ $errors->has('email') ? 'form-control-danger' :'' }}" placeholder="Please enter an email"
+                                        value="{{ old('email') }}">
+
+                                @if ($errors->has('email'))
+                                    <div id="email-error" class="form-control-feedback">
+                                        <span class="m--font-danger">{{ $errors->first('email') }}</span>
+                                    </div>
+                                @endif
+
+                                <span class="m-form__help">
+                                    The company email (displayed on client side).
                                 </span>
+                            </div>
+                        </div>
+                        <!--/. Email -->
+
+                        <!-- Phone number -->
+                        <div class="form-group m-form__group row {{ $errors->has('phone_number') ? 'has-danger' : '' }}">
+                            <label for="phone_number" class="col-lg-2 col-form-label">
+                                Phone number
+                            </label>
+
+                            <div class="col-lg-6">
+                                <div class="input-group m-input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-phone"></i></span>
+                                    </div>
+
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control m-input
+                                        {{ $errors->has('phone_number') ? 'form-control-danger' :'' }}"
+                                            placeholder="Please enter phone number" value="{{ old('phone_number') }}">
+                                </div>
+
+                                @if ($errors->has('phone_number'))
+                                    <div id="phone_number-error" class="form-control-feedback">
+                                        <span class="m--font-danger">{{ $errors->first('phone_number') }}</span>
+                                    </div>
+                                @endif
+
+                                <span class="m-form__help">
+                                    The company phone number (displayed on client side).
+                                </span>
+                            </div>
+                        </div>
+                        <!--/. Phone number -->
+
+                        <div class="form-group m-form__group row">
+                            <div class="col-10 ml-auto">
+                                <h3 class="m-form__section">2. Social Links</h3>
+                            </div>
+                        </div>
+
+                        <!-- Facebook -->
+                        <div class="form-group m-form__group row {{ $errors->has('facebook_url') ? 'has-danger' : '' }}" required>
+                            <label for="facebook_url" class="col-lg-2 col-form-label">
+                                Facebook
+                            </label>
+
+                            <div class="col-lg-6">
+                                <input type="text" name="facebook_url" id="facebook_url" class="form-control m-input {{ $errors->has('facebook_url') ? 'form-control-danger' :'' }}" placeholder="Please enter your facebook link" 
+                                        value="{{ old('facebook_url') }}">
+
+                                <div id="facebook_url-error" class="form-control-feedback">
+                                    <span class="m--font-danger">{{ $errors->first('facebook_url') }}</span>
+                                </div>
+
                                 <span class="m-form__help"></span>
                             </div>
-                            <!--/. Active -->
-
-                            <!-- Adult Rate -->
-                            <div class="col-lg-2 col-md-9 col-sm-12">
-                                <input type="text" name="adult_rate" id="adult_rate" class="form-control m-input" value="">
-                                <span class="m-form__help">Adult rate</span>
-                            </div>
-                            <!--/. Adult Rate -->
-
-                            <!-- Children Rate -->
-                            <div class="col-lg-2 col-md-9 col-sm-12">
-                                <input type="text" name="children_rate" id="children_rate" class="form-control m-input" value="">
-                                <span class="m-form__help">Children rate</span>
-                            </div>
-                            <!--/. Children Rate -->
                         </div>
-                        <!--/. Monday -->
+                        <!--/. Facebook -->
+
+                        <!-- Twitter -->
+                        <div class="form-group m-form__group row {{ $errors->has('twitter_url') ? 'has-danger' : '' }}" required>
+                            <label for="twitter_url" class="col-lg-2 col-form-label">
+                                Twitter
+                            </label>
+
+                            <div class="col-lg-6">
+                                <input type="text" name="twitter_url" id="twitter_url" class="form-control m-input {{ $errors->has('twitter_url') ? 'form-control-danger' :'' }}" placeholder="Please enter your twitter link" 
+                                        value="{{ old('twitter_url') }}">
+
+                                <div id="twitter_url-error" class="form-control-feedback">
+                                    <span class="m--font-danger">{{ $errors->first('twitter_url') }}</span>
+                                </div>
+
+                                <span class="m-form__help"></span>
+                            </div>
+                        </div>
+                        <!--/. Twitter -->
 
                         <!-- Bottom -->
                         <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
@@ -83,7 +173,7 @@
                     </div>
                 </form>
             </div>
-            <!--/. Calendar Tab -->
+            <!--/. Company Tab -->
 
             <!-- Reservation Tab -->
             <div class="tab-pane" id="reservation_tab">
@@ -248,7 +338,71 @@
 
 @section('scripts')
     <script>
-        var settings = function() {
+        var companySettings = function() {
+            // form validator init
+            var formValidatorInit = function () {
+                $("form[id=form-company-settings-update]").validate({
+                    rules: {
+                        name: {
+                            required: true,
+                            maxlength: 255
+                        },
+                        email: {
+                            email: true,
+                            required: true,
+                            maxlength: 255
+                        },
+                        phone_number: {
+                            maxlength: 255
+                        }
+                    },
+
+                    invalidHandler: function(event, validator) {
+                        var form = $('form[id=form-company-settings-update]');
+
+                        mApp.scrollTo(form, -200);
+                    },
+                });
+            }
+            // .form validator init
+
+            // input masks
+            var inputMasksInit = function () {
+                // email
+                $('input[id=email]').inputmask({
+                    mask: "*{1,50}[.*{1,50}][.*{1,50}][.*{1,50}]@*{1,50}[.*{2,6}][.*{1,2}]",
+                    greedy: false,
+                    onBeforePaste: function (pastedValue, opts) {
+                        pastedValue = pastedValue.toLowerCase();
+                        return pastedValue.replace("mailto:", "");
+                    },
+                    definitions: {
+                        '*': {
+                            validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
+                            cardinality: 1,
+                            casing: "lower"
+                        }
+                    }
+                });
+                //. email
+
+                // phone number
+                $('input[id=phone_number]').inputmask("mask", {
+                    "mask": "(+63) 999-9999999"
+                });
+                //. phone number
+            }
+            // input masks
+
+            return {
+                init: function() {
+                    inputMasksInit();
+                    formValidatorInit();
+                },
+            };
+        }();
+
+        var reservationSettings = function() {
             //== Private functions
 
             // selects initializer
@@ -316,7 +470,8 @@
         }();
 
         $(document).ready(function() {
-            settings.init();
+            companySettings.init();
+            reservationSettings.init();
         });
     </script>
 @endsection

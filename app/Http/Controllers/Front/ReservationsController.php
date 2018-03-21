@@ -464,14 +464,18 @@ class ReservationsController extends Controller
                 return back();
             }
 
-            // create a new reservation.
-            $reservation =  $user->createReservation($name, $checkin_date, $checkout_date, $item_costs);
+            $reservation = Reservation::where('name', $name)->first();
 
-            // store reservation items.
-            $this->storeReservationItems($reservation, $items, $item_costs);
+            if ($reservation == null) {
+                // create a new reservation.
+                $reservation =  $user->createReservation($name, $checkin_date, $checkout_date, $item_costs);
 
-            // store reservation days.
-            $this->storeReservationDays($reservation, $guests, $rates);
+                // store reservation items.
+                $this->storeReservationItems($reservation, $items, $item_costs);
+
+                // store reservation days.
+                $this->storeReservationDays($reservation, $guests, $rates);
+            }
 
             // If payment mode is paypal_express, redirect.
             if (strtolower($request->input('payment_mode')) == 'paypal_express') {
@@ -565,7 +569,7 @@ class ReservationsController extends Controller
                     ]);
                 }
 
-                return redirect()->route('front.reservation.cart');
+                return redirect()->route('front.reservation.cart.index');
             }
 
             return redirect($response['paypal_link']);
@@ -634,6 +638,6 @@ class ReservationsController extends Controller
             ]);
         }
 
-        return redirect()->route('front.reservation.cart');
+        return redirect()->route('front.reservation.cart.index');
     }
 }

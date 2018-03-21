@@ -41,7 +41,7 @@ Route::namespace('Root')->prefix('superuser')->name('root.')->group(function () 
 
         Route::prefix('settings')->name('settings.')->group(function() {
             Route::get('/', 'SettingsController@index')->name('index');
-            Route::patch('/calendar/update', 'SettingsController@updateCalendar')->name('calendar.update');
+            Route::patch('/company/update', 'SettingsController@updateCompany')->name('company.update');
             Route::patch('/reservation/update', 'SettingsController@updateReservation')->name('reservation.update');
         });
 
