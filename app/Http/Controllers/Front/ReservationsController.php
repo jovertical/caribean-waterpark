@@ -483,14 +483,6 @@ class ReservationsController extends Controller
                 $this->storeReservationDays($reservation, $guests, $rates);
             }
 
-            // If payment mode is paypal_express, redirect.
-            if (strtolower($request->input('payment_mode')) == 'paypal_express') {
-                return $this->paypalRedirect($reservation);
-            }
-
-            // clear reservation data from the session.
-            session()->pull('reservation');
-
             // notify superusers
             $this->superusers->each(function($notifiable) use ($reservation) {
                 $notifiable->notify(
@@ -505,6 +497,14 @@ class ReservationsController extends Controller
                     )
                 );
             });
+
+            // If payment mode is paypal_express, redirect.
+            if (strtolower($request->input('payment_mode')) == 'paypal_express') {
+                return $this->paypalRedirect($reservation);
+            }
+
+            // clear reservation data from the session.
+            session()->pull('reservation');
 
             return redirect()->route('front.reservation.review', $reservation);
         } catch(Exception $e) {
@@ -532,6 +532,21 @@ class ReservationsController extends Controller
 
         if ($transaction) {
             $this->storeItemsInCalendar($items, $checkin_date, $checkout_date);
+
+            // notify superusers
+            $this->superusers->each(function($notifiable) use ($reservation) {
+                $notifiable->notify(
+                    new ResourceUpdated(
+                        auth()->user(),
+                        $reservation,
+                        route('root.reservations.show', $reservation),
+                        [
+                            'text' => 'Paid',
+                            'class' => 'success'
+                        ]
+                    )
+                );
+            });
         }
 
         return [

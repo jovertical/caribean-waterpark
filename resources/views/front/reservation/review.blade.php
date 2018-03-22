@@ -99,12 +99,12 @@
                                     <h3>Cart detail</h3>
                                     <table class="cart-detail-table">
                                         <tbody>
-                                            <tr>
-                                                @foreach($reservation->items as $reservation_item)
+                                            @foreach($reservation->items as $reservation_item)
+                                                <tr>
                                                     <th>{{ $reservation_item->item->name }}</th>
                                                     <td>{{ Helper::moneyString($reservation_item->price_payable) }}</td>
-                                                @endforeach
-                                            </tr>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
 
                                         <tfoot>

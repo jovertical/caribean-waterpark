@@ -193,6 +193,11 @@
                                             </div>
                                             <!--/. Password -->
 
+                                            <div class="display-inline width-100">
+                                                <a href="{{ route('front.password.request') }}" 
+                                                    class="forgot-password padding-l-4">Forgot Password?</a>
+                                            </div>
+
                                             <div class="form-row place-order width-100">
                                                 <button type="submit" class="button button-primary">
                                                     Login</button>
