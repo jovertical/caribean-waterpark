@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Notifications\{WelcomeMessage, LoginCredential};
+use App\Notifications\{ResourceCreated, ResourceUpdated, WelcomeMessage, LoginCredential};
 use App\Traits\{ItemCalendarProcesses, ReservationProcesses};
 use App\{User, Reservation, ReservationDay, ReservationItem, Category, Item, ItemCalendar};
 use Helper, PaypalExpress;
@@ -41,12 +41,19 @@ class ReservationsController extends Controller
     protected $paypal_express;
 
     /**
+     * @var User
+     */
+    protected $superusers;
+
+    /**
      * @param PaypalExpress $paypal_express Injected instance of the PaypalExpress Service.
      */
     public function __construct(PaypalExpress $paypal_express)
     {
+        $this->calendar_settings = app('Setting')->calendar();
         $this->reservation_settings = app('Setting')->reservation();
         $this->paypal_express = $paypal_express;
+        $this->superusers = User::where('type', 'superuser')->get();
     }
 
     public function search(Request $request)
@@ -449,8 +456,9 @@ class ReservationsController extends Controller
         $checkout_date = session()->get('reservation.checkout_date');
         $adult_quantity = session()->get('reservation.adult_quantity');
         $children_quantity = session()->get('reservation.children_quantity');
+        $calendar_day = $this->calendar_settings['calendar_days'][Carbon::now()->dayOfWeek];
         $guests = ['adult' => $adult_quantity, 'children' => $children_quantity];
-        $rates = ['adult' => 200, 'children' => 120];
+        $rates = ['adult' => $calendar_day['adult_rate'], 'children' => $calendar_day['children_rate']];
         $item_costs = session()->get('reservation.item_costs');
         $name = Carbon::now()->format('Y').'-'.Helper::createPaddedCounter(mt_rand(100000, 999999));
 
@@ -482,6 +490,21 @@ class ReservationsController extends Controller
 
             // clear reservation data from the session.
             session()->pull('reservation');
+
+            // notify superusers
+            $this->superusers->each(function($notifiable) use ($reservation) {
+                $notifiable->notify(
+                    new ResourceCreated(
+                        auth()->user(),
+                        $reservation,
+                        route('root.reservations.show', $reservation),
+                        [
+                            'text' => 'Pending',
+                            'class' => 'warning'
+                        ]
+                    )
+                );
+            });
 
             return redirect()->route('front.reservation.review', $reservation);
         } catch(Exception $e) {

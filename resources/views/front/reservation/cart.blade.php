@@ -143,12 +143,6 @@
                                             </div>
                                             <div class="coupon-code">
                                                 <label for="coupon">Discount</label>
-                                                <div class="form-item">
-                                                    <input type="text" id="coupon">
-                                                </div>
-                                                <div class="form-submit">
-                                                    <input type="submit" value="Apply code" class="button">
-                                                </div>
                                             </div>
                                         </div>
                                         <!--/. Subtotal -->

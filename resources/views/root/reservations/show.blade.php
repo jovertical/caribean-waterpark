@@ -379,18 +379,6 @@
                     value="{{ Helper::moneyString($reservation->price_left_payable) }}" readonly>
             </div>
             <!--/. Transaction amount -->
-
-            <!-- Notify user -->
-            <div class="m-form__group form-group">
-                <div class="m-checkbox-list">
-                    <label class="m-checkbox">
-                        <input type="checkbox" name="notify_user" id="notify_user" checked>
-                            Notify customer
-                        <span></span>
-                    </label>
-                </div>
-            </div>
-            <!--/. Notify user -->
         </form>
     @endcomponent
     <!--/. Add Payment Modal -->
@@ -427,18 +415,6 @@
                     value="{{ Helper::moneyString($reservation->price_refundable) }}" readonly>
             </div>
             <!--/. Transaction amount -->
-
-            <!-- Notify user -->
-            <div class="m-form__group form-group">
-                <div class="m-checkbox-list">
-                    <label class="m-checkbox">
-                        <input type="checkbox" name="notify_user" id="notify_user" checked>
-                            Notify customer
-                        <span></span>
-                    </label>
-                </div>
-            </div>
-            <!--/. Notify user -->
         </form>
     @endcomponent
     <!--/. Refund Modal -->

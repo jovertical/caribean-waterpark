@@ -9,10 +9,6 @@
 
             <nav class="navigation awe-navigation" data-responsive="1200">
                 <ul class="menu-list">
-                    <li class="menu-item">
-                        <a href="{{ route('front.items.index') }}">Accomodations</a>
-                    </li>
-
                     <li class="menu-item menu-item-has-children
                         {{ Helper::activeMenu(Request::segment(2)) == 'reservation' ? 'current-menu-parent' : ''}}">
                         <a href="javascript:void(0);">Reservation</a>

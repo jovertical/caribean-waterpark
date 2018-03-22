@@ -41,9 +41,6 @@
                         <li>
                             <a href="{{ route('front.reservation.search') }}">Reservation</a>
                         </li>
-                        <li>
-                            <a href="{{ route('front.items.index') }}">Facilities</a>
-                        </li>
                     </ul>
                 </div>
 

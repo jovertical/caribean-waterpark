@@ -216,23 +216,14 @@
                                                     <div class="m-scrollable" data-scrollable="false" data-max-height="380" data-mobile-max-height="200">
                                                         <div class="m-nav-grid m-nav-grid--skin-light">
                                                             <div class="m-nav-grid__row">
-                                                                <a href="#" class="m-nav-grid__item">
-                                                                    <i class="m-nav-grid__icon flaticon-time"></i>
-                                                                    <span class="m-nav-grid__text">Add New Event</span>
+                                                                <a href="{{ route('root.reservations.index') }}"
+                                                                    class="m-nav-grid__item">
+                                                                    <i class="m-nav-grid__icon flaticon-time-1"></i>
+                                                                    <span class="m-nav-grid__text">New Reservations</span>
                                                                 </a>
                                                                 <a href="{{ route('root.reservation.search') }}" class="m-nav-grid__item">
                                                                     <i class="m-nav-grid__icon flaticon-time"></i>
                                                                     <span class="m-nav-grid__text">Create Reservation</span>
-                                                                </a>
-                                                            </div>
-                                                            <div class="m-nav-grid__row">
-                                                                <a href="#" class="m-nav-grid__item">
-                                                                    <i class="m-nav-grid__icon flaticon-folder"></i>
-                                                                    <span class="m-nav-grid__text">Create New Task</span>
-                                                                </a>
-                                                                <a href="#" class="m-nav-grid__item">
-                                                                    <i class="m-nav-grid__icon flaticon-clipboard"></i>
-                                                                    <span class="m-nav-grid__text">Completed Tasks</span>
                                                                 </a>
                                                             </div>
                                                         </div>

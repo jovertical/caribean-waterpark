@@ -19,12 +19,11 @@
                 <li data-slotamount="7" data-masterspeed="500" data-title="Slide title 2">
                     <img src="/front/assets/images/bg/2.jpg" data-bgposition="left center" data-duration="14000" data-bgpositionend="right center" alt="">
 
-                    <div class="tp-caption sft fadeout slider-caption-sub slider-caption-sub-2" data-x="center" data-y="220" data-speed="700" data-start="1500" data-easing="easeOutBack">Check out the top weekly destination
+                    <div class="tp-caption sft fadeout slider-caption-sub slider-caption-sub-2" data-x="center" data-y="220" data-speed="700" data-start="1500" data-easing="easeOutBack">Check out our budget friendly services
                     </div>
 
-                    <div class="tp-caption sft fadeout slider-caption slider-caption-2" data-x="center" data-y="260" data-speed="700" data-easing="easeOutBack" data-start="2000">Travel with us
+                    <div class="tp-caption sft fadeout slider-caption slider-caption-2" data-x="center" data-y="260" data-speed="700" data-easing="easeOutBack" data-start="2000">Stay with us
                     </div>
-                    <a href="#" class="tp-caption sft fadeout awe-btn awe-btn-style3 awe-btn-slider" data-x="center" data-y="370" data-easing="easeOutBack" data-speed="700" data-start="2200">Details</a>
                 </li>
 
                 <li data-slotamount="7" data-masterspeed="500" data-title="Slide title 3">
