@@ -5,7 +5,7 @@ namespace App;
 class Item extends Model
 {
     protected $casts = [
-        'price' => 'float',
+        'price' => 'float', 
         'quantity' => 'integer'
     ];
 
